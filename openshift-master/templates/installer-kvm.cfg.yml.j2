@@ -4,9 +4,9 @@ ansible_log_path: /tmp/ansible.log
 deployment:
   ansible_ssh_user: root
   hosts:
-  {% for host in groups['openshift-masters'] %}
+{% for host in groups['openshift-masters'] %}
   - connect_to: {{ hostvars[host]['ip'] }}
-    'hostname': {{ hostvars[host]['hostname'] }}
+    hostname: {{ hostvars[host]['hostname'] }}
     ip: {{ hostvars[host]['ip'] }}
     public_hostname: {{ hostvars[host]['hostname'] }}
     public_ip: {{ hostvars[host]['ip'] }}
@@ -15,7 +15,7 @@ deployment:
     - etcd
     - node
     - storage
-  {% endfor %}
+{% endfor %}
   - connect_to: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
     hostname: {{ hostvars[groups['openshift-nodes'][0]]['hostname']}}
     ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
@@ -24,7 +24,7 @@ deployment:
     public_ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
     roles:
     - node
-  {% for host in groups['openshift-nodes'][1:] %}
+{% for host in groups['openshift-nodes'][1:] %}
   - connect_to: {{ hostvars[host]['ip'] }}
     hostname: {{ hostvars[host]['hostname'] }}
     ip: {{ hostvars[host]['ip'] }}
