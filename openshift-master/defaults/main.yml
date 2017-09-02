@@ -4,3 +4,5 @@ virt_type: kvm
 deploy_openshift: true
 apps_domain: apps.192.168.122.101.nip.io
 openshift_type: origin
+ssh_key_pub: /home/jduncan/.ssh/id_rsa.pub
+ssh_key: /home/jduncan/.ssh/id_rsa

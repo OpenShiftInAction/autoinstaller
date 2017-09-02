@@ -4,30 +4,8 @@
   hostname:
     name: "{{ hostname }}"
 
-- name: install needed repositories
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - epel-release
-    - centos-release-openshift-origin
-
-- name: install needed packages
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - origin
-    - origin-clients
-    - vim-enhanced
-    - atomic-openshift-utils
-    - NetworkManager
-
-- name: enable and start NetworkManager
-  service:
-    name: NetworkManager
-    state: started
-    enabled: yes
+- name: include distribution-specific common tasks
+  include: "{{ ansible_distribution }}.yaml"
 
 - name: reboot each system
   shell: sleep 2 && systemctl reboot
