@@ -1,0 +1,24 @@
+---
+# tasks file for openshift-node
+- name: install node-specific packages
+  yum:
+    name: "{{item}}"
+  with_items:
+    - docker
+
+- name: create docker-storage-setup file on node-specific
+  template:
+    src: ../templates/docker-storage-setup.j2
+    dest: /etc/sysconfig/docker-storage-setup
+    owner: root
+    group: root
+    mode: 0644
+
+- name: run docker-storage-setup on node
+  command: /usr/bin/docker-storage-setup
+
+- name: enable and start docker on node
+  service:
+    name: docker
+    state: started
+    enabled: yes

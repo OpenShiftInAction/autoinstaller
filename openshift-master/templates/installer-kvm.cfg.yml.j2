@@ -1,0 +1,51 @@
+ansible_callback_facts_yaml: /root/.config/openshift/.ansible/callback_facts.yaml
+ansible_inventory_path: .config/openshift/hosts
+ansible_log_path: /tmp/ansible.log
+deployment:
+  ansible_ssh_user: root
+  hosts:
+  {% for host in groups['openshift-masters'] %}
+  - connect_to: {{ hostvars[host]['ip'] }}
+    'hostname': {{ hostvars[host]['hostname'] }}
+    ip: {{ hostvars[host]['ip'] }}
+    public_hostname: {{ hostvars[host]['hostname'] }}
+    public_ip: {{ hostvars[host]['ip'] }}
+    roles:
+    - master
+    - etcd
+    - node
+    - storage
+  {% endfor %}
+  - connect_to: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
+    hostname: {{ hostvars[groups['openshift-nodes'][0]]['hostname']}}
+    ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
+    node_labels: '{''region'': ''infra''}'
+    public_hostname: {{ hostvars[groups['openshift-nodes'][0]]['hostname']}}
+    public_ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
+    roles:
+    - node
+  {% for host in groups['openshift-nodes'][1:] %}
+  - connect_to: {{ hostvars[host]['ip'] }}
+    hostname: {{ hostvars[host]['hostname'] }}
+    ip: {{ hostvars[host]['ip'] }}
+    public_hostname: {{ hostvars[host]['hostname'] }}
+    public_ip: {{ hostvars[host]['ip'] }}
+    roles:
+    - node
+  {% endfor %}
+  master_routingconfig_subdomain: {{ apps_domain }}
+  openshift_master_cluster_hostname: None
+  openshift_master_cluster_public_hostname: None
+  proxy_exclude_hosts: ''
+  proxy_http: ''
+  proxy_https: ''
+  roles:
+    etcd: {}
+    master:
+      openshift_disable_check: disk_availability,memory_availability,docker_storage
+    node:
+      openshift_disable_check: disk_availability,memory_availability,docker_storage
+    storage: {}
+variant: {{ openshift_type }}
+variant_version: '3.6'
+version: v2

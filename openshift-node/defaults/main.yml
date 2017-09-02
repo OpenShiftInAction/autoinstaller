@@ -1,0 +1,4 @@
+---
+# defaults file for openshift-node
+docker_dev: /dev/vdb
+docker_vg: docker_vg

@@ -1,0 +1,43 @@
+---
+# tasks file for openshift-master
+- name: install dev packages for pip on master
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - gcc
+    - python-devel
+    - httpd-tools
+
+- name: install pip on master
+  easy_install:
+    name: pip
+    state: latest
+
+- name: install the proper version of ansible on master
+  pip:
+    name: ansible
+    version: 2.2.2.0
+
+- name: copy authorized key to centos user
+  authorized_key:
+    user: centos
+    state: present
+    key: "{{ lookup('file', '/home/jduncan/.ssh/id_rsa.pub') }}"
+
+- name: copy private key to master
+  copy:
+    src: /home/jduncan/.ssh/id_rsa
+    dest: /root/.ssh/id_rsa
+    owner: root
+    group: root
+    mode: 0400
+
+- name: install config template
+  template:
+    src: ../templates/installer-{{ virt_type }}.cfg.yml.j2
+    dest: /root/installer.cfg.yml
+
+- name: deploy openshift
+  command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml
+  when: deploy_openshift
