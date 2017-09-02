@@ -42,5 +42,5 @@
     dest: /root/installer.cfg.yml
 
 - name: deploy openshift
-  command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install
+  command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install --force
   when: deploy_openshift
