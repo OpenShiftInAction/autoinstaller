@@ -2,6 +2,8 @@
 
 This collection of Ansible (www.ansible.com) roles and playbooks is designed to implement the same configuration for a system that is in Appendix A of _OpenShift in Action_.
 
+Currently, these are optimized for _OpenShift Origin 3.6_ and _CentOS 7.3.1611_. Future versions will handle RHEL and OpenShift Container Platform.
+
 ## Prerequisites
 
 * Ansible on a linux system (tested using Ansible 2.2.2.0)
