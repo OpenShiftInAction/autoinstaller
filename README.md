@@ -29,7 +29,7 @@ This role takes a Linux hypervisor and creates your cluster on top of it. It is 
 * ssh_key_pub - the public SSH key that corresponds to ssh_key
 * ssh_known_hosts_file - the location to add your node's ssh key fingerprints to. defaults to `/etc/ssh/ssh_known_hosts`.
 * kvm_disk_dir - the location to store your cluster's virtual disks. defaults to `/var/lib/libvirt/images`.
-* disk_image - the CentOS 7 or RHEL 7 qcow2 cloud image that will be used to create your virtual machines.
+* disk_image - the CentOS 7 or RHEL 7 qcow2 cloud image that will be used to create your virtual machines. This needs to be on the system you are launching the playbook from. It will be copied to your hypervisor.
 
 ## OpenShift Roles
 
