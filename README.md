@@ -23,7 +23,7 @@ This role takes a Linux hypervisor and creates your cluster on top of it. It is 
 
 ##### Required parameters
 
-* ssh_key - SSH key to use to configure on the virtual machines. For the KVM hypervisor role, this is a file on the system you're running the playbook on. F
+* ssh_key - SSH key to use to configure on the virtual machines. For the KVM hypervisor role, this is a file on the system you're running the playbook on.
 * ssh_key_pub - the public SSH key that corresponds to ssh_key
 * ssh_known_hosts_file - the location to add your node's ssh key fingerprints to. defaults to `/etc/ssh/ssh_known_hosts`.
 * kvm_disk_dir - the location to store your cluster's virtual disks. defaults to `/var/lib/libvirt/images`.
@@ -54,6 +54,8 @@ This role configures your OpenShift masters, and performs the actual OpenShift d
 * deploy_openshift - Defaults to `true`. If you set it to `false`, it will configure your systems, but not actually deploy OpenShift.
 * apps_domain: Wilcard domain to use for your application domain. Defaults to `apps.192.168.122.101.nip.io`.
 * openshift_type: Which deployment to create. Defaults to `origin`.
+* ssh_key - SSH key to use to perform the OpenShift deployment. It will be added to the root user's identity.
+* ssh_key_pub - the public SSH key that corresponds to ssh_key. This will hopefully be improved down the road.
 
 ## Inventory
 
