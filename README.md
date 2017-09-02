@@ -8,6 +8,7 @@ Currently, these are optimized for _OpenShift Origin 3.6_ and _CentOS 7.3.1611_.
 
 * Ansible on a linux system (tested using Ansible 2.2.2.0)
 * git, to clone this repository
+* A supported infrastructure platform, currently KVM.
 
 ## Required parameters
 
