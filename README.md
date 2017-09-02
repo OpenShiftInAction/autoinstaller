@@ -1,27 +1,27 @@
-= OpenShift in Action Autoinstaller
+# OpenShift in Action Autoinstaller
 
 This collection of Ansible (www.ansible.com) roles and playbooks is designed to implement the same configuration for a system that is in Appendix A of _OpenShift in Action_.
 
-== Prerequisites
+## Prerequisites
 
 * Ansible on a linux system (tested using Ansible 2.2.2.0)
 * git, to clone this repository
 
-== Required parameters
+## Required parameters
 
 There are several required, and more optional, parameters that you need to set to deploy OpenShift. They are outlined in the roles below. You need to create a variables file that customizes them to fit your needs and desires.
 
-== Roles
+## Roles
 
 This project contains two primary types of roles, intrastructure and OpenShift. The infrastructure roles are designed to build out infrastructure for your cluster on different platforms. OpenShift roles are designed to take those newly created instances and deploy OpenShift on top of them.
 
-=== Infrastructure Roles
+### Infrastructure Roles
 
-==== kvm-hypervisor
+#### kvm-hypervisor
 
 This role takes a Linux hypervisor and creates your cluster on top of it. It is tested on Fedora, and possibly on later ones down the road.
 
-===== Required parameters
+##### Required parameters
 
 * ssh_key - SSH key to use to configure on the virtual machines. For the KVM hypervisor role, this is a file on the system you're running the playbook on. F
 * ssh_key_pub - the public SSH key that corresponds to ssh_key
@@ -29,33 +29,33 @@ This role takes a Linux hypervisor and creates your cluster on top of it. It is 
 * kvm_disk_dir - the location to store your cluster's virtual disks. defaults to `/var/lib/libvirt/images`.
 * disk_image - the CentOS 7 or RHEL 7 qcow2 cloud image that will be used to create your virtual machines.
 
-=== OpenShift Roles
+## OpenShift Roles
 
-==== openshift-common
+#### openshift-common
 
 This role does the preperation steps common to both master and application nodes. There are no options required for this role.
 
-==== openshfit-node
+#### openshfit-node
 
 This role sets up your OpenShift nodes, including configuring docker and storage.
 
-===== Required parameters
+##### Required parameters
 
 * docker_dev - Block device to use for container storage. Defaults to `/dev/vdb`.
 * docker_vg - Volume group name to use for docker storage. Defaults to `docker_vg`.
 
-==== openshift-master
+#### openshift-master
 
 This role configures your OpenShift masters, and performs the actual OpenShift deployment.
 
-===== Required parameters
+##### Required parameters
 
 * virt_type - the virtualization type you're using. Defaults to `kvm`. This is used to make sure the installation inventory is created correctly for your platform.
 * deploy_openshift - Defaults to `true`. If you set it to `false`, it will configure your systems, but not actually deploy OpenShift.
 * apps_domain: Wilcard domain to use for your application domain. Defaults to `apps.192.168.122.101.nip.io`.
 * openshift_type: Which deployment to create. Defaults to `origin`.
 
-== Inventory
+## Inventory
 
 The default inventory file is:
 
@@ -78,9 +78,9 @@ The design is to create essentially as large a cluster as you desire. If you wan
 
 The `install-hosts` group is the system you're installing your cluster on. For KVM, it is your kvm host. For OpenStack, etc, it would be `localhost`.
 
-The node variables set by default are required for KVM to work properly. For other infrastructures, we'll document whether or not you need them. 
+The node variables set by default are required for KVM to work properly. For other infrastructures, we'll document whether or not you need them.
 
-== Installation and Deployment
+## Installation and Deployment
 
 Once you have your extra-vars.yaml file created, you can start the deployment process with the following command from the directory you cloned or downloaded the repository into:
 
