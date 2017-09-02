@@ -57,6 +57,9 @@ This role configures your OpenShift masters, and performs the actual OpenShift d
 * ssh_key - SSH key to use to perform the OpenShift deployment. It will be added to the root user's identity.
 * ssh_key_pub - the public SSH key that corresponds to ssh_key. This will hopefully be improved down the road.
 
+Note:
+If you're using KVM, you only have to set `ssh_key` and `ssh_key_pub` once in your variables file.
+
 ## Inventory
 
 The default inventory file is:
