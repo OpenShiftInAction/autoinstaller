@@ -26,7 +26,7 @@
   authorized_key:
     user: "{{ username }}"
     state: present
-    key: "{{ lookup('file', ssh_key_pub }}"
+    key: "{{ lookup('file', ssh_key_pub) }}"
 
 - name: copy private key to master
   copy:
