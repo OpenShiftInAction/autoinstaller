@@ -1,5 +1,3 @@
 ---
-# defaults file for openshift-installer
+# defaults file for openshift-common
 group: openshift
-docker_dev: /dev/vdb
-docker_vg: docker_vg
