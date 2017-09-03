@@ -1,0 +1,21 @@
+- hosts: openshift-masters
+  remote_user: centos
+  become: yes
+  roles:
+    - openshift-master
+
+  tasks:
+  - Create image-uploader project
+    command: oc new-project image-uploader --display-name='Image Uploader Project'
+
+  - Deploy app-cli
+    command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name=app-cli
+
+  - Create route for app-cli
+    command: oc expose svc/app-cli
+
+  - Deploy app-gui
+    command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name=app-gui
+
+  - Create route for app-gui
+    command: oc expose svc/app-gui
