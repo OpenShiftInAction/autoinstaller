@@ -1,8 +1,9 @@
+---
 - hosts: openshift-masters
   remote_user: centos
   become: yes
   roles:
-    - openshift-master
+  - openshift-master
 
   tasks:
   - Create image-uploader project
