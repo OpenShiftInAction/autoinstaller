@@ -7,7 +7,7 @@
   become: yes
   vars:
     project: image-uploader
-    project_desc: Image Uploader Project
+    project_desc: "Image Uploader Project"
     app_names:
     - app-cli
     - app-gui
