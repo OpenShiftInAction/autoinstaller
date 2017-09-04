@@ -6,6 +6,7 @@
   remote_user: centos
   become: yes
   vars:
+    install_directory: /root/autoinstaller
     nfs_server_host: 192.168.122.100
     nfs_export_dirs:
     - pv01
@@ -17,6 +18,6 @@
   tasks:
   - name: create PV templates
     template:
-      src: templates/pv.yaml.j2
+      src: pv.yaml.j2
       dest: /root/{{ item }}.yaml
     with_items: "{{ nfs_export_dirs }}"
