@@ -6,11 +6,11 @@
   remote_user: centos
   become: yes
   vars:
-    app-names:
-    - app-cli
-    - app-gui
     project: image-uploader
     project_desc: Image Uploader Project
+    app_names:
+    - app-cli
+    - app-gui
 
   tasks:
   - name: log in as dev user
@@ -21,8 +21,8 @@
 
   - name: Deploy applications
     command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name={{ item }}
-    with_items: "{{ app-names }}"
+    with_items: "{{ app_names }}"
 
   - name: Create routes for applications
     command: oc expose svc/{{ item }}
-    with_items: "{{ app-names }}"
+    with_items: "{{ app_names }}"
