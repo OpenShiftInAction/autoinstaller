@@ -36,6 +36,11 @@
     group: root
     mode: 0400
 
+- name: copy down autoinstaller repository
+  git:
+    repo: https://github.com/OpenShiftInAction/autoinstaller.git
+    dest: /root/autoinstaller
+
 - name: install config template
   template:
     src: ../templates/installer-{{ virt_type }}.cfg.yml.j2

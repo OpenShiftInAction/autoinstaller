@@ -108,5 +108,7 @@ These can be useful if you, like us, often break things through experimentation.
 To run a chapter playbook, be sure to reference the same inventory file:
 
 ```
-$ ansible-playbook -i inventory chapters/chapterX.yaml 
+$ ansible-playbook -i inventory chapters/chapterX.yaml
 ```
+
+The autointaller automatically pulls the repository down on to your master server in the `/root` directory. You may find it helpful here if you need to quickly get back up and running.
