@@ -26,7 +26,7 @@
     with_items: "{{ nfs_export_dirs }}"
 
   - name: create PVs
-    command: oc create -f {{ item }}.yaml
+    command: oc create -f /root/{{ item }}.yaml
     with_items: "{{ nfs_export_dirs }}"
 
   - name: create PVC templates
@@ -36,7 +36,7 @@
     with_items: "{{ app_names }}"
 
   - name: create PVCs
-    command: oc create -f pvc-{{ item }}.yaml
+    command: oc create -f /root/pvc-{{ item }}.yaml
     with_items: "{{ app_names }}"
 
   - name: add volumes to applications
