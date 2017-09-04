@@ -111,4 +111,8 @@ To run a chapter playbook, be sure to reference the same inventory file:
 $ ansible-playbook -i inventory chapters/chapterX.yaml
 ```
 
-The autointaller automatically pulls the repository down on to your master server in the `/root` directory. You may find it helpful here if you need to quickly get back up and running.
+The autointaller automatically pulls the repository down on to your master server in the `/root` directory. You may find it helpful there if you need to quickly get back up and running.
+
+## Contributing
+
+If you are an Ansible user and want to add general improvements, or especially addtional hypervisor platforms, PRs are _most definitely_ welcome!
