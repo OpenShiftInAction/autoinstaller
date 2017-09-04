@@ -32,7 +32,7 @@
   - name: create PVC templates
     template:
       src: pvc.yaml.j2
-      dest: pvc-{{ item }}.yaml
+      dest: /root/pvc-{{ item }}.yaml
     with_items: "{{ app_names }}"
 
   - name: create PVCs
