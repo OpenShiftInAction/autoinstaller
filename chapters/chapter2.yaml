@@ -7,6 +7,9 @@
   become: yes
 
   tasks:
+  - name: log in as dev user
+    command: oc login -u dev -p dev https://ocp1-192.168.122.100.nip.io:8443
+
   - name: Create image-uploader project
     command: oc new-project image-uploader --display-name='Image Uploader Project'
 
