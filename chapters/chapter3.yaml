@@ -40,5 +40,5 @@
     with_items: "{{ app_names }}"
 
   - name: add volumes to applications
-    command: oc volume add dc/{{ item }} --add --type=persistentVolumeClaim --claim-name={{ item }} --mount-path=/opt/app-root/src/uploads
+    command: oc volume dc/{{ item }} --add --type=persistentVolumeClaim --claim-name={{ item }} --mount-path=/opt/app-root/src/uploads
     with_items: "{{ app_names }}"
