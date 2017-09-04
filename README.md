@@ -33,7 +33,7 @@ This role takes a Linux hypervisor and creates your cluster on top of it. It is 
 * disk_image - the CentOS 7 or RHEL 7 qcow2 cloud image that will be used to create your virtual machines. This needs to be on the system you are launching the playbook from. It will be copied to your hypervisor.
 * data_disk_size - Size, in GB, for the data disk. On the nodes, this is used for docker storage. On the masters, this is used for NFS volumes. Defaults to `20` (20GB)
 
-## OpenShift Roles
+### OpenShift Roles
 
 #### openshift-common
 
