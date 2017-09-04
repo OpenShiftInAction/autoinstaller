@@ -26,7 +26,7 @@
     with_items: "{{ nfs_export_dirs }}"
 
   - name: log in as system:admin
-    command: oc login system:admin
+    command: oc login system:admin https://192.168.122.100:8443
 
   - name: create PVs
     command: oc create -f /root/{{ item }}.yaml
