@@ -6,8 +6,6 @@
   remote_user: centos
   become: yes
   vars:
-    project: image-uploader
-    project_desc: 'Image Uploader Project'
     app_names:
     - app-cli
     - app-gui
@@ -17,7 +15,7 @@
     command: oc login -u dev -p dev https://ocp1.192.168.122.100.nip.io:8443
 
   - name: Create image-uploader project
-    command: oc new-project {{ project }} --display-name={{ project_desc }}
+    command: oc new-project image-uploader --display-name="Image Uploader Project"
 
   - name: Deploy applications
     command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name={{ item }}
