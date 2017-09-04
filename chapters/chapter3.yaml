@@ -14,6 +14,9 @@
     - pv03
     - pv04
     - pv05
+    app_names:
+    - app-cli
+    - app-gui
 
   tasks:
   - name: create PV templates
@@ -21,3 +24,20 @@
       src: pv.yaml.j2
       dest: /root/{{ item }}.yaml
     with_items: "{{ nfs_export_dirs }}"
+
+  - name: create PVs
+    command: oc create -f {{ item }}.yaml
+    with_items: "{{ nfs_export_dirs }}"
+
+  - name: create PVC templates
+    template:
+      src: pvc.yaml.j2
+      dest: pvc-{{ item }}.yaml
+    with_items: "{{ app_names }}"
+
+  - name: create PVCs
+    command: oc create -f pvc-{{ item }}.yaml
+    with_items: "{{ app_names }}"
+
+  - name: add volumes to applications
+    command: oc volume add dc/{{ item }} --add --type=persistentVolumeClaim --claim-name={{ item }} --mount-path=/opt/app-root/src/uploads
