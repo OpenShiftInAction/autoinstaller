@@ -7,7 +7,7 @@ spec:
     storage: 2Gi
   accessModes:
   - ReadWriteMany
-nfs:
-  path: /var/nfs-data/{{ item }}
-  server: {{ nfs_server_host }}
-persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /var/nfs-data/{{ item }}
+    server: {{ nfs_server_host }}
+  persistentVolumeReclaimPolicy: Recycle
