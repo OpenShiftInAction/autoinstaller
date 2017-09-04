@@ -98,3 +98,15 @@ $ ansible-playbook -i inventory -e @/path/to/extra-vars.yaml site.yaml
 ```
 
 Depending on your internet connection speed, and how many nodes you decide to build out, the entire processs could take 30-60 minutes.
+
+## Chapters
+
+Inside the chapters directory, there are smaller playbooks and templates to quickly perform the tasks for each book chapter that are used to build on top of each other to configure your environment.
+
+These can be useful if you, like us, often break things through experimentation. They aren't a substitute for the additional knowledge in each chapter, but are great if you need to quickly get up and running after a failed 'experiment'.
+
+To run a chapter playbook, be sure to reference the same inventory file:
+
+```
+$ ansible-playbook -i inventory chapters/chapterX.yaml 
+```
