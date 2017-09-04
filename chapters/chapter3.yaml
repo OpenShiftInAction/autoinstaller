@@ -25,6 +25,9 @@
       dest: /root/{{ item }}.yaml
     with_items: "{{ nfs_export_dirs }}"
 
+  - name: log in as system:admin
+    command: oc login system:admin
+
   - name: create PVs
     command: oc create -f /root/{{ item }}.yaml
     with_items: "{{ nfs_export_dirs }}"
