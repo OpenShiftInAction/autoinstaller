@@ -1,0 +1,35 @@
+---
+# Appendix B automation playbook
+# Be sure to reference the inventory file for your cluster.
+
+- hosts: openshift-masters
+  remote_user: centos
+  become: yes
+  vars:
+    nfs_server_host: 192.168.122.100
+    nfs_export_dirs:
+    - pv01
+    - pv02
+    - pv03
+    - pv04
+    - pv05
+
+  tasks:
+  - name: create PV templates
+    blockinfile:
+      name: /root/{{ item }}.yaml
+      block: |
+      apiVersion: v1
+      kind: PersistentVolume
+      metadata:
+        name: {{ item }}
+      spec:
+        capacity:
+          storage: 2Gi
+        accessModes:
+        - ReadWriteMany
+      nfs:
+        path: /var/nfs-data/{{ item }}
+        server: {{ nfs_server_host }}
+      persistentVolumeReclaimPolicy: Recycle
+    with_items: "{{ nfs_export_dirs }}"

@@ -1,22 +1,23 @@
 ---
+# Chapter 2 exercise automation
+# Be sure to reference the inventory file for your cluster.
+
 - hosts: openshift-masters
   remote_user: centos
   become: yes
-  roles:
-  - openshift-master
 
   tasks:
-  - Create image-uploader project
+  - name: Create image-uploader project
     command: oc new-project image-uploader --display-name='Image Uploader Project'
 
-  - Deploy app-cli
+  - name: Deploy app-cli
     command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name=app-cli
 
-  - Create route for app-cli
+  - name: Create route for app-cli
     command: oc expose svc/app-cli
 
-  - Deploy app-gui
+  - name: Deploy app-gui
     command: oc new-app --image-stream=php --code=https://github.com/OpenShiftInAction/image-uploader.git --name=app-gui
 
-  - Create route for app-gui
+  - name: Create route for app-gui
     command: oc expose svc/app-gui

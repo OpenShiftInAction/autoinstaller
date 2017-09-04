@@ -1,0 +1,82 @@
+---
+# Appendix B automation playbook
+# Be sure to reference the inventory file for your cluster.
+
+- hosts: openshift-masters
+  remote_user: centos
+  become: yes
+  vars:
+    nfs_disk: /dev/vdb
+    nfs_mountpoint: /var/nfs-data
+    nfs_export_dirs:
+    - pv01
+    - pv02
+    - pv03
+    - pv04
+    - pv05
+
+  tasks:
+  - name: ensure nfs-utils is installed
+    yum:
+      name: nfs-utils
+      state: present
+
+  - name: create filesystem for NFS volumes
+    filesystem:
+      fstype: ext4
+      dev: "{{ nfs_disk }}"
+
+  - name: create NFS mountpoint
+    file:
+      name: "{{ nfs_mountpoint }}"
+      state: directory
+      mode: 0770
+      owner: nfsnobody
+      group: nfsnobody
+
+  - name: configure NFS filesystem to mount at boot
+    mount:
+      src: "{{ nfs_disk }}"
+      name: "{{ nfs_mountpoint }}"
+      fstype: ext4
+      state: mounted
+
+  - name: create NFS export directories
+    file:
+      path: "{{ nfs_mountpoint }}/{{ item }}"
+      state: directory
+      mode: 0770
+      owner: nfsnobody
+      group: nfsnobody
+    with_items: "{{ nfs_export_dirs }}"
+
+
+  - name: set NFS iptables rules
+    iptables:
+      chain: INPUT
+      protocol: tcp
+      destination_port: 2049
+      jump: ACCEPT
+
+  - name: add exports to /etc/exports
+    lineinfile:
+      dest: /etc/exports
+      line: "{{ nfs_mountpoint }}/{{ item }} *(rw,root_squash)"
+    with_items: "{{ nfs_export_dirs }}"
+
+  - name: enable and restart NFS services
+    service:
+      name: "{{ item }}"
+      state: restarted
+      enabled: yes
+    with_items:
+      - rpcbind
+      - nfs-server
+      - nfs-lock
+      - nfs-idmap
+
+  - name: confirm your nfs volumes are exported
+    command: exportfs
+    register: exportfs
+
+  - debug: var=exportfs.stdout_lines
