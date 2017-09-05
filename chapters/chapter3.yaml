@@ -1,5 +1,5 @@
 ---
-# Appendix B automation playbook
+# Chapter 3 automation playbook
 # Be sure to reference the inventory file for your cluster.
 
 - hosts: openshift-masters
