@@ -10,6 +10,7 @@ Currently, these are optimized for _OpenShift Origin 3.6_ and _CentOS 7.3.1611_.
 * git, to clone this repository
 * A supported infrastructure platform, currently KVM.
 
+
 ## Required parameters
 
 There are several required, and more optional, parameters that you need to set to deploy OpenShift. They are outlined in the roles below. You need to create a variables file that customizes them to fit your needs and desires.
