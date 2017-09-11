@@ -27,17 +27,17 @@
   - name: add htpasswd provider name
     lineinfile:
       name: "{{ master_config_file }}"
-      line: "  -name: htpasswd_provider"
+      line: "    -name: htpasswd_provider"
       regexp: 'name: allow_all'
 
   - name: edit provider type
     lineinfile:
       name: "{{ master_config_file }}"
-      line: "    kind: HTPasswdPasswordIdentityProvider"
+      line: "      kind: HTPasswdPasswordIdentityProvider"
       regexp: 'AllowAllPasswordIdentityProvider'
 
   - name: add reference to htpasswd file
     lineinfile:
       name: "{{ master_config_file }}"
-      line: "    file: {{ htpasswd_file }}"
+      line: "      file: {{ htpasswd_file }}"
       insertafter: "    kind: HTPasswdPasswordIdentityProvider"
