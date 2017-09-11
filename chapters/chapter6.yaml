@@ -27,7 +27,7 @@
   - name: add htpasswd provider name
     lineinfile:
       name: "{{ master_config_file }}"
-      line: "    -name: htpasswd_provider"
+      line: "    name: htpasswd_provider"
       regexp: 'name: allow_all'
 
   - name: edit provider type
