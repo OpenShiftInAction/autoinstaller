@@ -6,13 +6,14 @@
   remote_user: centos
   become: yes
   vars:
+    server: https://ocp1.192.168.122.100.nip.io:8443
     app_names:
     - app-cli
     - app-gui
 
   tasks:
   - name: log in as the dev user
-    command: oc login -u dev -p dev https://192.168.122.100:8443
+    command: oc login -u dev -p dev {{ server }}
 
   - name: set liveness probe for app-cli
     command: oc set probe dc/app-cli --liveness --get-url=http://:8080 --initial-delay-seconds=5 --timeout-seconds=1
