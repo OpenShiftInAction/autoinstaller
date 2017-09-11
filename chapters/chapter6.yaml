@@ -29,13 +29,14 @@
       dest: "{{ master_config_file }}"
       state: absent
       block: |2
-          - challenge: true
+        - challenge: true
           login: true
           mappingMethod: claim
           name: allow_all
           provider:
             apiVersion: v1
             kind: AllowAllPasswordIdentityProvider
+
 
   - name: add htpasswd provider
     blockinfile:
