@@ -25,6 +25,7 @@
 
   - name: add
     blockinfile:
+      dest: "{{ htpasswd_file }}"
       insertafter: "identityProviders:"
       block: |
         - name: my_htpasswd_provider 1
