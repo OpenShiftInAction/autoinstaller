@@ -24,10 +24,9 @@
       mode: 0640
     with_items: "{{ openshift_users }}"
 
-  - name: remove allow_all provider
+  - name: mark allow_all provider
     blockinfile:
       dest: "{{ master_config_file }}"
-      state: present
       marker: "# to_be_removed"
       insertafter: "identityProviders:"
       block: |2
@@ -38,6 +37,12 @@
             provider:
               apiVersion: v1
               kind: AllowAllPasswordIdentityProvider
+
+  - name: remove allow_all provider
+    blockinfile:
+      dest: "{{ master_config_file }}"
+      marker: "# to_be_removed"
+      state: absent
 
   - name: add htpasswd provider
     blockinfile:
