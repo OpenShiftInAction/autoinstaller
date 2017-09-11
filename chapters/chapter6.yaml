@@ -41,3 +41,8 @@
       name: "{{ master_config_file }}"
       line: "      file: {{ htpasswd_file }}"
       insertafter: "    kind: HTPasswdPasswordIdentityProvider"
+
+  - name: restart master service
+    service:
+      name: origin-master
+      state: restarted
