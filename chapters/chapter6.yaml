@@ -17,6 +17,9 @@
     - core-resource-limits.yaml
     - compute-resources.yaml
     - core-object-counts.yaml
+    apps:
+    - app-cli
+    - app-gui
 
   tasks:
   - name: create users in htpasswd database
@@ -85,3 +88,7 @@
   - name: create limit ranges and quotas
     command: oc create -f /root/{{ item }} -n image-uploader
     with_items: "{{ template_files }}"
+
+  - name: force restart of pods to count against quotas
+    command: oc delete pod -l app={{ item }}
+    with_items: "{{ apps }}"
