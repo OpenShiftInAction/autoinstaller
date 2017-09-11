@@ -28,7 +28,7 @@
     lineinfile:
       name: "{{ master_config_file }}"
       line: "  -name: htpasswd_provider"
-      insertafter: "identityProviders"
+      regexp: 'name: allow_all'
 
   - name: edit provider type
     lineinfile:
