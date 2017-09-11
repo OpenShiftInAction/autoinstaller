@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-  name: core-object-counts 1
+  name: core-object-counts
 spec:
   hard:
-    configmaps: "10" 
+    configmaps: "10"
     persistentvolumeclaims: "5"
     resourcequotas: "5"
     replicationcontrollers: "20"
