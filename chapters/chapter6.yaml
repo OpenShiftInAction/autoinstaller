@@ -24,36 +24,20 @@
       mode: 0640
     with_items: "{{ openshift_users }}"
 
-  - name: mark allow_all provider
-    blockinfile:
-      dest: "{{ master_config_file }}"
-      marker: "# to_be_removed"
-      insertafter: "identityProviders:"
-      block: |2
-          - challenge: true
-            login: true
-            mappingMethod: claim
-            name: allow_all
-            provider:
-              apiVersion: v1
-              kind: AllowAllPasswordIdentityProvider
+  - name: add htpasswd provider name
+    lineinfile:
+      name: "{{ master_config_file }}"
+      line: "  -name: htpasswd_provider"
+      insertafter: "identityProviders"
 
-  - name: remove allow_all provider
-    blockinfile:
-      dest: "{{ master_config_file }}"
-      marker: "# to_be_removed"
-      state: absent
+  - name: edit provider type
+    lineinfile:
+      name: "{{ master_config_file }}"
+      line: "    kind: HTPasswdPasswordIdentityProvider"
+      regexp: 'AllowAllPasswordIdentityProvider'
 
-  - name: add htpasswd provider
-    blockinfile:
-      dest: "{{ master_config_file }}"
-      insertafter: "identityProviders:"
-      block: |2
-          - name: my_htpasswd_provider
-            challenge: true
-            login: true
-            mappingMethod: claim
-            provider:
-              apiVersion: v1
-              kind: HTPasswdPasswordIdentityProvider
-              file: {{ htpasswd_file }}
+  - name: add reference to htpasswd file
+    lineinfile:
+      name: "{{ master_config_file }}"
+      line: "    file: {{ htpasswd_file }}"
+      insertafter: "    kind: HTPasswdPasswordIdentityProvider"
