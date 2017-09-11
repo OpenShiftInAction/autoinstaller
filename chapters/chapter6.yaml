@@ -37,7 +37,7 @@
             apiVersion: v1
             kind: AllowAllPasswordIdentityProvider
 
-  - name: add
+  - name: add htpasswd provider
     blockinfile:
       dest: "{{ master_config_file }}"
       insertafter: "identityProviders:"
