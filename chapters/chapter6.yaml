@@ -1,0 +1,37 @@
+---
+# Chapter 6 automation playbook
+# Be sure to reference the inventory file for your cluster.
+
+- hosts: openshift-masters
+  remote_user: centos
+  become: yes
+  htpasswd_file: /etc/origin/master/openshift.htpasswd
+  vars:
+    openshift_users:
+    - developer
+    - project-admin
+    - admin
+
+  tasks:
+  - name: create users in htpasswd database
+    htpasswd:
+      path: "{{ htpasswd_file }}"
+      name: "{{ item }}"
+      password: "{{ item }}"
+      owner: root
+      group: root
+      mode: 0640
+    with_items: "{{ openshift_users }}"
+
+  - name: add
+    blockinfile:
+      insertafter: "identityProviders:"
+      block: |
+        - name: my_htpasswd_provider 1
+          challenge: true
+          login: true
+          mappingMethod: claim
+          provider:
+            apiVersion: v1
+            kind: HTPasswdPasswordIdentityProvider 2
+            file: {{ htpasswd_file }}
