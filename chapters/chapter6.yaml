@@ -27,7 +27,8 @@
   - name: remove allow_all provider
     blockinfile:
       dest: "{{ master_config_file }}"
-      state: absent
+      state: present
+      marker: # To be removed 
       block: |2
         - challenge: true
           login: true
