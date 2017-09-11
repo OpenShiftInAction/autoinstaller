@@ -5,8 +5,8 @@
 - hosts: openshift-masters
   remote_user: centos
   become: yes
-  htpasswd_file: /etc/origin/master/openshift.htpasswd
   vars:
+    htpasswd_file: /etc/origin/master/openshift.htpasswd
     openshift_users:
     - developer
     - project-admin
