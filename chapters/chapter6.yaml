@@ -47,41 +47,41 @@
       line: "      file: {{ htpasswd_file }}"
       insertafter: "    kind: HTPasswdPasswordIdentityProvider"
 
-  # - name: restart master service
-  #   service:
-  #     name: origin-master
-  #     state: restarted
-  #
-  # - name: log in as system:admin user
-  #   command: oc login -u system:admin {{ server }}
-  #
-  # - name: add edit role for image-uploader to developer user
-  #   command: oadm policy -n image-uploader add-role-to-user edit developer
-  #
-  # - name: add admin role for image-uploader to project-admin user
-  #   command: oadm policy -n image-uploader add-role-to-user admin project-admin
-  #
-  # - name: add cluster-admin role to admin user
-  #   command: oadm policy add-cluster-role-to-user cluster-admin admin
-  #
-  # - name: add image-uploader edit role to all authenticated users
-  #   command: oadm policy add-role-to-group edit -n image-uploader system:authenticated
-  #
-  # - name: create user1 in htpasswd database to test new edit role
-  #   htpasswd:
-  #     path: "{{ htpasswd_file }}"
-  #     name: user1
-  #     password: user1
-  #     owner: root
-  #     group: root
-  #     mode: 0640
-  #
-  # - name: copy over yaml templats for limit ranges and quotas
-  #   template:
-  #     src: "{{ item }}"
-  #     dest: /root/{{ item }}
-  #   with_items: "{{ template_files }}"
-  #
-  # - name: create limit ranges and quotas
-  #   command: oc create -f /root/{{ item }} -n image-uploader
-  #   with_items: "{{ template_files }}"
+  - name: restart master service
+    service:
+      name: origin-master
+      state: restarted
+
+  - name: log in as system:admin user
+    command: oc login -u system:admin {{ server }}
+
+  - name: add edit role for image-uploader to developer user
+    command: oadm policy -n image-uploader add-role-to-user edit developer
+
+  - name: add admin role for image-uploader to project-admin user
+    command: oadm policy -n image-uploader add-role-to-user admin project-admin
+
+  - name: add cluster-admin role to admin user
+    command: oadm policy add-cluster-role-to-user cluster-admin admin
+
+  - name: add image-uploader edit role to all authenticated users
+    command: oadm policy add-role-to-group edit -n image-uploader system:authenticated
+
+  - name: create user1 in htpasswd database to test new edit role
+    htpasswd:
+      path: "{{ htpasswd_file }}"
+      name: user1
+      password: user1
+      owner: root
+      group: root
+      mode: 0640
+
+  - name: copy over yaml templats for limit ranges and quotas
+    template:
+      src: "{{ item }}"
+      dest: /root/{{ item }}
+    with_items: "{{ template_files }}"
+
+  - name: create limit ranges and quotas
+    command: oc create -f /root/{{ item }} -n image-uploader
+    with_items: "{{ template_files }}"
