@@ -93,7 +93,5 @@
     command: oc delete pod -l app={{ item }}
     with_items: "{{ apps }}"
 
-  - name: copy over app-cli resources template
-    template:
-      name: app-cli-resources.yaml
-      dest: /root/app-cli-resources.yaml
+  - name: edit app-cli resources
+    command: oc set resources dc/app-cli --requests=cpu=750m,memory=500Mi --limits=cpu=1,memory=1000Mi
