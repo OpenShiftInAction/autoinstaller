@@ -31,24 +31,24 @@
       marker: "# to_be_removed"
       insertafter: "identityProviders:"
       block: |2
-        - challenge: true
-          login: true
-          mappingMethod: claim
-          name: allow_all
-          provider:
-            apiVersion: v1
-            kind: AllowAllPasswordIdentityProvider
+          - challenge: true
+            login: true
+            mappingMethod: claim
+            name: allow_all
+            provider:
+              apiVersion: v1
+              kind: AllowAllPasswordIdentityProvider
 
   - name: add htpasswd provider
     blockinfile:
       dest: "{{ master_config_file }}"
       insertafter: "identityProviders:"
       block: |2
-        - name: my_htpasswd_provider
-          challenge: true
-          login: true
-          mappingMethod: claim
-          provider:
-            apiVersion: v1
-            kind: HTPasswdPasswordIdentityProvider
-            file: {{ htpasswd_file }}
+          - name: my_htpasswd_provider
+            challenge: true
+            login: true
+            mappingMethod: claim
+            provider:
+              apiVersion: v1
+              kind: HTPasswdPasswordIdentityProvider
+              file: {{ htpasswd_file }}
