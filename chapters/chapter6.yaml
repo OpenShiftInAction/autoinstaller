@@ -42,11 +42,11 @@
       dest: "{{ master_config_file }}"
       insertafter: "identityProviders:"
       block: |2
-          - name: my_htpasswd_provider
-            challenge: true
-            login: true
-            mappingMethod: claim
-            provider:
-              apiVersion: v1
-              kind: HTPasswdPasswordIdentityProvider
-              file: {{ htpasswd_file }}
+        - name: my_htpasswd_provider
+          challenge: true
+          login: true
+          mappingMethod: claim
+          provider:
+            apiVersion: v1
+            kind: HTPasswdPasswordIdentityProvider
+            file: {{ htpasswd_file }}
