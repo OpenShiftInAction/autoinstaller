@@ -28,7 +28,8 @@
     blockinfile:
       dest: "{{ master_config_file }}"
       state: present
-      marker: # To be removed 
+      marker: # To be removed
+      insertafter: "identityProviders:"
       block: |2
         - challenge: true
           login: true
