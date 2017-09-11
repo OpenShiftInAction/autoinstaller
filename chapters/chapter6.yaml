@@ -41,7 +41,7 @@
     blockinfile:
       dest: "{{ master_config_file }}"
       insertafter: "identityProviders:"
-      block: |
+      block: |2
           - name: my_htpasswd_provider 1
             challenge: true
             login: true
