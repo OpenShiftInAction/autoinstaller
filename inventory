@@ -6,7 +6,7 @@ openshift-masters
 openshift-nodes
 
 [openshift-masters]
-ocp1 ip=192.168.122.100 vcpus=2 ram=4096 mac=00:1c:c4:00:00:14 hostname=ocp1.192.168.122.100.nip.io
+ocp1 ip=192.168.122.100 vcpus=2 ram=4096 mac=00:1c:c4:00:00:14 role=master hostname=ocp1.192.168.122.100.nip.io
 
 [openshift-nodes]
-ocp2 ip=192.168.122.101 vcpus=2 ram=4096 mac=00:1c:c4:00:00:15 hostname=ocp2.192.168.122.101.nip.io
+ocp2 ip=192.168.122.101 vcpus=2 ram=4096 mac=00:1c:c4:00:00:15 role=node hostname=ocp2.192.168.122.101.nip.io
