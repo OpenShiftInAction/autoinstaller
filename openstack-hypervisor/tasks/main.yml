@@ -60,4 +60,4 @@
     name: "{{ external_network.router_name }}"
     network: "{{ external_network.name }}"
     interfaces:
-      - "{{ private_network.name }}"
+      - "{{ private_network.subnet_name }}"
