@@ -21,6 +21,7 @@
   include: os_networking.yml
   when: set_up_network
 
+# This requires more privileges than a regular user. If you don't have auth credentials, then you can have this created ahead of time and set `create_flavor` to false to bypass this step.
 - name: create openshift-specific flavor
   os_nova_flavor:
     auth:

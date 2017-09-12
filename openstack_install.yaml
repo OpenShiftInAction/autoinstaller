@@ -4,20 +4,20 @@
   roles:
     - openstack-hypervisor
 
-# - hosts: openshift
-#   remote_user: centos
-#   become: yes
-#   roles:
-#     - openshift-common
-#
-# - hosts: openshift-nodes
-#   remote_user: centos
-#   become: yes
-#   roles:
-#     - openshift-node
-#
-# - hosts: openshift-masters
-#   remote_user: centos
-#   become: yes
-#   roles:
-#     - openshift-master
+- hosts: openshift
+  remote_user: centos
+  become: yes
+  roles:
+    - openshift-common
+
+- hosts: openshift-nodes
+  remote_user: centos
+  become: yes
+  roles:
+    - openshift-node
+
+- hosts: openshift-masters
+  remote_user: centos
+  become: yes
+  roles:
+    - openshift-master

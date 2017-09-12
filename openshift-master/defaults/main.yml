@@ -1,6 +1,6 @@
 ---
 # defaults file for openshift-master
-virt_type: kvm
+virt_type: openstack
 deploy_openshift: true
 apps_domain: apps.192.168.122.101.nip.io
 openshift_type: origin
