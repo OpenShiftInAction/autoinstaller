@@ -34,6 +34,7 @@
     vcpus: "{{ flavor.vcpus }}"
     disk: "{{ flavor.disk }}"
     ephemeral: "{{ flavor.ephemeral }}"
+  when: create_flavor
 
 - name: create openshift nodes
   os_server:
