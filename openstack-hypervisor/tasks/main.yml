@@ -1,0 +1,23 @@
+---
+# tasks file for openstack-hypervisor
+# This creates all of the resources needed to build out an entire OCP instance on openstack-hypervisor
+# including the networking, ssh-keys, etc.
+- name: ensure module dependencies are installed
+  become: yes
+  pip:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - shade
+  - futures
+  - jmespath
+
+- name: ensure keypair is created in OpenStack
+  os_keypair:
+    auth:
+      auth_url: http://rhshadowbox.hopto.org:35357/v2.0/
+      username: jduncan
+      password: T3@mst3r
+      project_name: jduncan
+    name: "{{ ssh_key_name }}"
+    public_key_file: "{{ ssh_key_file }}"
