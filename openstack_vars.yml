@@ -9,10 +9,16 @@ ssh_key:
   file_private: /root/.ssh/jduncan
   file_public: /root/.ssh/jduncan.pub
 
+# for right now, to make the initial version easier, the floating
+# IPs need to be pre-allocated into the project.
 external_network:
   name: public
   router_name: router1
   subnet_cidr: 192.168.0.0/23
+  floating_ips:
+    - 192.168.1.84
+    - 192.168.1.87
+    - 192.168.1.88
 
 private_network:
   name: openshift_int
@@ -22,8 +28,9 @@ private_network:
     - 8.8.8.8
     - 8.8.4.4
 
-guest_image:
-  id: 556f8523-3af3-4980-9d94-3a7d414b96aa
+instance:
+  image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
+  flavor: m1.xlarge
 
 security_group:
   name: openshift
@@ -38,4 +45,9 @@ security_group:
       protocol: tcp
       port_range_min: 8443
       port_range_max: 8443
+      remote_ip_prefix: "{{ external_network.subnet_cidr }}"
+    allow_22_public:
+      protocol: tcp
+      port_range_min: 22
+      port_range_max: 22
       remote_ip_prefix: "{{ external_network.subnet_cidr }}"

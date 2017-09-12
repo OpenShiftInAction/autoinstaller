@@ -87,3 +87,19 @@
     network: "{{ external_network.name }}"
     interfaces:
       - "{{ private_network.subnet_name }}"
+
+- name: create openshift master node
+  os_server:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    flavor: "{{ instance.flavor }}"
+    image: "{{ instance.image_id }}"
+    key_name: "{{ ssh_key.name }}"
+    name: "{{ hostvars.item.inventory_hostname }}"
+    auto_ip: yes
+    security_groups: "{{ secruity_group.name }}"
+  with_items: "{{ groups['openshift'] }}"
