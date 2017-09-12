@@ -106,3 +106,16 @@
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
   with_items: "{{ groups['openshift'] }}"
+
+- name: gather openstack facts
+  os_server_facts:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    server: ocp*
+
+- name: debug openstack facts
+  debug:
+    var: openstack_servers
