@@ -33,10 +33,10 @@
       project_name: "{{ auth_creds.project }}"
     security_group: "{{ security_group.name }}"
     protocol: "{{ item.protocol }}"
-    port_range_min: "{{ item.port_range_min }}"
-    port_range_max: "{{ item.port_range_max }}"
-    remote_ip_prefix: "{{ item.remote_ip_prefix }}"
-  with_items: "{{ security_group.rules }}"
+    port_range_min: "{{ item.value.port_range_min }}"
+    port_range_max: "{{ item.value.port_range_max }}"
+    remote_ip_prefix: "{{ item.value.remote_ip_prefix }}"
+  with_dict: "{{ security_group.rules }}"
 
 - name: ensure keypair is created in OpenStack
   os_keypair:
