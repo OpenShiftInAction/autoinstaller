@@ -25,27 +25,15 @@
   os_nova_flavor:
     auth:
       auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
+      username: "{{ auth_creds.admin.username }}"
+      password: "{{ auth_creds.admin.password }}"
+      project_name: "{{ auth_creds.admin.project }}"
     state: present
     name: "{{ flavor.name }}"
     ram: "{{ flavor.ram }}"
     vcpus: "{{ flavor.vcpus }}"
     disk: "{{ flavor.disk }}"
     ephemeral: "{{ flavor.ephemeral }}"
-
-- name: create cinder volumes for data
-  os_volume:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    state: present
-    size: "{{ data_disk_size }}"
-    display_name: "{{ hostvars[item]['inventory_hostname'] }}"
-  with_items: "{{ groups['openshift'] }}"
 
 - name: create openshift nodes
   os_server:
