@@ -3,6 +3,16 @@ auth_creds:
   username: jduncan
   password: redhat
   project: jduncan
-ssh_key_name: jduncan_key
-ssh_key_file_private: /root/.ssh/jduncan
-ssh_key_file: /root/.ssh/jduncan.pub
+
+ssh_key:
+  name: jduncan_key
+  file_private: /root/.ssh/jduncan
+  file_public: /root/.ssh/jduncan.pub
+
+private_network:
+  name: openshift_int
+  subnet_cidr: 192.168.77.0/24
+  subnet_name: openshift_subnet
+  subnet_dns:
+    - 8.8.8.8
+    - 8.8.4.4
