@@ -4,4 +4,5 @@ auth_creds:
   password: redhat
   project: jduncan
 ssh_key_name: jduncan_key
+ssh_key_file_private: /root/.ssh/jduncan
 ssh_key_file: /root/.ssh/jduncan.pub
