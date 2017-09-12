@@ -99,7 +99,7 @@
     flavor: "{{ instance.flavor }}"
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
-    name: "{{ hostvars.item.inventory_hostname }}"
+    name: "{{ hostvars.item.'inventory_hostname' }}"
     auto_ip: yes
     security_groups: "{{ secruity_group.name }}"
   with_items: "{{ groups['openshift'] }}"
