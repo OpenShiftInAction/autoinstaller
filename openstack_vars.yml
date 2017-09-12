@@ -12,6 +12,7 @@ ssh_key:
 external_network:
   name: public
   router_name: router1
+  subnet_cidr: 192.168.0.0/23
 
 private_network:
   name: openshift_int
@@ -20,3 +21,29 @@ private_network:
   subnet_dns:
     - 8.8.8.8
     - 8.8.4.4
+
+guest_image:
+  id: 556f8523-3af3-4980-9d94-3a7d414b96aa
+
+security_group:
+  name: openshift
+  desc: OpenShift security group
+  rules:
+    allow_all_internal:
+      protocol: tcp
+      port_range_min: -1
+      port_range_max: -1
+      remote_ip_prefix: "{{ private_network.subnet_cidr }}"
+      direction: ingress
+    allow_8443_public:
+      protocol: tcp
+      port_range_min: 8443
+      port_range_max: 8443
+      remote_ip_prefix: "{{ external_network.subnet_cidr }}"
+      direction: ingress
+    all_all_egress:
+      protocol: tcp
+      port_range_min: -1
+      port_range_max: -1
+      remote_ip_prefix: 0.0.0.0/0
+      direction: egress 

@@ -2,6 +2,7 @@
 # tasks file for openstack-hypervisor
 # This creates all of the resources needed to build out an entire OCP instance on openstack-hypervisor
 # including the networking, ssh-keys, etc.
+
 - name: ensure module dependencies are installed
   become: yes
   pip:
@@ -11,6 +12,31 @@
   - shade
   - futures
   - jmespath
+
+- name: create security group for OpenShift
+  os_security_group:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    name: "{{ security_group.name }}"
+    description: "{{ security_group.desc }}"
+    state: present
+
+- name: add rules to security group
+  os_security_group_rule:
+      auth:
+        auth_url: "{{ auth_creds.url }}"
+        username: "{{ auth_creds.username }}"
+        password: "{{ auth_creds.password }}"
+        project_name: "{{ auth_creds.project }}"
+      security_group: "{{ security_group.name }}"
+      protocol: "{{ item.protocol }}"
+      port_range_min: "{{ item.port_range_min }}"
+      port_range_max: "{{ item.port_range_max }}"
+      remote_ip_prefix: "{{ item.remote_ip_prefix }}"
+    with_items: "{{ security_group.rules }}"
 
 - name: ensure keypair is created in OpenStack
   os_keypair:
