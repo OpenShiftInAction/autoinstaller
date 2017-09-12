@@ -15,9 +15,9 @@
 - name: ensure keypair is created in OpenStack
   os_keypair:
     auth:
-      auth_url: {{ auth_creds.url }}
-      username: {{ auth_creds.username }}
-      password: {{ auth_creds.password }}
-      project_name: {{ auth_creds.project }}
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
     name: "{{ ssh_key_name }}"
     public_key_file: "{{ ssh_key_file }}"
