@@ -90,7 +90,19 @@
     interfaces:
       - "{{ private_network.subnet_name }}"
 
-- name: create openshift master node
+- name: create cinder volumes for data
+  os_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    size: 20
+    display_name: "{{ hostvars[item]['inventory_hostname'] }}"
+  with_items: "{{ groups['openshift'] }}"
+
+- name: create openshift nodes
   os_server:
     auth:
       auth_url: "{{ auth_creds.url }}"
@@ -107,6 +119,19 @@
     security_groups: "{{ security_group.name }}"
     meta: "role={{ hostvars[item]['role'] }}"
   with_items: "{{ groups['openshift'] }}"
+
+- name: attach data volumes to instances
+  os_server_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    server: "{{ hostvars[item]['inventory_hostname'] }}"
+    volume: "{{ hostvars[item]['inventory_hostname'] }}"
+    device: /dev/vdb
+  with_items: "{{ groups['openshift'] }}"    
 
 - name: gather openstack facts
   os_server_facts:
