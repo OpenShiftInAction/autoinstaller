@@ -48,3 +48,16 @@
     dns_nameservers:
       - "{{ private_network.subnet_dns[0] }}"
       - "{{ private_network.subnet_dns[1] }}"
+
+- name: create router for project
+  os_router:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    name: "{{ external_network.router_name }}"
+    network: "{{ external_network.name }}"
+    interfaces:
+      - "{{ private_network.name }}"

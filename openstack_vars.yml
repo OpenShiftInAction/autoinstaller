@@ -9,6 +9,10 @@ ssh_key:
   file_private: /root/.ssh/jduncan
   file_public: /root/.ssh/jduncan.pub
 
+external_network:
+  name: public
+  router_name: router1
+
 private_network:
   name: openshift_int
   subnet_cidr: 192.168.122.0/24
