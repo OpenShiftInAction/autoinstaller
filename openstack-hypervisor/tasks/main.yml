@@ -101,6 +101,7 @@
     flavor: "{{ instance.flavor }}"
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
+    network: "{{ private_network.name }}"
     name: "{{ hostvars[item]['inventory_hostname'] }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
