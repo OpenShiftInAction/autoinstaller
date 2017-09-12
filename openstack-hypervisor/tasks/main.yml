@@ -49,7 +49,7 @@
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
     network: "{{ private_network.name }}"
-    name: "{{ items.value.name }}"
+    name: "{{ item.value.name }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
     meta: "role={{ item.value.role }}"
