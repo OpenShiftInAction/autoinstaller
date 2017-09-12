@@ -23,6 +23,7 @@
     name: "{{ security_group.name }}"
     description: "{{ security_group.desc }}"
     state: present
+  register: sec_group
 
 - name: add rules to security group
   os_security_group_rule:
@@ -37,6 +38,7 @@
     port_range_max: "{{ item.value.port_range_max }}"
     remote_ip_prefix: "{{ item.value.remote_ip_prefix }}"
   with_dict: "{{ security_group.rules }}"
+  when: sec_group.changed
 
 - name: ensure keypair is created in OpenStack
   os_keypair:
@@ -99,7 +101,7 @@
     flavor: "{{ instance.flavor }}"
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
-    name: "{{ hostvars.item.'inventory_hostname' }}"
+    name: "{{ hostvars[item]['inventory_hostname'] }}"
     auto_ip: yes
     security_groups: "{{ secruity_group.name }}"
   with_items: "{{ groups['openshift'] }}"
