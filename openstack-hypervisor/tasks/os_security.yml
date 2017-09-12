@@ -1,0 +1,36 @@
+- name: create security group for OpenShift
+  os_security_group:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    name: "{{ security_group.name }}"
+    description: "{{ security_group.desc }}"
+    state: present
+  register: sec_group
+
+- name: add rules to security group
+  os_security_group_rule:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    security_group: "{{ security_group.name }}"
+    protocol: "{{ item.value.protocol }}"
+    port_range_min: "{{ item.value.port_range_min }}"
+    port_range_max: "{{ item.value.port_range_max }}"
+    remote_ip_prefix: "{{ item.value.remote_ip_prefix }}"
+  with_dict: "{{ security_group.rules }}"
+  when: sec_group.changed
+
+- name: ensure keypair is created in OpenStack
+  os_keypair:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    name: "{{ ssh_key.name }}"
+    public_key_file: "{{ ssh_key.file_public }}"

@@ -13,82 +13,27 @@
   - futures
   - jmespath
 
-- name: create security group for OpenShift
-  os_security_group:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    name: "{{ security_group.name }}"
-    description: "{{ security_group.desc }}"
-    state: present
-  register: sec_group
+- name: include security-related tasks
+  include: os_security.yml
+  when: set_up_security
 
-- name: add rules to security group
-  os_security_group_rule:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    security_group: "{{ security_group.name }}"
-    protocol: "{{ item.value.protocol }}"
-    port_range_min: "{{ item.value.port_range_min }}"
-    port_range_max: "{{ item.value.port_range_max }}"
-    remote_ip_prefix: "{{ item.value.remote_ip_prefix }}"
-  with_dict: "{{ security_group.rules }}"
-  when: sec_group.changed
+- name: include networking tasks
+  include: os_networking.yml
+  when: set_up_network
 
-- name: ensure keypair is created in OpenStack
-  os_keypair:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    name: "{{ ssh_key.name }}"
-    public_key_file: "{{ ssh_key.file_public }}"
-
-- name: create private network
-  os_network:
-    name: "{{ private_network.name }}"
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    project: "{{ auth_creds.project }}"
-    state: present
-    wait: yes
-
-- name: create subnet on private network
-  os_subnet:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    name: "{{ private_network.subnet_name }}"
-    network_name: "{{ private_network.name }}"
-    state: present
-    cidr: "{{ private_network.subnet_cidr }}"
-    dns_nameservers:
-      - "{{ private_network.subnet_dns[0] }}"
-      - "{{ private_network.subnet_dns[1] }}"
-
-- name: create router for project
-  os_router:
+- name: create openshift-specific flavor
+  os_nova_flavor:
     auth:
       auth_url: "{{ auth_creds.url }}"
       username: "{{ auth_creds.username }}"
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     state: present
-    name: "{{ external_network.router_name }}"
-    network: "{{ external_network.name }}"
-    interfaces:
-      - "{{ private_network.subnet_name }}"
+    name: "{{ flavor.name }}"
+    ram: "{{ flavor.ram }}"
+    vcpus: "{{ flavor.vcpus }}"
+    disk: "{{ flavor.disk }}"
+    ephemeral: "{{ flavor.ephemeral }}"
 
 - name: create cinder volumes for data
   os_volume:
@@ -98,7 +43,7 @@
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     state: present
-    size: 20
+    size: "{{ data_disk_size }}"
     display_name: "{{ hostvars[item]['inventory_hostname'] }}"
   with_items: "{{ groups['openshift'] }}"
 
@@ -110,7 +55,7 @@
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     state: present
-    flavor: "{{ instance.flavor }}"
+    flavor: "{{ flavor.name }}"
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
     network: "{{ private_network.name }}"
@@ -119,19 +64,6 @@
     security_groups: "{{ security_group.name }}"
     meta: "role={{ hostvars[item]['role'] }}"
   with_items: "{{ groups['openshift'] }}"
-
-- name: attach data volumes to instances
-  os_server_volume:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.username }}"
-      password: "{{ auth_creds.password }}"
-      project_name: "{{ auth_creds.project }}"
-    state: present
-    server: "{{ hostvars[item]['inventory_hostname'] }}"
-    volume: "{{ hostvars[item]['inventory_hostname'] }}"
-    device: /dev/vdb
-  with_items: "{{ groups['openshift'] }}"    
 
 - name: gather openstack facts
   os_server_facts:
