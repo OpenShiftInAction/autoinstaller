@@ -26,17 +26,17 @@
 
 - name: add rules to security group
   os_security_group_rule:
-      auth:
-        auth_url: "{{ auth_creds.url }}"
-        username: "{{ auth_creds.username }}"
-        password: "{{ auth_creds.password }}"
-        project_name: "{{ auth_creds.project }}"
-      security_group: "{{ security_group.name }}"
-      protocol: "{{ item.protocol }}"
-      port_range_min: "{{ item.port_range_min }}"
-      port_range_max: "{{ item.port_range_max }}"
-      remote_ip_prefix: "{{ item.remote_ip_prefix }}"
-    with_items: "{{ security_group.rules }}"
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    security_group: "{{ security_group.name }}"
+    protocol: "{{ item.protocol }}"
+    port_range_min: "{{ item.port_range_min }}"
+    port_range_max: "{{ item.port_range_max }}"
+    remote_ip_prefix: "{{ item.remote_ip_prefix }}"
+  with_items: "{{ security_group.rules }}"
 
 - name: ensure keypair is created in OpenStack
   os_keypair:
