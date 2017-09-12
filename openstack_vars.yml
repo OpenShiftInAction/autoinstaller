@@ -30,14 +30,14 @@ security_group:
   desc: OpenShift security group
   rules:
     - allow_all_internal:
-        protocol: tcp
-        port_range_min: -1
-        port_range_max: -1
-        remote_ip_prefix: "{{ private_network.subnet_cidr }}"
-        direction: ingress
+      protocol: tcp
+      port_range_min: -1
+      port_range_max: -1
+      remote_ip_prefix: "{{ private_network.subnet_cidr }}"
+      direction: ingress
     - allow_8443_public:
-        protocol: tcp
-        port_range_min: 8443
-        port_range_max: 8443
-        remote_ip_prefix: "{{ external_network.subnet_cidr }}"
-        direction: ingress
+      protocol: tcp
+      port_range_min: 8443
+      port_range_max: 8443
+      remote_ip_prefix: "{{ external_network.subnet_cidr }}"
+      direction: ingress
