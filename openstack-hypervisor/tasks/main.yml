@@ -36,6 +36,11 @@
 
 - name: create subnet on private network
   os_subnet:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
     name: "{{ private_network.subnet_name }}"
     network_name: "{{ private_network.name }}"
     state: present
