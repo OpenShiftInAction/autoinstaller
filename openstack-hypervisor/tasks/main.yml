@@ -64,6 +64,12 @@
       project_name: "{{ auth_creds.project }}"
     server: ocp*
 
+- name: set ansible_host values for instances
+  set_fact:
+    ansible_host: "{{ openstack_servers['public_v4'] }}"
+  with_items: "{{ groups['openshift'] }}"
+  when: "{{ hostvars[item]['ansible_hostname'] }} == {{ openstack_servers['name'] }}"
+
 - name: debug openstack facts
   debug:
     var: openstack_servers
