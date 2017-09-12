@@ -73,5 +73,5 @@
     name: "{{ item['name'] }}"
     ansible_ssh_host: "{{ item['public_v4'] }}"
     ansible_ssh_port: 22
-    groups: "{{ item['meta']['role'] }}"
+    groups: "{{ item['metadata']['role'] }}"
   with_items: "{{ openstack_servers }}"
