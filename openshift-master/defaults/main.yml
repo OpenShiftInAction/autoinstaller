@@ -1,8 +1,8 @@
 ---
 # defaults file for openshift-master
 virt_type: openstack
-deploy_openshift: true
+deploy_openshift: false
 apps_domain: apps.192.168.122.101.nip.io
 openshift_type: origin
-ssh_key_pub: /home/jduncan/.ssh/id_rsa.pub
-ssh_key: /home/jduncan/.ssh/id_rsa
+ssh_key_pub: /root/.ssh/jduncan.pub
+ssh_key: /root/.ssh/jduncan
