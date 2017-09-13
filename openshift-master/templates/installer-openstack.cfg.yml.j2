@@ -4,32 +4,32 @@ ansible_log_path: /tmp/ansible.log
 deployment:
   ansible_ssh_user: root
   hosts:
-{% for host in groups['openshift-masters'] %}
-  - connect_to: {{ hostvars[host]['ip'] }}
-    hostname: {{ hostvars[host]['hostname'] }}
-    ip: {{ hostvars[host]['ip'] }}
-    public_hostname: {{ hostvars[host]['hostname'] }}
-    public_ip: {{ hostvars[host]['ip'] }}
+{% for host in groups['master'] %}
+  - connect_to: {{ hostvars[host]['public_ip'] }}
+    hostname: {{ hostvars[host]['private_hostname'] }}
+    ip: {{ hostvars[host]['private_ip'] }}
+    public_hostname: {{ hostvars[host]['public_hostname'] }}
+    public_ip: {{ hostvars[host]['public_ip'] }}
     roles:
     - master
     - etcd
     - node
     - storage
 {% endfor %}
-  - connect_to: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
-    hostname: {{ hostvars[groups['openshift-nodes'][0]]['hostname']}}
-    ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
+  - connect_to: {{ hostvars[groups['node'][0]]['public_ip']}}
+    hostname: {{ hostvars[groups['node'][0]]['private_hostname']}}
+    ip: {{ hostvars[groups['node'][0]]['private_ip']}}
     node_labels: '{''region'': ''infra''}'
-    public_hostname: {{ hostvars[groups['openshift-nodes'][0]]['hostname']}}
-    public_ip: {{ hostvars[groups['openshift-nodes'][0]]['ip']}}
+    public_hostname: {{ hostvars[groups['node'][0]]['public_hostname']}}
+    public_ip: {{ hostvars[groups['node'][0]]['public_ip']}}
     roles:
     - node
-{% for host in groups['openshift-nodes'][1:] %}
-  - connect_to: {{ hostvars[host]['ip'] }}
-    hostname: {{ hostvars[host]['hostname'] }}
-    ip: {{ hostvars[host]['ip'] }}
-    public_hostname: {{ hostvars[host]['hostname'] }}
-    public_ip: {{ hostvars[host]['ip'] }}
+{% for host in groups['node'][1:] %}
+  - connect_to: {{ hostvars[host]['public_ip'] }}
+    hostname: {{ hostvars[host]['private_hostname'] }}
+    ip: {{ hostvars[host]['private_ip'] }}
+    public_hostname: {{ hostvars[host]['public_hostname'] }}
+    public_ip: {{ hostvars[host]['public_ip'] }}
     roles:
     - node
   {% endfor %}

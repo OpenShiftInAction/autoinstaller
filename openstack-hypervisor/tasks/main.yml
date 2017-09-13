@@ -80,6 +80,6 @@
     public_hostname: "{{ item.name }}.{{ item.public_v4 }}.nip.io"
   with_items: "{{ openstack_servers }}"
 
-- name: wait 15 seconds for vms to finish coming up
+- name: wait 30 seconds for vms to finish coming up
   pause:
-    seconds: 15
+    seconds: 30
