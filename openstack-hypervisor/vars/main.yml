@@ -50,10 +50,8 @@ instance:
   image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
   nodes:
     ocp1:
-      name: ocp1
       role: master
     ocp2:
-      name: ocp2
       role: node
 
 security_group:
