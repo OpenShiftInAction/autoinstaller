@@ -48,4 +48,9 @@
 
 - name: deploy openshift
   command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install --force
+  register: ocp_out
   when: deploy_openshift
+
+- name: deploy output
+  debug:
+    msg: "{{ deploy_openshigt.stdout }}"

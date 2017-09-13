@@ -1,3 +1,2 @@
 ---
 # vars file for openshift-master
-deploy_openshift: false
