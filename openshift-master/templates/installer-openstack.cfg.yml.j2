@@ -2,7 +2,7 @@ ansible_callback_facts_yaml: /root/.config/openshift/.ansible/callback_facts.yam
 ansible_inventory_path: .config/openshift/hosts
 ansible_log_path: /tmp/ansible.log
 deployment:
-  ansible_ssh_user: root
+  ansible_ssh_user: centos
   hosts:
 {% for host in groups['master'] %}
   - connect_to: {{ hostvars[host]['public_ip'] }}
