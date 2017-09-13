@@ -33,7 +33,7 @@ deployment:
     roles:
     - node
   {% endfor %}
-  master_routingconfig_subdomain: {{ apps_domain }}
+  master_routingconfig_subdomain: apps.{{ hostvars[groups['node'][0]]['public_ip']}}.nip.io
   openshift_master_cluster_hostname: None
   openshift_master_cluster_public_hostname: None
   proxy_exclude_hosts: ''
