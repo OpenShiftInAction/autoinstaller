@@ -1,8 +1,8 @@
 ---
 # tasks file for openshift-common
-- name: set hostname
-  hostname:
-    name: "{{ hostname }}"
+# - name: set hostname
+#   hostname:
+#     name: "{{ hostname }}"
 
 - name: include distribution-specific common tasks
   include: "{{ ansible_distribution }}.yaml"
