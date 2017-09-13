@@ -34,8 +34,19 @@
     ram: "{{ flavor.ram }}"
     vcpus: "{{ flavor.vcpus }}"
     disk: "{{ flavor.disk }}"
-    ephemeral: "{{ flavor.ephemeral }}"
   when: create_flavor
+
+- name: create cinder volumes for data
+  os_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    display_name: "{{ item.key }}"
+    size: "{{ item.value.vol_size }}"
+  with_dict: "{{ instance.nodes }}"
 
 - name: create openshift nodes
   os_server:
@@ -53,6 +64,19 @@
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
     meta: "role={{ item.value.role }}"
+  with_dict: "{{ instance.nodes }}"
+
+- name: attach data volumes to servers
+  os_server_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    server: "{{ item.key }}"
+    volume: "{{ item.key }}"
+    device: "{{ item.value.vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: gather openstack facts

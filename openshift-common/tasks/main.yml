@@ -25,9 +25,3 @@
 - name: wait for server to come back
   local_action: wait_for host={{ ansible_ssh_host }} state=started delay=30 timeout=90 port=22
   become: false
-
-- name: bump up hard file limits for install run
-  command: ulimit -Hn 10000
-
-- name: bump up soft file limits for install run
-  command: ulimit -Sn 10000

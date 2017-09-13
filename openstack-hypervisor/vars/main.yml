@@ -44,17 +44,22 @@ flavor:
   ram: 8192
   vcpus: 4
   disk: 20
-  ephemeral: 20
 
 instance:
   image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
   nodes:
     ocp1:
       role: master
+      vol_size: 20
+      vol_dev: /dev/vdb
     ocp2:
       role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
     ocp3:
       role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
 
 security_group:
   name: openshift
