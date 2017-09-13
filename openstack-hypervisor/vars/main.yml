@@ -55,10 +55,6 @@ instance:
       role: node
     ocp3:
       role: node
-    ocp4:
-      role: node
-    ocp5:
-      role: node
 
 security_group:
   name: openshift
