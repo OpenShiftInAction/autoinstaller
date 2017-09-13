@@ -64,14 +64,14 @@
       project_name: "{{ auth_creds.project }}"
     server: ocp*
 
-- name: debug openstack facts
-  debug:
-    var: openstack_servers
+# - name: debug openstack facts
+#   debug:
+#     var: openstack_servers
 
 - name: create groups
   add_host:
-    name: "{{ item['name'] }}"
-    ansible_ssh_host: "{{ item['public_v4'] }}"
+    name: "{{ item.name }}"
+    ansible_ssh_host: "{{ item.public_v4 }}"
     ansible_ssh_port: 22
-    groups: "{{ item['metadata']['role'] }}"
+    groups: "{{ item.metadata.role }}"
   with_items: "{{ openstack_servers }}"
