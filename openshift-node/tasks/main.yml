@@ -16,9 +16,9 @@
 
 - name: make sure docker_dev isn't mounted
   mount:
-    path: /mnt
+    name: /mnt
     src: /dev/vdb
-    state: unmounted 
+    state: unmounted
 
 - name: make sure no filesystem signatures are on the docker storage device
   command: /sbin/wipefs -a {{ docker_dev }}
