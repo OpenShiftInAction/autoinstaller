@@ -1,2 +1,15 @@
 ---
 # vars file for openshift-master
+dev_pkgs:
+  - gcc
+  - python-devel
+  - httpd-tools
+
+ansible_version: 2.2.2.0
+
+autoinstaller:
+  repo: https://github.com/OpenShiftInAction/autoinstaller.git
+  dest: /root/autoinstaller
+
+installer:
+  dest: /root/installer.cfg.yml

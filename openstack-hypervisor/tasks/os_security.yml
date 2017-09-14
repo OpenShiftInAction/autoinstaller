@@ -32,5 +32,5 @@
       username: "{{ auth_creds.username }}"
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
-    name: "{{ ssh_key.name }}"
-    public_key_file: "{{ ssh_key.file_public }}"
+    name: "{{ instance.ssh_key.name }}"
+    public_key_file: "{{ instance.ssh_key.file_public }}"

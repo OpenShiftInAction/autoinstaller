@@ -1,15 +1,9 @@
 ---
 # vars file for openstack-hypervisor
-
-# include security and network tasks
-# this is almost always true, unless you have an
-# openstack project already set up
-
-set_up_security: true
-set_up_network: true
-
-# sets up an openshift-friendly flavor.
-create_flavor: true
+ansible_deps:
+  - shade
+  - futures
+  - jmespath
 
 auth_creds:
   url: http://192.168.1.40:5000/v2.0
@@ -21,45 +15,25 @@ auth_creds:
     password: redhat
     project: operators
 
-ssh_key:
-  name: jduncan_key
-  file_private: /root/.ssh/jduncan
-  file_public: /root/.ssh/jduncan.pub
-
-external_network:
-  name: public
-  router_name: router1
-  subnet_cidr: 192.168.0.0/23
-
-private_network:
-  name: openshift_int
-  subnet_cidr: 192.168.122.0/24
-  subnet_name: openshift_subnet
-  subnet_dns:
-    - 8.8.8.8
-    - 8.8.4.4
+networks:
+  external:
+    public:
+      name: public
+      router_name: router1
+      subnet_cidr: 192.168.0.0/23
+  private:
+    openshift_int:
+      subnet_cidr: 192.168.122.0/24
+      subnet_name: openshift_subnet
+      subnet_dns:
+        - 8.8.8.8
+        - 8.8.4.4
 
 flavor:
   name: m1.openshift
   ram: 8192
   vcpus: 4
   disk: 20
-
-instance:
-  image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
-  nodes:
-    ocp1:
-      role: master
-      vol_size: 20
-      vol_dev: /dev/vdb
-    ocp2:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-    ocp3:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
 
 security_group:
   name: openshift

@@ -1,7 +1,0 @@
-kvm_disk_dir: /var/lib/libvirt/images
-ssh_key: /home/jduncan/.ssh/id_rsa
-ssh_key_pub: /home/jduncan/.ssh/id_rsa.pub
-ssh_known_hosts_file: "/etc/ssh/ssh_known_hosts"
-group: openshift
-disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
-data_disk_size: 20

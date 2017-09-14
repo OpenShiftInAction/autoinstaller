@@ -12,9 +12,7 @@
     name: "{{ item }}"
     state: yes
     persistent: yes
-  with_items:
-    - virt_use_nfs
-    - virt_sandbox_use_nfs
+  with_items: "{{ selinux_bools }}"
 
 - name: reboot each system
   shell: sleep 2 && systemctl reboot

@@ -1,2 +1,5 @@
 ---
 # vars file for openshift-installer
+selinux_bools:
+  - virt_use_nfs
+  - virt_sandbox_use_nfs

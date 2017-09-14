@@ -1,0 +1,37 @@
+- name: power down any old instances of this group
+  virt:
+    name: "{{ item.key }}"
+    command: destroy
+    uri: qemu:///system
+  ignore_errors: true
+  with_dict: "{{ instance.nodes }}"
+
+- name: undefine any old instances of this group
+  virt:
+    name: "{{ item.key }}"
+    command: undefine
+    uri: qemu:///system
+  ignore_errors: true
+  with_dict: "{{ instance.nodes }}"
+  become: yes
+
+- name: clean up any old disk images
+  file:
+    name: "{{ kvm_host.disk_dir }}/{{ item.key }}.qcow2"
+    state: absent
+  with_dict: "{{ instance.nodes }}"
+  ignore_errors: true
+
+- name: clean up any cloud-init ISOs
+  file:
+    name: "{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso"
+    state: absent
+  with_dict: "{{ instance.nodes }}"
+  ignore_errors: true
+
+- name: clean up any old data disk images
+  file:
+    name: {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2
+    state: absent
+  with_dict: "{{ instance.nodes }}"
+  ignore_errors: true

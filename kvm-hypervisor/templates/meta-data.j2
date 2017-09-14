@@ -1,0 +1,17 @@
+instance-id: {{ item.key }}
+local-hostname: {{ item.hostname }}
+network-interfaces: |
+  auto lo
+  iface lo inet loopback
+
+  iface eth0 inet static
+    address {{ item.value.kvm_params.ip }}
+    netmask {{ kvm_host.network.netmask }}
+    network {{ kvm_host.network.network }}
+    gateway {{ kvm_host.network.gateway }}
+bootcmd:
+  - ifdown eth0
+  - ifup eth0
+manage_resolv_conf: true
+resolv_conf:
+  nameservers: ['{{ kvm_host.network.dns[0] }}',{{ kvm_host.network.dns[1] }}]

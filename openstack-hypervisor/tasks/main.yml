@@ -8,18 +8,15 @@
   pip:
     name: "{{ item }}"
     state: present
-  with_items:
-  - shade
-  - futures
-  - jmespath
+  with_items: "{{ ansible_deps }}"
 
 - name: include security-related tasks
   include: os_security.yml
-  when: set_up_security
+  when: deployment.set_up_security
 
 - name: include networking tasks
   include: os_networking.yml
-  when: set_up_network
+  when: deployment.set_up_network
 
 # This requires more privileges than a regular user. If you don't have auth credentials, then you can have this created ahead of time and set `create_flavor` to false to bypass this step.
 - name: create openshift-specific flavor

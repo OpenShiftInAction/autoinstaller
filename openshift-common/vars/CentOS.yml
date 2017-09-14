@@ -1,0 +1,12 @@
+---
+# CentOS vars file for openshift-installer
+repos:
+  - epel-release
+  - centos-release-openshift-origin
+
+packages:
+  - origin
+  - origin-clients
+  - vim-enhanced
+  - atomic-openshift-utils
+  - NetworkManager

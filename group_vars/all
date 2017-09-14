@@ -1,0 +1,50 @@
+deployment:
+  virt_type: openstack
+  use_nip_io: false
+  deploy_openshift: true
+  openshift_type: origin
+  create_flavor: true
+  set_up_security: true
+  set_up_network: true
+
+instance:
+  image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
+  ssh_key:
+    name: jduncan_key
+    file_private: /root/.ssh/jduncan
+    file_public: /root/.ssh/jduncan.pub
+  username: centos
+  domain: example.com
+  nodes:
+    ocp1:
+      role: master
+      vol_size: 20
+      vol_dev: /dev/vdb
+      kvm_params:
+        ip: 192.168.122.100
+        ram: 4096
+        vcpus: 2
+        mac: 52:54:00:00:00:01
+        role: master
+    ocp2:
+      role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
+      docker_vg: docker_vg
+      kvm_params:
+        ip: 192.168.122.101
+        ram: 4096
+        vcpus: 2
+        mac: 52:54:00:00:00:02
+        role: node
+    ocp3:
+      role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
+      docker_vg: docker_vg
+      kvm_params:
+        ip: 192.168.122.102
+        ram: 4096
+        vcpus: 2
+        mac: 52:54:00:00:00:03
+        role: node

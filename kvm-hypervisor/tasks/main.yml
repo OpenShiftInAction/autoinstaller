@@ -1,158 +1,166 @@
-# - name: ensure kvm is installed and started
-#   service: name=libvirtd state=started enabled=yes
-#   register: libvirtd
-#
-# - name: wait for libvirtd to start up
-#   pause: seconds=30
-#   when: libvirtd.changed
-#
-# - name: ensure genisoimage is installed
-#   yum: name=genisoimage state=latest
+- name: ensure kvm is installed and started
+  service:
+    name: libvirtd
+    state: started
+    enabled: yes
+  register: libvirtd
 
-- name: collect dns server information
-  shell: grep -m 1 nameserver /etc/resolv.conf | awk '{ print $2}'
-  register: dns
+- name: wait for libvirtd to start up
+  pause:
+    seconds: 30
+  when: libvirtd.changed
+
+- name: ensure genisoimage is installed
+  yum:
+    name: genisoimage
+    state: present
 
 - name: clean up any old temporary workspaces
-  file: name={{ tmp_workspace }} state=absent
+  file:
+    name: "{{ kvm_host.tmp_workspace }}"
+    state: absent
   ignore_errors: true
 
 - name: create workspace folder
-  file: name={{ tmp_workspace }} state=directory
+  file:
+    name: "{{ kvm_host.tmp_workspace }}"
+    state: directory
 
-- name: add ssh public key to hypervisor for hosts
-  copy: src={{ ssh_key }} dest={{ tmp_workspace }}/ssh_key.pub
+- name: add ssh public key to workspace folder
+  copy:
+    src: "{{ instance.ssh_key.file_public }}
+    dest: "{{ kvm_host.tmp_workspace }}/ssh_key.pub"
 
-- name: create hosts file for hypervisor
-  template: src=../templates/hosts dest=/etc/hosts
-  become: yes
+- name: set hostname using nip.io
+  set_fact: hostname="{{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io"
+  with_dict: "{{ instance.nodes }}"
+  when: deployment.use_nip_io
 
-- name: power down any old instances of this group
-  virt: name={{ hostvars[item]['inventory_hostname'] }}
-        command=destroy
-        uri=qemu:///system
-  ignore_errors: true
-  with_items: "{{ groups[group] }}"
-  become: yes
+- name: set hostname using provided domain
+  set_fact: hostname="{{ item.key }}.{{ instance.domain }}"
+  with_dict: "{{ instance.nodes }}"
+  with_dict: "{{ instance.nodes }}"
+  when: not deployment.use_nip.io
 
-- name: undefine any old instances of this group
-  virt: name={{ hostvars[item]['inventory_hostname'] }}
-        command=undefine
-        uri=qemu:///system
-  ignore_errors: true
-  with_items: "{{ groups[group] }}"
-  become: yes
-
-- name: clean up any old disk images
-  file: name={{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}.qcow2 state=absent
-  with_items: "{{ groups[group] }}"
-  ignore_errors: true
-
-- name: clean up any cloud-init ISOs
-  file: name={{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-ci.iso state=absent
-  with_items: "{{ groups[group] }}"
-  ignore_errors: true
-
-- name: clean up any old data disk images
-  file: name={{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-data.qcow2 state=absent
-  with_items: "{{ groups[group] }}"
-  ignore_errors: true
+- name: clean up old virtual machines and their artifacts
+  include: cleanup.yml
+  when: kvm_host.cleanup
 
 - name: Copy over the virtual disk images
-  copy: src={{ disk_image }} dest={{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}.qcow2
-  with_items: "{{ groups[group] }}"
+  copy:
+    src: {{ disk_image }}
+    dest: {{ kvm_host.disk_dir }}/{{ item.key }}.qcow2
+  with_dict: "{{ instance.nodes }}"
 
-# Each VM will have a 10G data disk that can be formatted / mounted wherever you want.
-- name: create disk for data
-  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-data.qcow2 {{ data_disk_size }}G
-  with_items: "{{ groups[group] }}"
+- name: create data disk
+  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key-data.qcow2 {{ item.value.vol_size }}G
+  with_dict: "{{ instance.nodes }}"
 
 - name: create temporary folder for host disk customization
-  file: name={{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }} state=directory
-  with_items: "{{ groups[group] }}"
+  file:
+    name: "{{ kvm_host.tmp_workspace }}/{{ item.key }}"
+    state: directory
+  with_dict: "{{ instance.nodes }}"
 
 - name: create the metadata ISO directory
-  file: name={{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}/metadata state=directory
-  with_items: "{{ groups[group] }}"
+  file:
+    name: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata"
+    state: directory
+  with_dict: "{{ instance.nodes }}"
 
 - name: create meta-data files for cloud-init
-  template: src=../templates/meta-data dest={{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}/metadata/meta-data
-  with_items: "{{ groups[group] }}"
+  template:
+    src: meta-data.j2
+    dest: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/meta-data"
+  with_dict: "{{ instance.nodes }}"
 
 - name: create user-data files for cloud-init
-  template: src=../templates/user-data dest={{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}/metadata/user-data
-  with_items: "{{ groups[group] }}"
+  template:
+    src: user-data.j2
+    dest: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/user-data"
+  with_dict: "{{ instance.nodes }}"
 
 - name: create cloud-config ISO image
-  command: genisoimage -o {{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}-ci.iso -V cidata -r -J {{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}/metadata/user-data {{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}/metadata/meta-data
-  with_items: "{{ groups[group] }}"
+  command: genisoimage -o {{ kvm_host.tmp_workspace }}/{{ item.key }}-ci.iso -V cidata -r -J {{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/user-data {{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/meta-data
+  with_dict: "{{ instance.nodes }}"
 
 - name: copy over cloud-init ISOs
-  copy: src={{ tmp_workspace }}/{{ hostvars[item]['inventory_hostname'] }}-ci.iso dest={{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-ci.iso
-  with_items: "{{ groups[group] }}"
+  copy:
+    src: "{{ kvm_host.tmp_workspace }}/{{ item.key }}-ci.iso"
+    dest: "{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso
+  with_dict: "{{ instance.nodes }}"
+  become: yes
 
 - name: Define guest images
-  virt: name={{ hostvars[item]['inventory_hostname'] }}
-        command=define
-        xml="{{ lookup('template', '../templates/vm.xml') }}"
-        uri=qemu:///system
-  with_items: "{{ groups[group] }}"
+  virt:
+    name: "{{ item.key }}"
+    command: define
+    xml: "{{ lookup('template', 'vm.xml') }}"
+    uri: qemu:///system
+  with_dict: "{{ instance.nodes }}"
   become: yes
 
 - name: remove any static ips from libvirt
-  command: virsh net-update default delete ip-dhcp-host '<host mac="{{ hostvars[item]['mac'] }}" ip="{{ hostvars[item]['ip'] }}"/>' --config --live
+  command: virsh net-update {{ kvm_host.network.name }} delete ip-dhcp-host '<host mac="{{ item.value.kvm_params.mac }}" ip="{{ item.value.kvm_params.ip }}"/>' --config --live
   ignore_errors: true
-  with_items: "{{ groups[group] }}"
+  with_dict: "{{ instance.nodes }}"
   become: yes
 
-- name: add static ip addresses for the hosts
-  command: virsh net-update default add ip-dhcp-host '<host mac="{{ hostvars[item]['mac'] }}" ip="{{ hostvars[item]['ip'] }}"/>' --config --live
-  with_items: "{{ groups[group] }}"
+- name: add static ip addresses for hosts
+  command: virsh net-update {{ kvm_host.network.name }} add ip-dhcp-host '<host mac="{{ item.value.kvm_params.mac }}" ip="{{ item.value.kvm_params.ip }}"/>' --config --live
+  with_dict: "{{ instance.nodes }}"
   become: yes
 
 - name: stop libvirt networking
-  virt_net: command=destroy name=default
+  virt_net:
+    command: destroy
+    name: "{{ kvm_host.network.name }}"
   become: yes
 
 - name: start libvirt networking
-  virt_net: command=start name=default
+  virt_net:
+    command: start
+    name: "{{ kvm_host.network.name }}"
   become: yes
 
 - name: Start the new Virtual Machines
-  virt:  name={{ hostvars[item]['inventory_hostname'] }}
-         command=start
-         uri=qemu:///system
-  with_items: "{{ groups[group] }}"
+  virt:
+    name: "{{ item.key }}"
+    command: start
+    uri: qemu:///system
+  with_dict: "{{ instance.nodes }}"
   become: yes
 
 - name: make sure all vms are running
-  local_action: wait_for host={{ hostvars[item]['inventory_hostname'] }} port=22 state=started delay=5 timeout=300
+  local_action: wait_for host={{ item.key }} port=22 state=started delay=5 timeout=300
   become: false
-  with_items: "{{ groups[group] }}"
+  with_dict: "{{ instance.nodes }}"
 
 - name: make sure the known_hosts file exists
-  file: path={{ ssh_known_hosts_file }} state=touch
+  file:
+    path: "{{ kvm_host.known_hosts_file }}"
+    state: touch
 
 - name: remove any stale entries for these virtual Machines by hostname
-  shell: "ssh-keygen -R {{ hostvars[item]['inventory_hostname'] }} -f {{ ssh_known_hosts_file}}"
-  with_items: "{{ groups[group] }}"
+  shell: "ssh-keygen -R {{ item.key }} -f {{ kvm_host.known_hosts_file}}"
+  with_dict: "{{ instance.nodes }}"
 
 - name: remove any stale entries for these virtual Machines by ip
-  shell: "ssh-keygen -R {{ hostvars[item]['ip'] }} -f {{ ssh_known_hosts_file}}"
-  with_items: "{{ groups[group] }}"
+  shell: "ssh-keygen -R {{ item.value.kvm_params.ip }} -f {{ kvm_host.known_hosts_file}}"
+  with_dict: "{{ instance.nodes }}"
 
 - name: scan ssh keys by hostname
-  command: "ssh-keyscan {{ hostvars[item]['inventory_hostname'] }}"
+  command: "ssh-keyscan {{ item.key }}"
   register: "host_keys_hostname"
-  with_items: "{{ groups[group] }}"
+  with_dict: "{{ instance.nodes }}"
   changed_when: false
   delegate_to: localhost
   become: false
 
 - name: scan ssh keys by IP
-  command: "ssh-keyscan {{ hostvars[item]['ip'] }}"
+  command: "ssh-keyscan {{ item.value.kvm_params.ip }}"
   register: "host_keys_ip"
-  with_items: "{{ groups[group] }}"
+  with_dict: "{{ instance.nodes }}"
   changed_when: false
   delegate_to: localhost
   become: false
@@ -160,15 +168,16 @@
 - name: write ssh keys to known_hosts
   template:
     src: "ssh-hosts.j2"
-    dest: "/etc/ssh/ssh_known_hosts"
+    dest: "{{ kvm_host.known_hosts_file }}"
 
-- name: collect the current username
-  local_action: command whoami
-  become: no
-  register: local_username
-
-- name: set the proper permissions back on known_hosts
-  file: path={{ ssh_known_hosts_file }}
-        owner={{ local_username.stdout }}
-        group={{ local_username.stdout }}
-        mode=0600
+- name: create dynamic groups to deploy openshift
+  add_host:
+    name: "{{ item.key }}"
+    ansible_ssh_host: "{{ item.kvm_params.ip }}"
+    ansible_ssh_port: 22
+    groups: "{{ item.kvm_params.role }},openshift"
+    private_ip: "{{ item.kvm_params.ip }}"
+    private_hostname: "{{ hostvars[item.key]['hostname'] }}"
+    public_ip: "{{ item.kvm_params.ip }}"
+    public_hostname: "{{ hostvars[item.key]['hostname'] }}"
+  with_items: "{{ instance.nodes }}"

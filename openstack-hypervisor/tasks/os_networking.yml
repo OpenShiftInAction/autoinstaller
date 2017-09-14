@@ -1,9 +1,8 @@
 ---
 # openstack networking setup
 
-- name: create private network
+- name: create private networks
   os_network:
-    name: "{{ private_network.name }}"
     auth:
       auth_url: "{{ auth_creds.url }}"
       username: "{{ auth_creds.username }}"
@@ -11,22 +10,26 @@
       project_name: "{{ auth_creds.project }}"
     project: "{{ auth_creds.project }}"
     state: present
+    name: "{{ item.key }}"
     wait: yes
+  with_dict: "{{ networks.private }}"
 
-- name: create subnet on private network
+
+- name: create subnets on private networks
   os_subnet:
     auth:
       auth_url: "{{ auth_creds.url }}"
       username: "{{ auth_creds.username }}"
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
-    name: "{{ private_network.subnet_name }}"
-    network_name: "{{ private_network.name }}"
+    name: "{{ items.key }}"
+    network_name: "{{ item.key }}_net"
     state: present
-    cidr: "{{ private_network.subnet_cidr }}"
+    cidr: "{{ item.value.subnet_cidr }}"
     dns_nameservers:
-      - "{{ private_network.subnet_dns[0] }}"
-      - "{{ private_network.subnet_dns[1] }}"
+      - "{{ item.value.subnet_dns[0] }}"
+      - "{{ item.value.subnet_dns[1] }}"
+  with_dict: "{{ networks.private }}"
 
 - name: create router for project
   os_router:
@@ -36,7 +39,8 @@
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     state: present
-    name: "{{ external_network.router_name }}"
-    network: "{{ external_network.name }}"
+    name: "{{ networks.external.public.router_name }}"
+    network: "{{ networks.external.public.name }}"
     interfaces:
-      - "{{ private_network.subnet_name }}"
+      - "{{ item.value.subnet_name }}"
+  with_dict: "{{ networks.private }}"

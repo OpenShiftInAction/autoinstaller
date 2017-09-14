@@ -1,16 +1,13 @@
 ---
 # tasks file for openshift-master
-- name: include distro-specific variable
+- name: include distro-specific variables
   include_vars: "{{ ansible_distribution }}.yml"
 
 - name: install dev packages for pip on master
   yum:
     name: "{{item}}"
     state: present
-  with_items:
-    - gcc
-    - python-devel
-    - httpd-tools
+  with_items: "{{ dev_pkgs }}"
 
 - name: install pip on master
   easy_install:
@@ -20,7 +17,7 @@
 - name: install the proper version of ansible on master
   pip:
     name: ansible
-    version: 2.2.2.0
+    version: "{{ ansible_version }}"
 
 - name: copy authorized key to remote user
   authorized_key:
@@ -38,13 +35,13 @@
 
 - name: copy down autoinstaller repository
   git:
-    repo: https://github.com/OpenShiftInAction/autoinstaller.git
-    dest: /root/autoinstaller
+    repo: "{{ autoinstaller.repo }}"
+    dest: "{{ autoinstaller.dest }}"
 
 - name: install config template
   template:
-    src: ../templates/installer-{{ virt_type }}.cfg.yml.j2
-    dest: /root/installer.cfg.yml
+    src: installer.cfg.yml.j2
+    dest: "{{ installer.dest }}"
 
 - name: deploy openshift
   command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install --force

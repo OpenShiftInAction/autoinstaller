@@ -15,17 +15,6 @@
     mode: 0644
   register: template_create
 
-- name: make sure docker_dev isn't mounted
-  mount:
-    name: /mnt
-    src: /dev/vdb
-    state: unmounted
-  register: mount_status
-
-- name: make sure no filesystem signatures are on the docker storage device
-  command: /sbin/wipefs -a {{ docker_dev }}
-  when: mount_status.changed
-
 - name: run docker-storage-setup on node
   command: /usr/bin/docker-storage-setup
   when: template_create.changed

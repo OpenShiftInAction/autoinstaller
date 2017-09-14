@@ -1,7 +1,2 @@
 ---
 # defaults file for openshift-master
-virt_type: openstack
-deploy_openshift: true
-openshift_type: origin
-ssh_key_pub: /root/.ssh/jduncan.pub
-ssh_key: /root/.ssh/jduncan

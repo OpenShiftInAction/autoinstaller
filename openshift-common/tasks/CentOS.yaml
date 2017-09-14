@@ -1,24 +1,20 @@
 ---
 #CentOS-specific tasks
+- name: include CentOS vars
+  include_vars:
+    file: "{{ ansible_distribution }}.yaml"
 
 - name: install needed repositories
   yum:
     name: "{{ item }}"
     state: present
-  with_items:
-    - epel-release
-    - centos-release-openshift-origin
+  with_items: "{{ repos }}"
 
 - name: install needed packages
   yum:
     name: "{{ item }}"
     state: present
-  with_items:
-    - origin
-    - origin-clients
-    - vim-enhanced
-    - atomic-openshift-utils
-    - NetworkManager
+  with_items: "{{ packages }}"
 
 - name: enable and start NetworkManager
   service:

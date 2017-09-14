@@ -1,7 +1,7 @@
 <domain type='kvm'>
-  <name>{{ hostvars[item]['inventory_hostname'] }}</name>
-  <memory unit='KiB'>{{ hostvars[item]['ram'] * 1024 }}</memory>
-  <vcpu>{{ hostvars[item]['vcpus'] }}</vcpu>
+  <name>'{{ item.key }}'</name>
+  <memory unit='KiB'>'{{ item.value.kvm_params.ram }}'</memory>
+  <vcpu>'{{ item.values.kvm_params.vcpus }}'</vcpu>
 
   <os>
     <type arch='x86_64' machine='pc'>hvm</type>
@@ -24,26 +24,26 @@
   <devices>
     <disk type='block' device='disk'>
       <driver name='qemu' type='qcow2' cache='writeback'/>
-      <source dev='{{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}.qcow2'/>
+      <source dev='{{ kvm_host.disk_dir }}/{{ item.key }}.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
 
     <disk type='block' device='disk'>
       <driver name='qemu' type='qcow2' cache='writeback'/>
-      <source dev='{{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-data.qcow2'/>
+      <source dev='{{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2'/>
       <target dev='vdb' bus='virtio'/>
     </disk>
 
     <disk type='file' device='cdrom'>
       <drive name='qemu' type='raw'/>
-      <source file='{{ kvm_disk_dir }}/{{ hostvars[item]['inventory_hostname'] }}-ci.iso'/>
+      <source file='{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso'/>
       <target dev='vdc' bus='virtio'/>
       <readonly/>
     </disk>
 
     <interface type='network'>
-      <source network='default'/>
-      <mac address='{{ hostvars[item]['mac'] }}'/>
+      <source network='{{ kvm_host.network.name }}'/>
+      <mac address='{{ item.values.kvm_params.mac }}'/>
       <model type='virtio'/>
     </interface>
 
