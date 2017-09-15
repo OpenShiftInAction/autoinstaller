@@ -33,13 +33,13 @@
 
 - name: set hostname using nip.io
   set_fact:
-    kvm_params: "{{ kvm_params | combine({ hostname: {{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io }) }}"
+    kvm_params: "{{ kvm_params | combine( 'hostname: {{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io' }}"
   with_dict: "{{ instance.nodes }}"
   when: deployment.use_nip_io
 
 - name: set hostname using provided domain
   set_fact:
-    kvm_params: {{ kvm_params | combine({ hostname: {{ item.key }}.{{ instance.domain }}  }) }}
+    kvm_params: "{{ kvm_params | combine( 'hostname: {{ item.key }}.{{ instance.domain }}' ) }}"
   with_dict: "{{ instance.nodes }}"
   when: not deployment.use_nip_io
 
