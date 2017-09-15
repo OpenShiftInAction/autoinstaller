@@ -31,7 +31,7 @@
 
 - name: clean up any old data disk images
   file:
-    name: {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2
+    name: "{{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2"
     state: absent
   with_dict: "{{ instance.nodes }}"
   ignore_errors: true

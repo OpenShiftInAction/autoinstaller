@@ -10,10 +10,10 @@
     seconds: 30
   when: libvirtd.changed
 
-- name: ensure genisoimage is installed
-  yum:
-    name: genisoimage
-    state: present
+# - name: ensure genisoimage is installed
+#   yum:
+#     name: genisoimage
+#     state: present
 
 - name: clean up any old temporary workspaces
   file:
@@ -28,19 +28,25 @@
 
 - name: add ssh public key to workspace folder
   copy:
-    src: "{{ instance.ssh_key.file_public }}
+    src: "{{ instance.ssh_key.file_public }}"
     dest: "{{ kvm_host.tmp_workspace }}/ssh_key.pub"
 
 - name: set hostname using nip.io
-  set_fact: hostname="{{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io"
+  set_fact:
+    kvm_params: "{{ kvm_params | combine({ hostname: {{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io }) }}"
   with_dict: "{{ instance.nodes }}"
   when: deployment.use_nip_io
 
 - name: set hostname using provided domain
-  set_fact: hostname="{{ item.key }}.{{ instance.domain }}"
+  set_fact:
+    kvm_params: {{ kvm_params | combine({ hostname: {{ item.key }}.{{ instance.domain }}  }) }}
   with_dict: "{{ instance.nodes }}"
-  with_dict: "{{ instance.nodes }}"
-  when: not deployment.use_nip.io
+  when: not deployment.use_nip_io
+
+- name: check hostname
+  debug:
+    var: "{{ item.value.hostname }}"
+  with_dict: "{{ instance.nodes.kvm_params }}"
 
 - name: clean up old virtual machines and their artifacts
   include: cleanup.yml
@@ -48,12 +54,12 @@
 
 - name: Copy over the virtual disk images
   copy:
-    src: {{ disk_image }}
-    dest: {{ kvm_host.disk_dir }}/{{ item.key }}.qcow2
+    src: "{{ kvm_host.disk_image }}"
+    dest: "{{ kvm_host.disk_dir }}/{{ item.key }}.qcow2"
   with_dict: "{{ instance.nodes }}"
 
 - name: create data disk
-  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key-data.qcow2 {{ item.value.vol_size }}G
+  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2 {{ item.value.vol_size }}G
   with_dict: "{{ instance.nodes }}"
 
 - name: create temporary folder for host disk customization
@@ -87,7 +93,7 @@
 - name: copy over cloud-init ISOs
   copy:
     src: "{{ kvm_host.tmp_workspace }}/{{ item.key }}-ci.iso"
-    dest: "{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso
+    dest: "{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso"
   with_dict: "{{ instance.nodes }}"
   become: yes
 

@@ -1,7 +1,6 @@
-disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
-
 kvm_host:
   cleanup: true
+  disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: /etc/ssh/ssh_known_hosts
   tmp_workspace: /tmp/autoinstaller

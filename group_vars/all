@@ -1,18 +1,36 @@
+kvm_host:
+  cleanup: true
+  disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
+  disk_dir: /var/lib/libvirt/images
+  known_hosts_file: /etc/ssh/ssh_known_hosts
+  tmp_workspace: /tmp/autoinstaller
+  network:
+    name: default
+    network: 192.168.122.0
+    netmask: 255.255.255.0
+    gateway: 192.168.122.1
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
 deployment:
   virt_type: openstack
-  use_nip_io: false
+  use_nip_io: true
   deploy_openshift: true
   openshift_type: origin
   create_flavor: true
   set_up_security: true
   set_up_network: true
 
+hostname_dict:
+  hostname: "{{ hostname }}"
+
 instance:
   image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
   ssh_key:
     name: jduncan_key
-    file_private: /root/.ssh/jduncan
-    file_public: /root/.ssh/jduncan.pub
+    file_private: /home/jduncan/.ssh/id_rsa
+    file_public: /home/jduncan/.ssh/id_rsa.pub
   username: centos
   domain: example.com
   nodes:
