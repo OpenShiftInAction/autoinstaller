@@ -3,3 +3,14 @@
 selinux_bools:
   - virt_use_nfs
   - virt_sandbox_use_nfs
+
+repos:
+  - epel-release
+  - centos-release-openshift-origin
+
+packages:
+  - origin
+  - origin-clients
+  - vim-enhanced
+  - atomic-openshift-utils
+  - NetworkManager

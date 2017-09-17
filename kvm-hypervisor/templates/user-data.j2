@@ -11,7 +11,7 @@ write_files:
    127.0.0.1		localhost.localdomain localhost
    ::1		localhost6.localdomain6 localhost6
    {% for item in instance.nodes %}
-   {{ item.value.ip }} {{ item.key }} {{ item.hostname }}
+   {{ instance.nodes[item].kvm_params.ip }} {{ item }} {{ instance.nodes[item].kvm_params.hostname }}
    {% endfor %}
   owner: root:root
   path: /etc/hosts

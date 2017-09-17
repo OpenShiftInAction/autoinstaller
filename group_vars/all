@@ -22,9 +22,6 @@ deployment:
   set_up_security: true
   set_up_network: true
 
-hostname_dict:
-  hostname: "{{ hostname }}"
-
 instance:
   image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
   ssh_key:
@@ -42,7 +39,7 @@ instance:
         ip: 192.168.122.100
         ram: 4096
         vcpus: 2
-        mac: 52:54:00:00:00:01
+        mac: 00:1c:c4:00:00:01
         role: master
         hostname: ocp1.192.168.122.100.nip.io
     ocp2:
@@ -54,7 +51,7 @@ instance:
         ip: 192.168.122.101
         ram: 4096
         vcpus: 2
-        mac: 52:54:00:00:00:02
+        mac: 00:1c:c4:00:00:02
         role: node
         hostname: ocp1.192.168.122.101.nip.io
     ocp3:
@@ -66,6 +63,6 @@ instance:
         ip: 192.168.122.102
         ram: 4096
         vcpus: 2
-        mac: 52:54:00:00:00:03
+        mac: 00:1c:c4:00:00:03
         role: node
         hostname: ocp1.192.168.122.102.nip.io

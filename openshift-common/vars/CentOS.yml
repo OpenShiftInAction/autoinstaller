@@ -1,5 +1,3 @@
----
-# CentOS vars file for openshift-installer
 repos:
   - epel-release
   - centos-release-openshift-origin

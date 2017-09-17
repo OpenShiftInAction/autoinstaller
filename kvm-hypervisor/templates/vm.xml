@@ -1,7 +1,7 @@
 <domain type='kvm'>
-  <name>'{{ item.key }}'</name>
-  <memory unit='KiB'>'{{ item.value.kvm_params.ram }}'</memory>
-  <vcpu>'{{ item.values.kvm_params.vcpus }}'</vcpu>
+  <name>{{ item.key }}</name>
+  <memory unit='MiB'>{{ item.value.kvm_params.ram }}</memory>
+  <vcpu>{{ item.value.kvm_params.vcpus }}</vcpu>
 
   <os>
     <type arch='x86_64' machine='pc'>hvm</type>
@@ -43,7 +43,7 @@
 
     <interface type='network'>
       <source network='{{ kvm_host.network.name }}'/>
-      <mac address='{{ item.values.kvm_params.mac }}'/>
+      <mac address='{{ item.value.kvm_params.mac | hwaddr }}'/>
       <model type='virtio'/>
     </interface>
 

@@ -1,5 +1,5 @@
 instance-id: {{ item.key }}
-local-hostname: {{ item.hostname }}
+local-hostname: {{ item.value.kvm_params.hostname }}
 network-interfaces: |
   auto lo
   iface lo inet loopback

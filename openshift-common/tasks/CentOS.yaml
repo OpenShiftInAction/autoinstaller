@@ -1,8 +1,8 @@
 ---
 #CentOS-specific tasks
-- name: include CentOS vars
-  include_vars:
-    file: "{{ ansible_distribution }}.yaml"
+# - name: include CentOS vars
+#   include_vars:
+#     file: "{{ role_path }}/vars/{{ ansible_distribution }}.yaml"
 
 - name: install needed repositories
   yum:
