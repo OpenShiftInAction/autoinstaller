@@ -31,23 +31,6 @@
     src: "{{ instance.ssh_key.file_public }}"
     dest: "{{ kvm_host.tmp_workspace }}/ssh_key.pub"
 
-- name: set hostname using nip.io
-  set_fact:
-    kvm_params: "{{ kvm_params | combine( 'hostname: {{ item.key }}.{{ item.value.kvm_params.ip }}.nip.io' }}"
-  with_dict: "{{ instance.nodes }}"
-  when: deployment.use_nip_io
-
-- name: set hostname using provided domain
-  set_fact:
-    kvm_params: "{{ kvm_params | combine( 'hostname: {{ item.key }}.{{ instance.domain }}' ) }}"
-  with_dict: "{{ instance.nodes }}"
-  when: not deployment.use_nip_io
-
-- name: check hostname
-  debug:
-    var: "{{ item.value.hostname }}"
-  with_dict: "{{ instance.nodes.kvm_params }}"
-
 - name: clean up old virtual machines and their artifacts
   include: cleanup.yml
   when: kvm_host.cleanup

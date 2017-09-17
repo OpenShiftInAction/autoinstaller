@@ -44,6 +44,7 @@ instance:
         vcpus: 2
         mac: 52:54:00:00:00:01
         role: master
+        hostname: ocp1.192.168.122.100.nip.io
     ocp2:
       role: node
       vol_size: 20
@@ -55,6 +56,7 @@ instance:
         vcpus: 2
         mac: 52:54:00:00:00:02
         role: node
+        hostname: ocp1.192.168.122.101.nip.io
     ocp3:
       role: node
       vol_size: 20
@@ -66,3 +68,4 @@ instance:
         vcpus: 2
         mac: 52:54:00:00:00:03
         role: node
+        hostname: ocp1.192.168.122.102.nip.io
