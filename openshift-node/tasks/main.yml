@@ -6,9 +6,9 @@
   with_items:
     - docker
 
-- name: create docker-storage-setup file on node-specific
+- name: create docker-storage-setup file
   template:
-    src: ../templates/docker-storage-setup.j2
+    src: docker-storage-setup.j2
     dest: /etc/sysconfig/docker-storage-setup
     owner: root
     group: root

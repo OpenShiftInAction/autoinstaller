@@ -16,18 +16,20 @@
 
 - name: install the proper version of ansible on master
   pip:
-    name: ansible
-    version: "{{ ansible_version }}"
+    name: "{{ item }}"
+  with_items:
+    - pip==8.1.1
+    - ansible==2.2.2.0
 
 - name: copy authorized key to remote user
   authorized_key:
-    user: "{{ username }}"
+    user: "{{ kvm_host.remote_username }}"
     state: present
-    key: "{{ lookup('file', ssh_key_pub) }}"
+    key: "{{ lookup('file', instance.ssh_key.file_public ) }}"
 
 - name: copy private key to master
   copy:
-    src: "{{ ssh_key }}"
+    src: "{{ instance.ssh_key.file_private }}"
     dest: /root/.ssh/id_rsa
     owner: root
     group: root
@@ -46,8 +48,9 @@
 - name: deploy openshift
   command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install --force
   register: ocp_out
-  when: deploy_openshift
+  when: deployment.deploy_openshift
 
 - name: deploy output
   debug:
-    msg: "{{ deploy_openshigt.stdout }}"
+    msg: "{{ ocp_out.stdout }}"
+  when: deployment.deploy_openshift

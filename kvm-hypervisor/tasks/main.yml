@@ -20,16 +20,20 @@
     name: "{{ kvm_host.tmp_workspace }}"
     state: absent
   ignore_errors: true
+  when: kvm_host.cleanup
 
 - name: create workspace folder
   file:
     name: "{{ kvm_host.tmp_workspace }}"
     state: directory
+  when: kvm_host.cleanup
+
 
 - name: add ssh public key to workspace folder
   copy:
     src: "{{ instance.ssh_key.file_public }}"
     dest: "{{ kvm_host.tmp_workspace }}/ssh_key.pub"
+  when: kvm_host.cleanup
 
 - name: clean up old virtual machines and their artifacts
   include: cleanup.yml
@@ -40,38 +44,45 @@
     src: "{{ kvm_host.disk_image }}"
     dest: "{{ kvm_host.disk_dir }}/{{ item.key }}.qcow2"
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create data disk
   command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2 {{ item.value.vol_size }}G
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create temporary folder for host disk customization
   file:
     name: "{{ kvm_host.tmp_workspace }}/{{ item.key }}"
     state: directory
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create the metadata ISO directory
   file:
     name: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata"
     state: directory
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create meta-data files for cloud-init
   template:
     src: meta-data.j2
     dest: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/meta-data"
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create user-data files for cloud-init
   template:
     src: user-data.j2
     dest: "{{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/user-data"
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: create cloud-config ISO image
   command: genisoimage -o {{ kvm_host.tmp_workspace }}/{{ item.key }}-ci.iso -V cidata -r -J {{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/user-data {{ kvm_host.tmp_workspace }}/{{ item.key }}/metadata/meta-data
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 - name: copy over cloud-init ISOs
   copy:
@@ -79,6 +90,7 @@
     dest: "{{ kvm_host.disk_dir }}/{{ item.key }}-ci.iso"
   with_dict: "{{ instance.nodes }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: Define guest images
   virt:
@@ -88,29 +100,34 @@
     uri: qemu:///system
   with_dict: "{{ instance.nodes }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: remove any static ips from libvirt
   command: virsh net-update {{ kvm_host.network.name }} delete ip-dhcp-host '<host mac="{{ item.value.kvm_params.mac }}" ip="{{ item.value.kvm_params.ip }}"/>' --config --live
   ignore_errors: true
   with_dict: "{{ instance.nodes }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: add static ip addresses for hosts
   command: virsh net-update {{ kvm_host.network.name }} add ip-dhcp-host '<host mac="{{ item.value.kvm_params.mac }}" ip="{{ item.value.kvm_params.ip }}"/>' --config --live
   with_dict: "{{ instance.nodes }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: stop libvirt networking
   virt_net:
     command: destroy
     name: "{{ kvm_host.network.name }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: start libvirt networking
   virt_net:
     command: start
     name: "{{ kvm_host.network.name }}"
   become: yes
+  when: kvm_host.cleanup
 
 - name: Start the new Virtual Machines
   virt:
@@ -119,6 +136,7 @@
     uri: qemu:///system
   with_dict: "{{ instance.nodes }}"
   become: yes
+  when: kvm_host.cleanup
 
 # - name: make sure the known_hosts file exists
 #   file:
@@ -132,6 +150,7 @@
 - name: remove any stale entries for these virtual Machines by ip
   shell: "ssh-keygen -R {{ item.value.kvm_params.ip }} -f {{ kvm_host.known_hosts_file}}"
   with_dict: "{{ instance.nodes }}"
+  when: kvm_host.cleanup
 
 # - name: scan ssh keys by hostname
 #   command: "ssh-keyscan {{ item.key }}"
@@ -169,8 +188,11 @@
     private_hostname: "{{ item.value.kvm_params.hostname }}"
     public_ip: "{{ item.value.kvm_params.ip }}"
     public_hostname: "{{ item.value.kvm_params.hostname }}"
+    docker_vg: "{{ item.value.docker_vg }}"
+    vol_dev: "{{ item.value.vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: wait a few seconds for everything to boot
   pause:
     seconds: 20
+  when: kvm_host.cleanup

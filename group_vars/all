@@ -1,9 +1,10 @@
 kvm_host:
-  cleanup: true
+  cleanup: false
   disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
   disk_dir: /var/lib/libvirt/images
-  known_hosts_file: /etc/ssh/ssh_known_hosts
+  known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
+  remote_username: centos
   network:
     name: default
     network: 192.168.122.0
@@ -16,7 +17,7 @@ kvm_host:
 deployment:
   virt_type: openstack
   use_nip_io: true
-  deploy_openshift: true
+  deploy_openshift: false
   openshift_type: origin
   create_flavor: true
   set_up_security: true
@@ -35,6 +36,7 @@ instance:
       role: master
       vol_size: 20
       vol_dev: /dev/vdb
+      docker_vg: docker_vg
       kvm_params:
         ip: 192.168.122.100
         ram: 4096

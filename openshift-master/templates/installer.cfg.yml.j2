@@ -2,7 +2,7 @@ ansible_callback_facts_yaml: /root/.config/openshift/.ansible/callback_facts.yam
 ansible_inventory_path: .config/openshift/hosts
 ansible_log_path: /tmp/ansible.log
 deployment:
-  ansible_ssh_user: centos
+  ansible_ssh_user: root
   hosts:
 {% for host in groups['master'] %}
   - connect_to: {{ hostvars[host]['public_ip'] }}
@@ -46,6 +46,6 @@ deployment:
     node:
       openshift_disable_check: disk_availability,memory_availability,docker_storage
     storage: {}
-variant: {{ openshift_type }}
+variant: {{ deployment.openshift_type }}
 variant_version: '3.6'
 version: v2

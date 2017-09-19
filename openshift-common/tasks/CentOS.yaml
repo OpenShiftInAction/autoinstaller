@@ -1,8 +1,8 @@
 ---
 #CentOS-specific tasks
-# - name: include CentOS vars
-#   include_vars:
-#     file: "{{ role_path }}/vars/{{ ansible_distribution }}.yaml"
+- name: include CentOS vars
+  include_vars:
+    file: "{{ ansible_distribution }}.yml"
 
 - name: install needed repositories
   yum:
@@ -15,6 +15,14 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ packages }}"
+
+- name: hack for bz1480438 - may be CentOS-specific?
+  file:
+    name: /etc/origin/node
+    state: directory
+
+- name: hack for bz1480438 - may be CentOS-specific?
+  command: cp /etc/resolv.conf /etc/origin/node/resolv.conf
 
 - name: enable and start NetworkManager
   service:

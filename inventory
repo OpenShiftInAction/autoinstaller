@@ -1,2 +1,5 @@
 [install-hosts]
 127.0.0.1 ansible_connection=local
+
+[test]
+192.168.122.100
