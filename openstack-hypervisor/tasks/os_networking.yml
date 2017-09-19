@@ -42,5 +42,5 @@
     name: "{{ networks.external.public.router_name }}"
     network: "{{ networks.external.public.name }}"
     interfaces:
-      - "{{ item.value.subnet_name }}"
+      - "{{ item.key }}_net"
   with_dict: "{{ networks.private }}"
