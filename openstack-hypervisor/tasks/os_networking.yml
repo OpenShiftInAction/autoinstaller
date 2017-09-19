@@ -25,10 +25,10 @@
     name: "{{ items.key }}"
     network_name: "{{ item.key }}_net"
     state: present
-    cidr: "{{ item.value.subnet_cidr }}"
+    cidr: "{{ item.value.openshift_int.subnet_cidr }}"
     dns_nameservers:
-      - "{{ item.value.subnet_dns[0] }}"
-      - "{{ item.value.subnet_dns[1] }}"
+      - "{{ item.value.openshift_int.subnet_dns[0] }}"
+      - "{{ item.value.openshift_int.subnet_dns[1] }}"
   with_dict: "{{ networks.private }}"
 
 - name: create router for project
