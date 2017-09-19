@@ -22,7 +22,7 @@
       username: "{{ auth_creds.username }}"
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
-    name: "{{ items.key }}"
+    name: "{{ item.key }}"
     network_name: "{{ item.key }}_net"
     state: present
     cidr: "{{ item.value.openshift_int.subnet_cidr }}"
