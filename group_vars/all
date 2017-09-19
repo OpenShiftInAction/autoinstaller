@@ -44,6 +44,8 @@ instance:
         mac: 00:1c:c4:00:00:01
         role: master
         hostname: ocp1.192.168.122.100.nip.io
+      openstack_params:
+        private_network: openshift_int
     ocp2:
       role: node
       vol_size: 20
@@ -56,6 +58,8 @@ instance:
         mac: 00:1c:c4:00:00:02
         role: node
         hostname: ocp1.192.168.122.101.nip.io
+      openstack_params:
+        private_network: openshift_int
     ocp3:
       role: node
       vol_size: 20
@@ -68,3 +72,5 @@ instance:
         mac: 00:1c:c4:00:00:03
         role: node
         hostname: ocp1.192.168.122.102.nip.io
+      openstack_params:
+        private_network: openshift_int

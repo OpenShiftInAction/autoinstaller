@@ -56,7 +56,7 @@
     flavor: "{{ flavor.name }}"
     image: "{{ instance.image_id }}"
     key_name: "{{ ssh_key.name }}"
-    network: "{{ private_network.name }}"
+    network: "{{ item.value.openstack_params.private_network }}"
     name: "{{ item.key }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
