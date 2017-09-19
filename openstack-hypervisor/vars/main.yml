@@ -43,14 +43,14 @@ security_group:
       protocol: tcp
       port_range_min: -1
       port_range_max: -1
-      remote_ip_prefix: "{{ private_network.subnet_cidr }}"
+      remote_ip_prefix: "{{ networks.private.openshift_int.subnet_cidr }}"
     allow_8443_public:
       protocol: tcp
       port_range_min: 8443
       port_range_max: 8443
-      remote_ip_prefix: "{{ external_network.subnet_cidr }}"
+      remote_ip_prefix: "{{ networks.external.public.subnet_cidr }}"
     allow_22_public:
       protocol: tcp
       port_range_min: 22
       port_range_max: 22
-      remote_ip_prefix: "{{ external_network.subnet_cidr }}"
+      remote_ip_prefix: "{{ networks.external.public.subnet_cidr }}"
