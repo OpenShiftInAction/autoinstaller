@@ -33,6 +33,7 @@ flavor:
   ram: 8192
   vcpus: 4
   disk: 20
+  create: true
 
 security_group:
   name: openshift

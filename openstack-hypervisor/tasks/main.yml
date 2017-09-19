@@ -31,7 +31,7 @@
     ram: "{{ flavor.ram }}"
     vcpus: "{{ flavor.vcpus }}"
     disk: "{{ flavor.disk }}"
-  when: create_flavor
+  when: flavor.create
 
 - name: create cinder volumes for data
   os_volume:
