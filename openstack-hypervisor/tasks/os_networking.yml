@@ -23,7 +23,7 @@
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     name: "{{ item.key }}"
-    network_name: "{{ item.key }}_net"
+    network_name: "{{ item.value.subnet_name }}"
     state: present
     cidr: "{{ item.value.subnet_cidr }}"
     dns_nameservers:
