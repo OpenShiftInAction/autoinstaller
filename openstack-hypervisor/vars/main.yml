@@ -24,7 +24,6 @@ networks:
   private:
     openshift_int:
       subnet_cidr: 192.168.122.0/24
-      subnet_name: openshift_subnet
       subnet_dns:
         - 8.8.8.8
         - 8.8.4.4
