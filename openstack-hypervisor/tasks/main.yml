@@ -99,7 +99,7 @@
     private_hostname: "{{ item.name }}.{{ item.private_v4}}.nip.io"
     public_ip: "{{ item.public_v4 }}"
     public_hostname: "{{ item.name }}.{{ item.public_v4 }}.nip.io"
-    docker_vg: "{{ item.medatada.docker_vg }}"
+    docker_vg: "{{ item.metadada.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
   with_items: "{{ openstack_servers }}"
 
