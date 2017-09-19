@@ -55,7 +55,7 @@
     state: present
     flavor: "{{ flavor.name }}"
     image: "{{ instance.image_id }}"
-    key_name: "{{ ssh_key.name }}"
+    key_name: "{{ instance.ssh_key.name }}"
     network: "{{ item.value.openstack_params.private_network }}"
     name: "{{ item.key }}"
     auto_ip: yes
