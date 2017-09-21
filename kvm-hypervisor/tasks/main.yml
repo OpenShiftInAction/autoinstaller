@@ -10,10 +10,12 @@
     seconds: 30
   when: libvirtd.changed
 
-# - name: ensure genisoimage is installed
-#   yum:
-#     name: genisoimage
-#     state: present
+- name: pull in distribution-specific variables
+  include_vars:
+    file: "{{ ansible_distribution }}.yml"
+
+- name: pull in distribution-specific tasks
+  include: "{{ ansible_distribution }}.yml"
 
 - name: clean up any old temporary workspaces
   file:
