@@ -13,6 +13,6 @@ write_files:
    {% for item in instance.nodes %}
    {{ instance.nodes[item].kvm_params.ip }} {{ item }} {{ instance.nodes[item].kvm_params.hostname }}
    {% endfor %}
-owner: root:root
-path: /etc/hosts
-permissions: '0644'
+  path: /etc/hosts
+  owner: root:root
+  permissions: '0644'

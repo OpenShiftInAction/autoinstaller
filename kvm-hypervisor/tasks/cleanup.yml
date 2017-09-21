@@ -1,3 +1,11 @@
+- name: remove old ssh key entries by IP
+  command: ssh-keygen -f {{ kvm_host.known_hosts_file }} -R {{ item.value.kvm_params.ip }}
+  with_dict: "{{ instance.nodes }}"
+
+- name: remove old ssh key entries by hostname
+  command: ssh-keygen -f {{ kvm_host.known_hosts_file }} -R {{ item.value.kvm_params.hostname }}
+  with_dict: "{{ instance.nodes }}"
+
 - name: power down any old instances of this group
   virt:
     name: "{{ item.key }}"

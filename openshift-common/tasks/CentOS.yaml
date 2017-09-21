@@ -24,10 +24,16 @@
 - name: hack for bz1480438 - may be CentOS-specific?
   command: cp /etc/resolv.conf /etc/origin/node/resolv.conf
 
-- name: hack for bz1334895
+- name: hack for bz1334895 - create upstream-dns.conf for origin
   template:
     src: origin-upstream-dns.conf.j2
     dest: /etc/dnsmasq.d/origin-upstream-dns.conf
+
+- name: hack for bz1334895 - add cluster.local to resolv.conf
+  lineinfile:
+    name: /etc/resolv.conf
+    regexp: '^search'
+    line: 'search cluster.local'
 
 - name: enable and start NetworkManager
   service:

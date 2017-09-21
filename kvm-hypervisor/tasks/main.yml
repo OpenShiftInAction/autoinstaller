@@ -140,45 +140,13 @@
   become: yes
   when: kvm_host.cleanup
 
-# - name: make sure the known_hosts file exists
-#   file:
-#     path: "{{ kvm_host.known_hosts_file }}"
-#     state: touch
-
-# - name: remove any stale entries for these virtual Machines by hostname
-#   shell: "ssh-keygen -R {{ item.key }} -f {{ kvm_host.known_hosts_file}}"
-#   with_dict: "{{ instance.nodes }}"
-#
-- name: remove any stale entries for these virtual Machines by ip
-  shell: "ssh-keygen -R {{ item.value.kvm_params.ip }} -f {{ kvm_host.known_hosts_file}}"
+- name: scan ssh keys by hostname
+  shell: ssh-keyscan {{ item.value.kvm_params.hostname }} >> {{ kvm_host.known_hosts_file }}
   with_dict: "{{ instance.nodes }}"
-  when: kvm_host.cleanup
 
-# - name: scan ssh keys by hostname
-#   command: "ssh-keyscan {{ item.key }}"
-#   register: "{{ item.key }}-host_keys_hostname"
-#   with_dict: "{{ instance.nodes }}"
-#   changed_when: false
-#   delegate_to: localhost
-#   become: false
-#
-# - name: scan ssh keys by IP
-#   command: "ssh-keyscan {{ item.value.kvm_params.ip }}"
-#   register: "{{ item.key }}-host_keys_ip"
-#   with_dict: "{{ instance.nodes }}"
-#   changed_when: false
-#   delegate_to: localhost
-#   become: false
-#
-# - name: write ssh keys to known_hosts
-#   template:
-#     src: "ssh-hosts.j2"
-#     dest: "{{ kvm_host.known_hosts_file }}"
-#
-# - name: make sure all vms are running
-#   local_action: wait_for host={{ item.key }} port=22 state=started delay=5 timeout=300
-#   become: false
-#   with_dict: "{{ instance.nodes }}"
+- name: scan ssh keys by IP
+  shell: ssh-keyscan {{ item.value.kvm_params.ip }} >> {{ kvm_host.known_hosts_file }}
+  with_dict: "{{ instance.nodes }}"
 
 - name: create dynamic groups to deploy openshift
   add_host:
