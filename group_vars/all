@@ -17,7 +17,7 @@ kvm_host:
 deployment:
   virt_type: openstack
   use_nip_io: true
-  deploy_openshift: false
+  deploy_openshift: true
   openshift_type: origin
   create_flavor: true
   set_up_security: true
