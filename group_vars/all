@@ -1,5 +1,5 @@
 kvm_host:
-  cleanup: false
+  cleanup: true
   disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
