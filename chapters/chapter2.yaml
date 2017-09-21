@@ -2,7 +2,7 @@
 # Chapter 2 exercise automation
 # Be sure to reference the inventory file for your cluster.
 
-- hosts: openshift-masters
+- hosts: master
   remote_user: centos
   become: yes
   vars:

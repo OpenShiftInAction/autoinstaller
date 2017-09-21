@@ -2,7 +2,7 @@
 # Chapter 3 automation playbook
 # Be sure to reference the inventory file for your cluster.
 
-- hosts: openshift-masters
+- hosts: master
   remote_user: centos
   become: yes
   vars:
