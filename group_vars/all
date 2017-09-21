@@ -38,7 +38,7 @@ instance:
       docker_vg: docker_vg
       kvm_params:
         ip: 192.168.122.100
-        ram: 4096
+        ram: 8192
         vcpus: 2
         mac: 00:1c:c4:00:00:01
         role: master
@@ -52,7 +52,7 @@ instance:
       docker_vg: docker_vg
       kvm_params:
         ip: 192.168.122.101
-        ram: 4096
+        ram: 8192
         vcpus: 2
         mac: 00:1c:c4:00:00:02
         role: node
