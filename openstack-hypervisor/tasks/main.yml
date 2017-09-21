@@ -54,7 +54,7 @@
       project_name: "{{ auth_creds.project }}"
     state: present
     flavor: "{{ flavor.name }}"
-    image: "{{ instance.image_id }}"
+    image: "{{ item.value.openstack_params.image_id }}"
     key_name: "{{ instance.ssh_key.name }}"
     network: "{{ item.value.openstack_params.private_network }}"
     name: "{{ item.key }}"
