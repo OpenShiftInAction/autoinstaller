@@ -6,7 +6,7 @@
   remote_user: centos
   become: yes
   vars:
-    server: https://ocp1.{{ ansible_hostname }}.nip.io:8443
+    server: https://ocp1.{{ inventory_hostname }}.nip.io:8443
     master_config_file: /etc/origin/master/master-config.yaml
     htpasswd_file: /etc/origin/master/openshift.htpasswd
     openshift_users:

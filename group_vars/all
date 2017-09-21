@@ -56,7 +56,7 @@ instance:
         vcpus: 2
         mac: 00:1c:c4:00:00:02
         role: node
-        hostname: ocp1.192.168.122.101.nip.io
+        hostname: ocp2.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
         image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa

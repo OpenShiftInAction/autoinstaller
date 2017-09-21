@@ -6,9 +6,9 @@
   remote_user: centos
   become: yes
   vars:
-    server: https://ocp1.{{ ansible_hostname }}.nip.io:8443
+    server: https://ocp1.{{ inventory_hostname }}.nip.io:8443
     install_directory: /root/autoinstaller
-    nfs_server_host: "{{ ansible_hostname }}"
+    nfs_server_host: "{{ inventory_hostname }}"
     nfs_export_dirs:
     - pv01
     - pv02

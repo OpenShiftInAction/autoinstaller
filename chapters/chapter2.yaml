@@ -6,7 +6,7 @@
   remote_user: centos
   become: yes
   vars:
-    server: https://ocp1.{{ ansible_hostname }}.nip.io:8443
+    server: https://ocp1.{{ inventory_hostname }}.nip.io:8443
     app_names:
     - app-cli
     - app-gui
