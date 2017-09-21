@@ -60,17 +60,3 @@ instance:
         hostname: ocp1.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
-    ocp3:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
-      kvm_params:
-        ip: 192.168.122.102
-        ram: 4096
-        vcpus: 2
-        mac: 00:1c:c4:00:00:03
-        role: node
-        hostname: ocp1.192.168.122.102.nip.io
-      openstack_params:
-        private_network: openshift_int
