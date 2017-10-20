@@ -1,0 +1,7 @@
+- name: install CRI-O as the container runtime
+  hosts: all
+  remote_user: centos
+  become: yes
+
+  roles:
+    - crio-replace
