@@ -21,4 +21,4 @@
 - name: update system
   yum:
     state: latest
-    name: *
+    name: '*'
