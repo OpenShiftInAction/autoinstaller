@@ -10,12 +10,12 @@
     seconds: 30
   when: libvirtd.changed
 
-- name: pull in distribution-specific variables
-  include_vars:
-    file: "{{ ansible_distribution }}.yml"
-
-- name: pull in distribution-specific tasks
-  include: "{{ ansible_distribution }}.yml"
+# - name: pull in distribution-specific variables
+#   include_vars:
+#     file: "{{ ansible_distribution }}.yml"
+#
+# - name: pull in distribution-specific tasks
+#   include: "{{ ansible_distribution }}.yml"
 
 - name: clean up any old temporary workspaces
   file:

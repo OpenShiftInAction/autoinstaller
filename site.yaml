@@ -10,13 +10,13 @@
   roles:
     - openshift-common
 
-- hosts: openshift-nodes
+- hosts: node
   remote_user: centos
   become: yes
   roles:
     - openshift-node
 
-- hosts: openshift-masters
+- hosts: master
   remote_user: centos
   become: yes
   roles:

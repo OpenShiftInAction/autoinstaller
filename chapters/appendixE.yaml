@@ -1,0 +1,5 @@
+- hosts: new_node
+  remote_user: root
+  roles:
+    - "../openshift-common"
+    - "../openshift-node"

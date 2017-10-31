@@ -5,6 +5,7 @@
     name: "{{item}}"
   with_items:
     - docker
+    - libcgroup-tools
 
 - name: create docker-storage-setup file
   template:
