@@ -8,6 +8,7 @@
     username: "{{ rhn_user }}"
     password: "{{ rhn_pass }}"
     pool_ids: "{{ rhn_pool_id }}"
+    force_register: yes
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"
