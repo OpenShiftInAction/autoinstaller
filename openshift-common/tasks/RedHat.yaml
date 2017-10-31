@@ -1,3 +1,7 @@
+- name: include RHEL vars
+  include_vars:
+    file: "{{ ansible_distribution }}.yml"
+
 - name: Register system
   redhat_subscription:
     state: present
