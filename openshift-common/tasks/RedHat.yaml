@@ -1,9 +1,9 @@
 - name: Register system
   redhat_subscription:
     state: present
-    username: {{ rhn_user }}
-    password: {{ rhn_pass }}
-    pool_ids: {{ rhn_pool_id }}
+    username: "{{ rhn_user }}"
+    password: "{{ rhn_pass }}"
+    pool_ids: "{{ rhn_pool_id }}"
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"
