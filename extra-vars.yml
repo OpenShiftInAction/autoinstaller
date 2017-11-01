@@ -18,7 +18,7 @@ var_domain: example.com
 # The SSH key to use.
 # For KVM, it's copied over
 # For OpenStack, it's used to upload the public key with name of `var_ssh_key_name`
-var_ssh_key_file: /root/jduncan
+var_ssh_key_file: /root/.ssh/id_rsa
 
 # --------------------
 # OpenShift Options
