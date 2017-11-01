@@ -1,10 +1,10 @@
 kvm_host:
-  cleanup: {{ var_cleanup }}
-  disk_image: {{ var_disk_image }}
+  cleanup: "{{ var_cleanup }}"
+  disk_image: "{{ var_disk_image }}"
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
-  remote_username: {{ var_remote_username }}
+  remote_username: "{{ var_remote_username }}"
   network:
     name: default
     network: 192.168.122.0
@@ -16,21 +16,21 @@ kvm_host:
 
 deployment:
   virt_type: openstack
-  use_nip_io: {{ var_nip_io }}
-  deploy_openshift: {{ var_deploy_openshift }}
-  openshift_type: {{ var_openshift_type }}
-  create_flavor: {{ var_create_flavor }}
-  set_up_security: {{ var_setup_security }}
-  set_up_network: {{ var_setup_network }}
-  remote_user: {{ var_remote_username }}
+  use_nip_io: "{{ var_nip_io }}"
+  deploy_openshift: "{{ var_deploy_openshift }}"
+  openshift_type: "{{ var_openshift_type }}"
+  create_flavor: "{{ var_create_flavor }}"
+  set_up_security: "{{ var_setup_security }}"
+  set_up_network: "{{ var_setup_network }}"
+  remote_user: "{{ var_remote_username }}"
 
 instance:
   ssh_key:
-    name: {{ var_ssh_key_name }}
-    file_private: {{ var_ssh_key_file }}
+    name: "{{ var_ssh_key_name }}"
+    file_private: "{{ var_ssh_key_file }}"
     file_public: "{{ var_ssh_key_file}}.pub"
-  username: {{ var_remote_username }}
-  domain: {{ var_domain }}
+  username: "{{ var_remote_username }}"
+  domain: "{{ var_domain }}"
   nodes:
     ocp1:
       role: master
