@@ -57,3 +57,5 @@ var_setup_security: true
 var_setup_network: true
 # SSH key name in OpenStack to use
 var_ssh_key_name: jduncan_key
+# Image ID to use
+var_image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa

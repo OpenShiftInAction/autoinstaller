@@ -46,6 +46,7 @@ instance:
         hostname: ocp1.192.168.122.100.nip.io
       openstack_params:
         private_network: openshift_int
+        image_id: "{{ var_image_id }}"
     ocp2:
       role: node
       vol_size: 20
@@ -60,4 +61,4 @@ instance:
         hostname: ocp2.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: 556f8523-3af3-4980-9d94-3a7d414b96aa
+        image_id: "{{ var_image_id }}"
