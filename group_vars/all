@@ -28,7 +28,7 @@ instance:
   ssh_key:
     name: {{ var_ssh_key_name }}
     file_private: {{ var_ssh_key_file }}
-    file_public: {{ var_ssh_key_file}}.pub
+    file_public: "{{ var_ssh_key_file}}.pub"
   username: {{ var_remote_username }}
   domain: {{ var_domain }}
   nodes:
