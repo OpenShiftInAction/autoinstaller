@@ -2,6 +2,10 @@
   include_vars:
     file: "{{ ansible_distribution }}.yml"
 
+- name: check to see if system is already registered
+  command: subscription-manager status
+  register: sub_status
+
 - name: Register system
   redhat_subscription:
     state: present
@@ -9,6 +13,7 @@
     password: "{{ rhn_pass }}"
     pool_ids: "{{ rhn_pool_id }}"
     force_register: yes
+  when: 'Current' in sub_status.stdout
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"

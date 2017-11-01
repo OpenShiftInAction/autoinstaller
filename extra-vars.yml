@@ -1,0 +1,59 @@
+# Sample extra vars file to set variables for deployment
+
+# --------------------
+# Deployment Options
+# --------------------
+
+# user to log into the cluster VMs with
+# RHEL cloud image : cloud-user
+# RHEL ISO: root
+# CentOS cloud image: centos
+# CentOS ISO: root
+var_remote_username: cloud-user
+# use nip.io for hostnames and domain
+var_nip_io: true
+# if var_nip_io is set to false, you need to
+# provide a domain for the hostnames
+var_domain: example.com
+# The SSH key to use.
+# For KVM, it's copied over
+# For OpenStack, it's used to upload the public key with name of `var_ssh_key_name`
+var_ssh_key_file: /root/jduncan
+
+# --------------------
+# OpenShift Options
+# --------------------
+# deploy openshift or just prepare the systems
+var_deploy_openshift: true
+# version of OpenShift to deploy. Options:
+# origin
+# openshift-enterprise
+var_openshift_type: openshift-enterprise
+
+### EXPERIMENTAL ###
+# Deploy metrics or not
+var_deploy_metrics: false
+# Deploy the service catalog or not
+var_deploy_service_catalog: true
+# Deploy CNS (Container Native Storage) or not
+var_deploy_cns: false
+
+# ------------------
+#KVM Options
+# ------------------
+# remove old VMs or not
+var_cleanup: true
+var_disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
+
+# ------------------
+# OpenStack Options
+# ------------------
+# Create a custom flavor for OCP nodes
+# 4vcpu / 8GB RAM / 20GB disk
+var_create_flavor: true
+# Create custom security group
+var_setup_security: true
+# Create network / subnet
+var_setup_network: true
+# SSH key name in OpenStack to use
+var_ssh_key_name: jduncan_key

@@ -1,10 +1,10 @@
 kvm_host:
-  cleanup: true
-  disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
+  cleanup: {{ var_cleanup }}
+  disk_image: {{ var_disk_image }}
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
-  remote_username: centos
+  remote_username: {{ var_remote_username }}
   network:
     name: default
     network: 192.168.122.0
@@ -16,20 +16,21 @@ kvm_host:
 
 deployment:
   virt_type: openstack
-  use_nip_io: true
-  deploy_openshift: true
-  openshift_type: origin
-  create_flavor: true
-  set_up_security: true
-  set_up_network: true
+  use_nip_io: {{ var_nip_io }}
+  deploy_openshift: {{ var_deploy_openshift }}
+  openshift_type: {{ var_openshift_type }}
+  create_flavor: {{ var_create_flavor }}
+  set_up_security: {{ var_setup_security }}
+  set_up_network: {{ var_setup_network }}
+  remote_user: {{ var_remote_username }}
 
 instance:
   ssh_key:
-    name: jduncan_key
-    file_private: /home/jduncan/.ssh/id_rsa
-    file_public: /home/jduncan/.ssh/id_rsa.pub
-  username: centos
-  domain: example.com
+    name: {{ var_ssh_key_name }}
+    file_private: {{ var_ssh_key_file }}
+    file_public: {{ var_ssh_key_file}}.pub
+  username: {{ var_remote_username }}
+  domain: {{ var_domain }}
   nodes:
     ocp1:
       role: master
