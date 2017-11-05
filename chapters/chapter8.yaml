@@ -13,7 +13,7 @@
     command: oc create -f https://raw.githubusercontent.com/OpenShiftInAction/chapter8/master/wildfly-template.yaml -n stateful-apps
 
   - name: give the default serviceaccount access to the new project
-    command: oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
+    command: oc policy add-role-to-user view system:serviceaccount:stateful-apps:default -n stateful-apps
 
   - name: deploy the graceful shutdown application
     command: oc new-app -l app=graceful --context-dir=dockerfile-graceful-shutdown https://github.com/OpenShiftInAction/chapter8
