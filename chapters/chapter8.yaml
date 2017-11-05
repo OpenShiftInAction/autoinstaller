@@ -1,0 +1,28 @@
+- hosts: master
+  remote_user: centos
+  become: yes
+
+  tasks:
+  - name: log in as the developer user
+    command: oc login -u developer -p developer https://ocp1.192.168.122.100.nip.io:8443
+
+  - name: create the stateful-apps project
+    command: oc new-project stateful-apps
+
+  - name: install the wildfly application template
+    command: oc create -f https://raw.githubusercontent.com/OpenShiftInAction/chapter8/master/wildfly-template.yaml -n stateful-apps
+
+  - name: give the default serviceaccount access to the new project
+    command: oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
+
+  - name: deploy the graceful shutdown application
+    command: oc new-app -l app=graceful --context-dir=dockerfile-graceful-shutdown https://github.com/OpenShiftInAction/chapter8
+
+  - name: create the statefulset project
+    command: oc new-project statefulset
+
+  - name: deploy the stateful set application
+    command: oc create -f https://raw.githubusercontent.com/OpenShiftInAction/chapter8/master/statefulsets/mongodb-statefulset-replication-emptydir.yaml -n statefulset
+
+  - name: scale the mongodb stateful set app to 3 replicas
+    command: oc scale statefulsets mongodb --replicas=3
