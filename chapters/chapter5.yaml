@@ -1,0 +1,13 @@
+- hosts: master
+  remote_user: centos
+  become: yes
+
+  taks:
+  - name: run metrics installation playbook
+    command: ansible-playbook -i /root/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/openshift-cluster/openshift-metrics.yml -e openshift_metrics_install_metrics=True -e openshift_metrics_start_cluster=True -e openshift_metrics_duration=1 -e openshift_metrics_hawkular_hostname=hawkular-metrics.apps.192.168.122.101.nip.io
+
+  - name: set autoscale for app-cli
+    command: oc autoscale dc/app-cli --min 2 --max 5 --cpu-percent=80
+
+  - name: set CPU request for app-cli
+    command: oc set resources dc app-cli --requests=cpu=400m
