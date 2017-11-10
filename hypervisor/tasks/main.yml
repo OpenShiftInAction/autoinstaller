@@ -1,0 +1,5 @@
+---
+# tasks file for hypervisor
+- name: include the proper role for the virt type
+  include_role:
+    name: "{{ deployment.virt_type }}-hypervisor"

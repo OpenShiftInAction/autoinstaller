@@ -2,7 +2,7 @@
 - hosts: install-hosts
   become: yes
   roles:
-    - kvm-hypervisor
+    - hypervisor
 
 - hosts: openshift
   become: yes
