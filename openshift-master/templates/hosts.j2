@@ -7,7 +7,7 @@ glusterfs
 
 [OSEv3:vars]
 ansible_ssh_user={{ deployment.remote_user }}
-{% if use_nip_io %}
+{% if deployment.use_nip_io %}
 openshift_master_default_subdomain=apps.{{ instance.nodes.ocp2.kvm_params.ip }}.nip.io
 {% else %}
 openshift_master_default_subdomain={{ instance.domain }}
