@@ -131,7 +131,7 @@
     vol_dev: "{{ item.metadata.vol_dev }}"
   with_items: "{{ openstack_servers }}"
 
-- name: create groups
+- name: create gluster group
   add_host:
     name: "{{ item.name }}"
     ansible_ssh_host: "{{ item.public_v4 }}"
@@ -139,7 +139,7 @@
     ansible_ssh_port: 22
     groups: gluster
   with_items: "{{ openstack_servers }}"
-  when: item.cns_role
+  when: item.metadata.cns_role
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
