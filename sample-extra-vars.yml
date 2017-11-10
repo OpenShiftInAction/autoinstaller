@@ -19,7 +19,11 @@ var_domain: example.com
 # For KVM, it's copied over
 # For OpenStack, it's used to upload the public key with name of `var_ssh_key_name`
 var_ssh_key_file: /root/.ssh/id_rsa
-
+# Deployment platform
+# Current Options:
+# - kvm (local laptop)
+# - openstack
+deployment_type: openstack
 # --------------------
 # OpenShift Options
 # --------------------
