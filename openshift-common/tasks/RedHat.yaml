@@ -5,6 +5,7 @@
 - name: check to see if system is already registered
   command: subscription-manager status
   register: sub_status
+  failed_when: sub_status.rc != 0 and sub_status.rc != 1
 
 - name: Register system
   redhat_subscription:
