@@ -13,7 +13,7 @@ openshift_master_default_subdomain=apps.{{ instance.nodes.ocp2.kvm_params.ip }}.
 openshift_master_default_subdomain={{ instance.domain }}
 {% endif %}
 openshift_deployment_type={{ deployment.openshift_type }}
-{% if set_up_cns %}
+{% if deployment.set_up_cns %}
 openshift_hosted_registry_storage_kind=glusterfs
 {% endif %}
 openshift_disable_check=disk_availability,memory_availability,docker_storage
@@ -44,6 +44,6 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 {% if deployment.set_up_cns %}
 [glusterfs]
 {% for host in groups['gluster'] %}
-{{ hostvars[groups['node'][0]]['public_ip']}} glusterfs_devices="[ '{{ cns_vol_dev }}']"
+{{ hostvars[host]]['public_ip']}} glusterfs_devices="[ '{{ hostvars[host]['cns_vol_dev'] }}']"
 {% endfor %}
 {% endif %}
