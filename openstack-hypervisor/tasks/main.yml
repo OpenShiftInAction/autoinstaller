@@ -73,7 +73,7 @@
     name: "{{ item.key }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
-    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_role={{ item.value.cns_node }},cns_vol_dev={{ item.value.cns_vol_dev }}"
+    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_node={{ item.value.cns_node }},cns_vol_dev={{ item.value.cns_vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: attach data volumes to servers
