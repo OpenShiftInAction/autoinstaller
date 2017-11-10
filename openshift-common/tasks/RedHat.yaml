@@ -13,7 +13,7 @@
     password: "{{ rhn_pass }}"
     pool_ids: "{{ rhn_pool_id }}"
     force_register: yes
-  when: 'Current' in sub_status.stdout
+  when: sub_status.stdout.find("Current") != -1
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"
