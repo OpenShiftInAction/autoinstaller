@@ -76,32 +76,32 @@
     meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_role={{ item.value.cns_node }}"
   with_dict: "{{ instance.nodes }}"
 
-  - name: attach data volumes to servers
-    os_server_volume:
-      auth:
-        auth_url: "{{ auth_creds.url }}"
-        username: "{{ auth_creds.username }}"
-        password: "{{ auth_creds.password }}"
-        project_name: "{{ auth_creds.project }}"
-      state: present
-      server: "{{ item.key }}"
-      volume: "{{ item.key }}"
-      device: "{{ item.value.vol_dev }}"
-    with_dict: "{{ instance.nodes }}"
+- name: attach data volumes to servers
+  os_server_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    server: "{{ item.key }}"
+    volume: "{{ item.key }}"
+    device: "{{ item.value.vol_dev }}"
+  with_dict: "{{ instance.nodes }}"
 
-  - name: attach storage volumes to servers
-    os_server_volume:
-      auth:
-        auth_url: "{{ auth_creds.url }}"
-        username: "{{ auth_creds.username }}"
-        password: "{{ auth_creds.password }}"
-        project_name: "{{ auth_creds.project }}"
-      state: present
-      server: "{{ item.key }}"
-      volume: "{{ item.key }}-cns"
-      device: "{{ item.value.cns_vol_dev }}"
-    with_dict: "{{ instance.nodes }}"
-    when: deployment.set_up_cns and item.cns_node
+- name: attach storage volumes to servers
+  os_server_volume:
+    auth:
+      auth_url: "{{ auth_creds.url }}"
+      username: "{{ auth_creds.username }}"
+      password: "{{ auth_creds.password }}"
+      project_name: "{{ auth_creds.project }}"
+    state: present
+    server: "{{ item.key }}"
+    volume: "{{ item.key }}-cns"
+    device: "{{ item.value.cns_vol_dev }}"
+  with_dict: "{{ instance.nodes }}"
+  when: deployment.set_up_cns and item.cns_node
 
 - name: gather openstack facts
   os_server_facts:
