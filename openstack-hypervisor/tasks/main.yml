@@ -101,7 +101,7 @@
     volume: "{{ item.key }}-cns"
     device: "{{ item.value.cns_vol_dev }}"
   with_dict: "{{ instance.nodes }}"
-  when: deployment.set_up_cns and item.cns_node
+  when: deployment.set_up_cns and item.value.cns_node
 
 - name: gather openstack facts
   os_server_facts:
