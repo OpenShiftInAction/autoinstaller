@@ -5,19 +5,16 @@
     - kvm-hypervisor
 
 - hosts: openshift
-  remote_user: centos
   become: yes
   roles:
     - openshift-common
 
 - hosts: node
-  remote_user: centos
   become: yes
   roles:
     - openshift-node
 
 - hosts: master
-  remote_user: centos
   become: yes
   roles:
     - openshift-master
