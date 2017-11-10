@@ -1,7 +1,7 @@
 [OSEv3:children]
 masters
 nodes
-{% if set_up_cns %}
+{% if deployment.set_up_cns %}
 glusterfs
 {% endif %}
 
@@ -41,7 +41,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 {{ hostvars[host]['public_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True openshift_schedulable=True
 {% endfor %}
 
-{% if set_up_cns %}
+{% if deployment.set_up_cns %}
 [glusterfs]
 {% for host in groups['gluster'] %}
 {{ hostvars[groups['node'][0]]['public_ip']}} glusterfs_devices="[ '{{ cns_vol_dev }}']"
