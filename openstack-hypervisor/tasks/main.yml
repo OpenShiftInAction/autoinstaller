@@ -140,7 +140,7 @@
     ansible_ssh_port: 22
     groups: gluster
   with_items: "{{ openstack_servers }}"
-  when: item.metadata.cns_role
+  when: item.metadata.cns_node
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
