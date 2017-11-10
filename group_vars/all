@@ -42,6 +42,8 @@ instance:
       vol_dev: /dev/vdb
       docker_vg: docker_vg
       cns_node: false
+      cns_vol_size: 20
+      cns_vol_dev: /dev/vdc
       kvm_params:
         ip: 192.168.122.100
         ram: 8192
@@ -58,6 +60,8 @@ instance:
       vol_dev: /dev/vdb
       docker_vg: docker_vg
       cns_node: false
+      cns_vol_size: 20
+      cns_vol_dev: /dev/vdc
       kvm_params:
         ip: 192.168.122.101
         ram: 8192
