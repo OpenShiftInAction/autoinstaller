@@ -23,6 +23,10 @@ deployment:
   set_up_security: "{{ var_setup_security }}"
   set_up_network: "{{ var_setup_network }}"
   remote_user: "{{ var_remote_username }}"
+  set_up_cns: "{{ var_deploy_cns }}"
+  set_up_metrics: "{{ var_deploy_metrics }}"
+  set_up_catalog: "{{ var_deploy_service_catalog }}"
+  set_up_httpd_auth: "{{ var_deploy_httpd_auth }}"
 
 instance:
   ssh_key:
@@ -37,6 +41,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
+      cns_node: false
       kvm_params:
         ip: 192.168.122.100
         ram: 8192
@@ -52,6 +57,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
+      cns_node: false
       kvm_params:
         ip: 192.168.122.101
         ram: 8192
@@ -59,6 +65,60 @@ instance:
         mac: 00:1c:c4:00:00:02
         role: node
         hostname: ocp2.192.168.122.101.nip.io
+      openstack_params:
+        private_network: openshift_int
+        image_id: "{{ var_image_id }}"
+    ocp3:
+      role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
+      docker_vg: docker_vg
+      cns_node: true
+      cns_vol_size: 20
+      cns_vol_dev: /dev/vdc
+      kvm_params:
+        ip: 192.168.122.102
+        ram: 8192
+        vcpus: 2
+        mac: 00:1c:c4:00:00:03
+        role: node
+        hostname: ocp2.192.168.122.102.nip.io
+      openstack_params:
+        private_network: openshift_int
+        image_id: "{{ var_image_id }}"
+    ocp4:
+      role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
+      docker_vg: docker_vg
+      cns_node: true
+      cns_vol_size: 20
+      cns_vol_dev: /dev/vdc
+      kvm_params:
+        ip: 192.168.122.103
+        ram: 8192
+        vcpus: 2
+        mac: 00:1c:c4:00:00:04
+        role: node
+        hostname: ocp2.192.168.122.103.nip.io
+      openstack_params:
+        private_network: openshift_int
+        image_id: "{{ var_image_id }}"
+    ocp5:
+      role: node
+      vol_size: 20
+      vol_dev: /dev/vdb
+      docker_vg: docker_vg
+      cns_node: true
+      cns_vol_size: 20
+      cns_vol_dev: /dev/vdc
+      kvm_params:
+        ip: 192.168.122.104
+        ram: 8192
+        vcpus: 2
+        mac: 00:1c:c4:00:00:05
+        role: node
+        hostname: ocp2.192.168.122.104.nip.io
       openstack_params:
         private_network: openshift_int
         image_id: "{{ var_image_id }}"

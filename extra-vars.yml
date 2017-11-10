@@ -36,7 +36,11 @@ var_deploy_metrics: false
 # Deploy the service catalog or not
 var_deploy_service_catalog: true
 # Deploy CNS (Container Native Storage) or not
-var_deploy_cns: false
+var_deploy_cns: true
+# Set up htpasswd and make it the default provider
+# This will set up a 'dev' and 'admin' user automaticall with user/pass matching
+# the admin user will have cluster-admin privs
+var_deploy_httpd_auth: true
 
 # ------------------
 #KVM Options

@@ -12,4 +12,4 @@ autoinstaller:
   dest: /root/autoinstaller
 
 installer:
-  dest: /root/installer.cfg.yml
+  dest: /root/hosts

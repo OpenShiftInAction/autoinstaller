@@ -1,0 +1,49 @@
+[OSEv3:children]
+masters
+nodes
+{% if set_up_cns %}
+glusterfs
+{% endif %}
+
+[OSEv3:vars]
+ansible_ssh_user={{ deployment.remote_user }}
+{% if use_nip_io %}
+openshift_master_default_subdomain=apps.{{ instance.nodes.ocp2.kvm_params.ip }}.nip.io
+{% else %}
+openshift_master_default_subdomain={{ instance.domain }}
+{% endif %}
+openshift_deployment_type={{ deployment.openshift_type }}
+{% if set_up_cns %}
+openshift_hosted_registry_storage_kind=glusterfs
+{% endif %}
+openshift_disable_check=disk_availability,memory_availability,docker_storage
+{% if deployment.set_up_metrics %}
+openshift_hosted_metrics_deploy=true
+{% endif %}
+{% if deployment.set_up_catalog %}
+openshift_enable_service_catalog=true
+{% endif %}
+{% if deployment.set_up_httpd_auth %}
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+{% endif %}
+
+[masters]
+{% for host in groups['master'] %}
+{{ hostvars[host]['public_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
+{% endfor %}
+
+[nodes]
+{% for host in groups['master'] %}
+{{ hostvars[host]['public_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
+{% endfor %}
+{{ hostvars[groups['node'][0]]['public_ip']}} openshift_hostname={{ hostvars[groups['node'][0]]['private_hostname']}} openshift_public_hostname={{ hostvars[groups['node'][0]]['public_hostname']}} openshift_ip={{ hostvars[groups['node'][0]]['public_hostname']}} opensift_public_ip={{ hostvars[groups['node'][0]]['public_ip']}} node=True openshift_node_labels="{'region': 'infra'}" openshift_schedulable=True
+{% for host in groups['node'][1:] %}
+{{ hostvars[host]['public_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True openshift_schedulable=True
+{% endfor %}
+
+{% if set_up_cns %}
+[glusterfs]
+{% for host in groups['gluster'] %}
+{{ hostvars[groups['node'][0]]['public_ip']}} glusterfs_devices="[ '{{ cns_vol_dev }}']"
+{% endfor %}
+{% endif %}

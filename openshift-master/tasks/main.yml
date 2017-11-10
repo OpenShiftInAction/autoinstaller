@@ -40,13 +40,13 @@
     repo: "{{ autoinstaller.repo }}"
     dest: "{{ autoinstaller.dest }}"
 
-- name: install config template
+- name: install inventory
   template:
-    src: installer.cfg.yml.j2
+    src: hosts.j2
     dest: "{{ installer.dest }}"
 
 - name: deploy openshift
-  command: /bin/atomic-openshift-installer -u -c /root/installer.cfg.yml install --force
+  command: ansible-playbook -i {{ installer.dest }} /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   register: ocp_out
   when: deployment.deploy_openshift
 
