@@ -136,7 +136,7 @@
     name: "{{ item.name }}"
     ansible_ssh_host: "{{ item.public_v4 }}"
     ansible_user: "{{ instance.username }}"
-    cns_vol_dev: "{{ item.cns_vol_dev }}"
+    cns_vol_dev: "{{ item.metadata.cns_vol_dev }}"
     ansible_ssh_port: 22
     groups: gluster
   with_items: "{{ openstack_servers }}"
