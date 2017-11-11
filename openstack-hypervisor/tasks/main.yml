@@ -73,7 +73,7 @@
     name: "{{ item.key }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
-    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_server={{ item.value.cns_server }}"
+    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_server={{ item.value.cns_server }},cns_vol={{ item.value.cns_vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: attach data volumes to servers
@@ -125,6 +125,7 @@
     public_hostname: "{{ item.name }}.{{ item.public_v4 }}.nip.io"
     docker_vg: "{{ item.metadata.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
+    cns_vol_dev: "{{ item.metadata.cns_vol_dev }}"
   with_items: "{{ openstack_servers }}"
 
 - name: wait 30 seconds for vms to finish coming up
