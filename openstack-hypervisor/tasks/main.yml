@@ -136,7 +136,7 @@
     ansible_user: "{{ instance.username }}"
     groups: gluster
   with_items: "{{ openstack_servers }}"
-  when: "{{ item.metadata.cns_server | bool }}"
+  when: item.metadata.cns_server | bool
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
