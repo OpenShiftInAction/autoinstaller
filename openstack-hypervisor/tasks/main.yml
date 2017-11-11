@@ -126,6 +126,7 @@
     docker_vg: "{{ item.metadata.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
     cns_vol_dev: "{{ item.metadata.cns_vol_dev }}"
+    cns_server: "{{ item.metadata.cns_server }}"
   with_items: "{{ openstack_servers }}"
 
 - name: wait 30 seconds for vms to finish coming up
