@@ -127,13 +127,6 @@
     vol_dev: "{{ item.metadata.vol_dev }}"
   with_items: "{{ openstack_servers }}"
 
-- name: create gluster group
-  add_host:
-    name: "{{ item.name }}"
-    groups: gluster
-  with_items: "{{ openstack_servers }}"
-  when: item.metadata.cns_server
-
 - name: wait 30 seconds for vms to finish coming up
   pause:
     seconds: 30
