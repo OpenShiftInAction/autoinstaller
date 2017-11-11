@@ -1,0 +1,4 @@
+- name: install Ansible
+  yum:
+    name: ansible
+    state: present

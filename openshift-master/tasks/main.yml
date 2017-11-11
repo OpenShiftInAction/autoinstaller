@@ -3,23 +3,8 @@
 - name: include distro-specific variables
   include_vars: "{{ ansible_distribution }}.yml"
 
-- name: install dev packages for pip on master
-  yum:
-    name: "{{item}}"
-    state: present
-  with_items: "{{ dev_pkgs }}"
-
-- name: install pip on master
-  easy_install:
-    name: pip
-    state: latest
-
-- name: install the proper version of ansible on master
-  pip:
-    name: "{{ item }}"
-  with_items:
-    - pip==8.1.1
-    - ansible==2.2.2.0
+- name: include distro-specific tasks
+  include: "{{ ansible_distribution }}.yml"
 
 - name: copy authorized key to remote user
   authorized_key:
