@@ -41,7 +41,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
-      cns_node: false
+      cns_node: cns_client
       cns_vol_size: 20
       cns_vol_dev: /dev/vdc
       kvm_params:
@@ -59,7 +59,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
-      cns_node: false
+      cns_node: cns_client
       cns_vol_size: 20
       cns_vol_dev: /dev/vdc
       kvm_params:
@@ -77,7 +77,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
-      cns_node: true
+      cns_node: cns_server
       cns_vol_size: 20
       cns_vol_dev: /dev/vdc
       kvm_params:
@@ -95,7 +95,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
-      cns_node: true
+      cns_node: cns_server
       cns_vol_size: 20
       cns_vol_dev: /dev/vdc
       kvm_params:
@@ -113,7 +113,7 @@ instance:
       vol_size: 20
       vol_dev: /dev/vdb
       docker_vg: docker_vg
-      cns_node: true
+      cns_node: cns_server
       cns_vol_size: 20
       cns_vol_dev: /dev/vdc
       kvm_params:

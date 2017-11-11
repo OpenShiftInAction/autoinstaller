@@ -73,7 +73,7 @@
     name: "{{ item.key }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
-    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_node={{ item.value.cns_node }},cns_vol_dev={{ item.value.cns_vol_dev }}"
+    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_group={{ item.value.cns_node }},cns_vol_dev={{ item.value.cns_vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: attach data volumes to servers
@@ -112,17 +112,13 @@
       project_name: "{{ auth_creds.project }}"
     server: ocp*
 
-# - name: debug openstack facts
-#   debug:
-#     var: openstack_servers
-
 - name: create groups
   add_host:
     name: "{{ item.name }}"
     ansible_ssh_host: "{{ item.public_v4 }}"
     ansible_ssh_port: 22
     ansible_user: "{{ instance.username }}"
-    groups: "{{ item.metadata.role }},openshift"
+    groups: "{{ item.metadata.role }},openshift,{{ item.metadata.cns_group }}"
     private_ip: "{{ item.private_v4 }}"
     private_hostname: "{{ item.name }}.{{ item.private_v4}}.nip.io"
     public_ip: "{{ item.public_v4 }}"
@@ -130,17 +126,6 @@
     docker_vg: "{{ item.metadata.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
   with_items: "{{ openstack_servers }}"
-
-- name: create gluster group
-  add_host:
-    name: "{{ item.name }}"
-    ansible_ssh_host: "{{ item.public_v4 }}"
-    ansible_user: "{{ instance.username }}"
-    cns_vol_dev: "{{ item.metadata.cns_vol_dev }}"
-    ansible_ssh_port: 22
-    groups: gluster
-  with_items: "{{ openstack_servers }}"
-  when: item.metadata.cns_node == 'true'
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
