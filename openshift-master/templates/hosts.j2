@@ -44,9 +44,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 {% if deployment.set_up_cns %}
 [glusterfs]
-{% for host in groups['node'] %}
-{% if hostvars[host]['cns_server'] == 'true '%}
+{% for host in groups['gluster'] %}
 {{ hostvars[host]['public_ip']}} glusterfs_devices="[ '{{ hostvars[host]['cns_vol_dev'] }}' ]"
-{% endif %}
 {% endfor %}
 {% endif %}

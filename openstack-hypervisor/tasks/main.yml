@@ -126,8 +126,17 @@
     docker_vg: "{{ item.metadata.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
     cns_vol_dev: "{{ item.metadata.cns_vol_dev }}"
-    cns_server: "{{ item.metadata.cns_server }}"
   with_items: "{{ openstack_servers }}"
+
+- name: create gluster cns group
+  add_host:
+    name: "{{ item.name }}"
+    ansible_ssh_host: "{{ item.public_v4 }}"
+    ansible_ssh_port: 22
+    ansible_user: "{{ instance.username }}"
+    groups: gluster
+  with_items: "{{ openstack_servers }}"
+  when: "{{ item.metadata.cns_server | bool }}"
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
