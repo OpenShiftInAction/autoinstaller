@@ -56,7 +56,7 @@
     display_name: "{{ item.key }}-cns"
     size: "{{ item.value.cns_vol_size }}"
   with_dict: "{{ instance.nodes }}"
-  when: deployment.set_up_cns and item.value.cns_node == 'cns_server'
+  when: item.value.cns_server
 
 - name: create openshift nodes
   os_server:
@@ -73,7 +73,7 @@
     name: "{{ item.key }}"
     auto_ip: yes
     security_groups: "{{ security_group.name }}"
-    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_group={{ item.value.cns_node }},cns_vol_dev={{ item.value.cns_vol_dev }}"
+    meta: "role={{ item.value.role }},vol_dev={{ item.value.vol_dev }},docker_vg={{ item.value.docker_vg }},cns_server={{ item.value.cns_server }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: attach data volumes to servers
@@ -101,7 +101,7 @@
     volume: "{{ item.key }}-cns"
     device: "{{ item.value.cns_vol_dev }}"
   with_dict: "{{ instance.nodes }}"
-  when: deployment.set_up_cns and item.value.cns_node == 'cns_server'
+  when: deployment.set_up_cns and item.value.cns_server
 
 - name: gather openstack facts
   os_server_facts:
@@ -118,7 +118,7 @@
     ansible_ssh_host: "{{ item.public_v4 }}"
     ansible_ssh_port: 22
     ansible_user: "{{ instance.username }}"
-    groups: "{{ item.metadata.role }},openshift,{{ item.metadata.cns_group }}"
+    groups: "{{ item.metadata.role }},openshift"
     private_ip: "{{ item.private_v4 }}"
     private_hostname: "{{ item.name }}.{{ item.private_v4}}.nip.io"
     public_ip: "{{ item.public_v4 }}"
@@ -126,6 +126,13 @@
     docker_vg: "{{ item.metadata.docker_vg }}"
     vol_dev: "{{ item.metadata.vol_dev }}"
   with_items: "{{ openstack_servers }}"
+
+- name: create gluster group
+  add_host:
+    name: "{{ item.name }}"
+    groups: gluster
+  with_items: "{{ openstack_servers }}"
+  when: item.metadata.cns_server
 
 - name: wait 30 seconds for vms to finish coming up
   pause:
