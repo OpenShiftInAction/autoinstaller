@@ -109,14 +109,14 @@ objects:
 parameters:
 - name: APPLICATION_NAME
   description: "The name of the application."
-  value: "tf-app-server"
+  value: "tf-type"
   from: "[a-zA-Z0-9]{10}"
   required: true
 - name: SOURCE_REPOSITORY
   description: "Git repository for source."
-  value: ""
+  value: "https://github.com/sub-mod/mnist-models"
   required: true
 - name: SOURCE_DIRECTORY
   description: "Sub-directory of repository for source files."
-  value: ""
-  required: false
+  value: "cnn or regression"
+  required: true
