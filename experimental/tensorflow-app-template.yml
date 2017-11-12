@@ -1,0 +1,129 @@
+kind: Template
+apiVersion: v1
+labels:
+  template: tensorflow-sc17
+metadata:
+ name: mnistapp
+ annotations:
+  description: "Web application for Tensorflow SC 17 Demo"
+  tags: "tensorflow,oia,sc17,demo"
+  "icon-class": "icon-beakericon-beaker"
+objects:
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+   name: "${APPLICATION_NAME}"
+   labels:
+    appid: "mnist-app-${APPLICATION_NAME}"
+  spec:
+   tags:
+    -
+   name: latest
+     from:
+      kind: DockerImage
+      name: "submod/mnist-app:latest"
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+   name: "${APPLICATION_NAME}"
+   labels:
+    appid: "mnist-app-${APPLICATION_NAME}"
+  spec:
+   strategy:
+    type: Rolling
+   triggers:
+    -
+   type: ConfigChange
+    -
+   type: ImageChange
+     imageChangeParams:
+      automatic: true
+      containerNames:
+       -
+   "${APPLICATION_NAME}"
+      from:
+       kind: ImageStreamTag
+       name: "${APPLICATION_NAME}:latest"
+   replicas: 1
+   selector:
+    deploymentconfig: "${APPLICATION_NAME}"
+   template:
+    metadata:
+     labels:
+      appid: "mnist-app-${APPLICATION_NAME}"
+      deploymentconfig: "${APPLICATION_NAME}"
+    spec:
+     containers:
+      -
+   name: "${APPLICATION_NAME}"
+       env:
+        -
+   name: PREDICTION_HOST1
+         value: "${PREDICTION_SERVICE1}"
+        -
+   name: PREDICTION_HOST2
+         value: "${PREDICTION_SERVICE2}"
+        -
+   name: PREDICTION_PORT1
+         value: 6006
+        -
+   name: PREDICTION_PORT2
+         value: 6006
+       image: "${APPLICATION_NAME}:latest"
+       ports:
+        -
+   containerPort: 8000
+         protocol: TCP
+        -
+   containerPort: 5000
+         protocol: TCP
+- kind: Service
+  apiVersion: v1
+  metadata:
+   name: "${APPLICATION_NAME}"
+   labels:
+    appid: "mnist-app-${APPLICATION_NAME}"
+  spec:
+   ports:
+    -
+   name: "8000-tcp"
+     protocol: TCP
+     port: 8000
+     targetPort: 8000
+    -
+   name: "5000-tcp"
+     protocol: TCP
+     port: 5000
+     targetPort: 5000
+   selector:
+    deploymentconfig: "${APPLICATION_NAME}"
+- kind: Route
+  apiVersion: v1
+  metadata:
+   name: "${APPLICATION_NAME}"
+   labels:
+    appid: "mnist-app-${APPLICATION_NAME}"
+  spec:
+   host: ""
+   to:
+    kind: Service
+    name: "${APPLICATION_NAME}"
+    weight: 100
+   port:
+    targetPort: "8000-tcp"
+parameters:
+- name: APPLICATION_NAME
+  description: "The name of the application."
+  value: "mnist-app-server"
+  from: "[a-zA-Z0-9]{10}"
+  required: true
+- name: PREDICTION_SERVICE1
+  description: "Service name of prediction endpoint(regression)."
+  value: "0.0.0.0"
+  from: "[.0-9]"
+  required: true
+- name: PREDICTION_SERVICE2
+  description: "Service name of prediction endpoint(cnn)."
+  value: "0.0.0.0"
+  from: "[.0-9]"
+  required: true
