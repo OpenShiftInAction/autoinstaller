@@ -7,7 +7,7 @@ metadata:
  annotations:
   description: "Web application for Tensorflow SC 17 Demo"
   tags: "tensorflow,oia,sc17,demo"
-  "icon-class": "icon-shadowman"
+  icon-class: "icon-shadowman"
 objects:
 - kind: ImageStream
   apiVersion: v1
