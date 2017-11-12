@@ -30,16 +30,16 @@ objects:
   spec:
    strategy:
     type: Rolling
-   triggers:
-   - type: ConfigChange
-   - type: ImageChange
-     imageChangeParams:
-      automatic: true
-      containerNames:
-      - "${APPLICATION_NAME}"
-   from:
-    kind: ImageStreamTag
-    name: "${APPLICATION_NAME}:latest"
+     triggers:
+     - type: ConfigChange
+     - type: ImageChange
+       imageChangeParams:
+        automatic: true
+        containerNames:
+        - "${APPLICATION_NAME}"
+    from:
+      kind: ImageStreamTag
+      name: "${APPLICATION_NAME}:latest"
    replicas: 1
    selector:
     deploymentconfig: "${APPLICATION_NAME}"
@@ -101,16 +101,16 @@ objects:
 parameters:
 - name: APPLICATION_NAME
   description: "The name of the application."
-  value: "mnist-app-server"
+  value: "tf-sc17-web"
   from: "[a-zA-Z0-9]{10}"
   required: true
 - name: PREDICTION_SERVICE1
   description: "Service name of prediction endpoint(regression)."
-  value: "0.0.0.0"
-  from: "[.0-9]"
+  value: "tf-cnn"
+  from: "[a-zA-Z0-9]{10}"
   required: true
 - name: PREDICTION_SERVICE2
   description: "Service name of prediction endpoint(cnn)."
-  value: "0.0.0.0"
-  from: "[.0-9]"
+  value: "tf-reg"
+  from: "[a-zA-Z0-9]{10}"
   required: true
