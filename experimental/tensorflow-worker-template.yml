@@ -5,9 +5,9 @@ labels:
 metadata:
  name: "tensorflow-server-s2i"
  annotations:
-  description: Tensorflow Demo for SC 17
+  description: Tensorflow Worker Node for SC 17 Demo
   tags: tensorflow,oia,sc17,demo
-  icon-class: icon-beakericon-beaker
+  icon-class: icon-shadowman
 objects:
 - kind: ImageStream
   apiVersion: v1
