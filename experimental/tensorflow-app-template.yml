@@ -28,15 +28,6 @@ objects:
    labels:
     appid: "mnist-app-${APPLICATION_NAME}"
   spec:
-   strategy:
-    type: Rolling
-    triggers:
-    - type: ConfigChange
-    - type: ImageChange
-      imageChangeParams:
-      automatic: true
-      containerNames:
-      - "${APPLICATION_NAME}"
     from:
       kind: ImageStreamTag
       name: "${APPLICATION_NAME}:latest"
