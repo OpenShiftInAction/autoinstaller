@@ -6,6 +6,7 @@ metadata:
   annotations:
     description: Tensorflow Demo Endport Server
     tags: tensorflow,oia,demo
+    iconClass: icon-github
   name: tensorflow-server
 objects:
   - apiVersion: v1
