@@ -1,122 +1,119 @@
+apiVersion: template.openshift.io/v1
 kind: Template
-apiVersion: v1
 labels:
-  template: tensorflow-sc17
+  template: tensorflow-server
 metadata:
- name: "tensorflow-server-s2i"
- annotations:
-  description: Tensorflow Worker Node for SC 17 Demo
-  tags: tensorflow,oia,sc17,demo
-  icon-class: icon-shadowman
+  annotations:
+    description: Tensorflow Demo Endport Server
+    tags: tensorflow,oia,demo
+  name: tensorflow-server
 objects:
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-   name: "${APPLICATION_NAME}"
-   labels:
-    appid: "tf-app-server-${APPLICATION_NAME}"
-    appName: "${APPLICATION_NAME}"
-- kind: ImageStream
-  apiVersion: v1
-  metadata:
-   name: "${APPLICATION_NAME}-s2i"
-   labels:
-    appid: "tf-app-server-${APPLICATION_NAME}"
-    appName: "${APPLICATION_NAME}"
-  spec:
-   tags:
-   - name: latest
-     from:
-      kind: DockerImage
-      name: "radanalyticsio/tensorflow-serving-s2i:latest"
-- kind: BuildConfig
-  apiVersion: v1
-  metadata:
-   name: "${APPLICATION_NAME}"
-   labels:
-    appid: "tf-app-server-${APPLICATION_NAME}"
-    appName: "${APPLICATION_NAME}"
-  spec:
-   triggers:
-   - type: ConfigChange
-   - type: ImageChange
-   source:
-    type: Git
-    git:
-     uri: "${SOURCE_REPOSITORY}"
-    contextDir: "${SOURCE_DIRECTORY}"
-   strategy:
-    type: Source
-    sourceStrategy:
-     from:
-      kind: ImageStreamTag
-      name: "${APPLICATION_NAME}-s2i:latest"
-   output:
-    to:
-     kind: ImageStreamTag
-     name: "${APPLICATION_NAME}:latest"
-- kind: DeploymentConfig
-  apiVersion: v1
-  metadata:
-   name: "${APPLICATION_NAME}"
-   labels:
-    appid: "tf-app-server-${APPLICATION_NAME}"
-    appName: "${APPLICATION_NAME}"
-  spec:
-   strategy:
-    type: Rolling
-   triggers:
-   - type: ConfigChange
-   - type: ImageChange
-     imageChangeParams:
-      automatic: true
-      containerNames:
-      - "${APPLICATION_NAME}"
-      from:
-       kind: ImageStreamTag
-       name: "${APPLICATION_NAME}:latest"
-   replicas: 1
-   selector:
-    deploymentconfig: "${APPLICATION_NAME}"
-   template:
+  - apiVersion: v1
+    kind: ImageStream
     metadata:
-     labels:
-      appid: "tf-app-server-${APPLICATION_NAME}"
-      deploymentconfig: "${APPLICATION_NAME}"
-      appName: "${APPLICATION_NAME}"
+      labels:
+        appName: '${APPLICATION_NAME}'
+        appid: 'tf-app-server-${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}'
+  - apiVersion: v1
+    kind: ImageStream
+    metadata:
+      labels:
+        appName: '${APPLICATION_NAME}'
+        appid: 'tf-app-server-${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}-s2i'
     spec:
-     containers:
-     - name: "${APPLICATION_NAME}"
-       image: "${APPLICATION_NAME}:latest"
-       ports:
-       - containerPort: 6006
-         protocol: TCP
-- kind: Service
-  apiVersion: v1
-  metadata:
-   name: "${APPLICATION_NAME}"
-   labels:
-    appid: "tf-app-server-${APPLICATION_NAME}"
-    appName: "${APPLICATION_NAME}"
-  spec:
-   ports:
-   - name: "6006-tcp"
-     protocol: TCP
-     port: 6006
-     targetPort: 6006
-   selector:
-    deploymentconfig: "${APPLICATION_NAME}"
+      tags:
+        - from:
+            kind: DockerImage
+            name: 'radanalyticsio/tensorflow-serving-s2i:latest'
+          name: latest
+  - apiVersion: v1
+    kind: BuildConfig
+    metadata:
+      labels:
+        appName: '${APPLICATION_NAME}'
+        appid: 'tf-app-server-${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}'
+    spec:
+      output:
+        to:
+          kind: ImageStreamTag
+          name: '${APPLICATION_NAME}:latest'
+      source:
+        contextDir: '${SOURCE_DIRECTORY}'
+        git:
+          uri: '${SOURCE_REPOSITORY}'
+        type: Git
+      strategy:
+        sourceStrategy:
+          from:
+            kind: ImageStreamTag
+            name: '${APPLICATION_NAME}-s2i:latest'
+        type: Source
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      labels:
+        appName: '${APPLICATION_NAME}'
+        appid: 'tf-app-server-${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}'
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: '${APPLICATION_NAME}'
+      strategy:
+        type: Rolling
+      template:
+        metadata:
+          labels:
+            appName: '${APPLICATION_NAME}'
+            appid: 'tf-app-server-${APPLICATION_NAME}'
+            deploymentconfig: '${APPLICATION_NAME}'
+        spec:
+          containers:
+            - image: '${APPLICATION_NAME}:latest'
+              name: '${APPLICATION_NAME}'
+              ports:
+                - containerPort: 6006
+                  protocol: TCP
+      triggers:
+        - type: ConfigChange
+        - imageChangeParams:
+            automatic: true
+            containerNames:
+              - '${APPLICATION_NAME}'
+            from:
+              kind: ImageStreamTag
+              name: '${APPLICATION_NAME}:latest'
+          type: ImageChange
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        appName: '${APPLICATION_NAME}'
+        appid: 'tf-app-server-${APPLICATION_NAME}'
+      name: '${APPLICATION_NAME}'
+    spec:
+      ports:
+        - name: 6006-tcp
+          port: 6006
+          protocol: TCP
+          targetPort: 6006
+      selector:
+        deploymentconfig: '${APPLICATION_NAME}'
 parameters:
-- name: APPLICATION_NAME
-  description: "The name of the application."
-  value: "tf-type"
-  from: "[a-zA-Z0-9]{10}"
-  required: true
-- name: SOURCE_REPOSITORY
-  description: "Git repository for source."
-  value: "https://github.com/sub-mod/mnist-models"
-  required: true
-- name: SOURCE_DIRECTORY
-  description: "Sub-directory of repository for source files."
-  value: "cnn or regression"
-  required: true
+  - description: The name of the application.
+    from: '[a-zA-Z0-9]{10}'
+    name: APPLICATION_NAME
+    required: true
+    value: tensorflow-demo
+  - description: Git repository for source.
+    name: SOURCE_REPOSITORY
+    required: true
+    value: https://github.com/sub-mod/mnist-models
+  - description: Sub-directory of repository for source files.
+    name: SOURCE_DIRECTORY
