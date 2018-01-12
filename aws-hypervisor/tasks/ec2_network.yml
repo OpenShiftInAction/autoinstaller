@@ -1,0 +1,30 @@
+- name: create VPC for OpenShift cluster
+  ec2_vpc_net:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    name: OpenShift
+    cidr_block: "{{ networks.private.openshift_int.subnet_cidr }}"
+    region: "{{ ec2_env.region }}"
+    tags:
+      project: openshift
+  register: vpc_info
+
+- name: set VPC ID fact
+  set_fact:
+    vpc_id: "{{ vpc_info.vpc.id }}"
+
+- name: create VPC subnet
+  ec2_vpc_subnet:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    state: present
+    cidr: "{{ networks.private.openshift_int.subnet_cidr }}"
+    region: "{{ ec2_env.region }}"
+    resource_tags:
+      Name: OpenShift Subnet
+    vpc_id: "{{ vpc_id }}"
+  register: ocp_subnet
+
+- name: set VPC Subnet ID fact
+  set_fact:
+    subnet_id: "{{ ocp_subnet.subnet.id }}"

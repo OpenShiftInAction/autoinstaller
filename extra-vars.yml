@@ -1,35 +1,57 @@
+# Sample extra vars file to set variables for deployment
+
 # --------------------
 # Deployment Options
 # --------------------
 
-# use nip.io for hostnames and domain
+# use nip.io for hostnames and application domain (easy and works if your cluster has public DNS access)
 var_nip_io: false
 # if var_nip_io is set to false, you need to
 # provide a domain for the hostnames
 var_domain: example.com
 # The SSH key to use.
 # For KVM, it's copied over
-# For OpenStack and AWS, it's used to upload the public key with name of `var_ssh_key_name`
+# For OpenStack, it's used to upload the public key with name of `var_ssh_key_name`
 var_ssh_key_file: /home/jduncan/.ssh/id_rsa
-# SSH key name in OpenStack or AWS to use
+# SSH Key name for cloud infrastructures
 var_ssh_key_name: jduncan_key
 # Deployment platform
-# Current Options:
-# - kvm
+# Options:
+# - kvm (local laptop)
 # - openstack
 # - aws
-deployment_type: openstack
+var_deployment_type: aws
 # --------------------
 # OpenShift Options
 # --------------------
 # deploy openshift or just prepare the systems
 var_deploy_openshift: true
 # version of OpenShift to deploy. Options:
-# - origin
-# - openshift-enterprise
-var_openshift_type: openshift-enterprise
+# origin
+# openshift-enterprise
+var_openshift_type: origin
 
-### EXPERIMENTAL OPTIONS ###
+# ------------------
+#KVM Options
+# ------------------
+var_disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
+
+# ------------------
+# OpenStack Options
+# ------------------
+# Image ID to use
+var_image_id: 7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e
+
+# ------------------
+# EC2 Options
+# ------------------
+# VPC to use
+var_region: us-east-1
+var_flavor: m4.large
+var_ami_id: ami-c998b6b2
+var_sec_group: openshift
+
+### EXPERIMENTAL ###
 # Deploy metrics or not
 var_deploy_metrics: false
 # Deploy the service catalog or not
@@ -40,23 +62,3 @@ var_deploy_cns: false
 # This will set up a 'dev' and 'admin' user automaticall with user/pass matching
 # the admin user will have cluster-admin privs
 var_deploy_httpd_auth: false
-
-# ------------------
-#KVM Options
-# ------------------
-# remove old VMs or not
-var_cleanup: true
-var_disk_image: /home/jduncan/Downloads/CentOS-7-x86_64-GenericCloud-1707.qcow2
-
-# ------------------
-# OpenStack Options
-# ------------------
-var_image_id: 7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e
-
-# ------------------
-# AWS Options
-# ------------------
-var_region: us-east-1
-var_flavor: m4.large
-var_ami_id: ami-c998b6b2
-var_sec_group: openshift

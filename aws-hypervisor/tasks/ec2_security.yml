@@ -1,0 +1,30 @@
+- name: create ec2 vpc security group
+  ec2_group:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    name: "{{ ec2_env.sec_group }}"
+    description: OpenShift Security Group
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ ec2_env.region }}"
+    rules:
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 8443
+        to_port: 8443
+        cidr_ip: 0.0.0.0/0
+
+- name: create ssh key
+  ec2_key:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    region: "{{ ec2_env.region }}"
+    name: "{{ instance.ssh_key.name }}"
+    key_material: "{{ item }}"
+  with_file: "{{ instance.ssh_key.file_public }}"

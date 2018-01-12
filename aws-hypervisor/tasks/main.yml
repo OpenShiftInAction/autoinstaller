@@ -1,0 +1,53 @@
+---
+# tasks file for aws-hypervisor
+- name: include network-related tasks
+  include: ec2_network.yml
+
+- name: include security-related tasks
+  include: ec2_security.yml
+
+- name: create openshift nodes
+  ec2:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    instance_id: "{{ item.key }}"
+    group: "{{ ec2_env.sec_group }}"
+    region: "{{ ec2_env.region }}"
+    instance_tags:
+      role: "{{ item.value.role }}"
+      Name: "{{ item.key }}"
+    state: present
+    vpc_subnet_id: "{{ item.value.aws_params.subnet_id }}"
+    instance_type: "{{ ec2_env.flavor }}"
+    key_name: "{{ instance.ssh_key.name }}"
+    wait: yes
+    assign_public_ip: yes
+    image: "{{ ec2_env.ami_id }}"
+    volumes:
+    - device_name: /dev/sdb
+      volume_size: 20
+    - device_name: /dev/sdc
+      volume_size: 20
+  with_dict: "{{ instance.nodes }}"
+  register: ec2_result
+
+- name: create groups
+  add_host:
+    name: "{{ item.tags.Name }}"
+    ansible_ssh_host: "{{ item.public_dns_name }}"
+    ansible_ssh_port: 22
+    ansible_user: cloud-user
+    groups: "{{ item.tags.role }},openshift"
+    private_ip: "{{ item.private_ip }}"
+    private_hostname: "{{ item.private_dns_name }}"
+    public_ip: "{{ item.public_ip }}"
+    public_hostname: "{{ item.public_dns_name }}"
+  with_items: ec2_result.results.instances
+
+# - name: set fact
+#   set_fact:
+#     docker_vg: "{{ item.value.docker_vg }}"
+#     vol_dev: "{{ item.value.vol_dev }}"
+#     cns_vol_dev: "{{ item.value.cns_vol_dev }}"
+#   with_dict: "{{ instance.nodes }}"
+#   when: item.key ==

@@ -14,19 +14,48 @@ kvm_host:
       - 8.8.8.8
       - 8.8.4.4
 
+remote_users:
+  kvm:
+    origin: root
+    openshift-enterprise: root
+  aws:
+    origin: centos
+    openshift-enterprise: ec2-user
+  openstack:
+    origin: centos
+    openshift-enterprise: cloud-user
+
 deployment:
-  virt_type: openstack
+  virt_type: "{{ var_deployment_type }}"
   use_nip_io: "{{ var_nip_io }}"
   deploy_openshift: "{{ var_deploy_openshift }}"
   openshift_type: "{{ var_openshift_type }}"
   create_flavor: "{{ var_create_flavor }}"
   set_up_security: "{{ var_setup_security }}"
   set_up_network: "{{ var_setup_network }}"
-  remote_user: "{{ var_remote_username }}"
+  remote_user: "{{ remote_users.{{ virt_type }}.{{ openshift_type }} }}"
   set_up_cns: "{{ var_deploy_cns }}"
   set_up_metrics: "{{ var_deploy_metrics }}"
   set_up_catalog: "{{ var_deploy_service_catalog }}"
   set_up_httpd_auth: "{{ var_deploy_httpd_auth }}"
+
+networks:
+  external:
+    public:
+      name: public
+      router_name: router1
+      subnet_cidr: 192.168.0.0/23
+  private:
+    openshift_int:
+      subnet_cidr: 192.168.122.0/24
+      subnet_dns:
+        - 8.8.8.8
+        - 8.8.4.4
+    openshift_int_2:
+      subnet_cidr: 192.168.144.0/24
+      subnet_dns:
+        - 8.8.8.8
+        - 8.8.4.4
 
 instance:
   ssh_key:
@@ -54,6 +83,8 @@ instance:
       openstack_params:
         private_network: openshift_int
         image_id: "{{ var_image_id }}"
+      aws_params:
+        subnet_id: "{{ subnet_id }}"
     ocp2:
       role: node
       vol_size: 20
@@ -72,57 +103,5 @@ instance:
       openstack_params:
         private_network: openshift_int
         image_id: "{{ var_image_id }}"
-    ocp3:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
-      cns_server: true
-      cns_vol_size: 20
-      cns_vol_dev: /dev/vdc
-      kvm_params:
-        ip: 192.168.122.102
-        ram: 8192
-        vcpus: 2
-        mac: 00:1c:c4:00:00:03
-        role: node
-        hostname: ocp2.192.168.122.102.nip.io
-      openstack_params:
-        private_network: openshift_int
-        image_id: "{{ var_image_id }}"
-    ocp4:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
-      cns_server: true
-      cns_vol_size: 20
-      cns_vol_dev: /dev/vdc
-      kvm_params:
-        ip: 192.168.122.103
-        ram: 8192
-        vcpus: 2
-        mac: 00:1c:c4:00:00:04
-        role: node
-        hostname: ocp2.192.168.122.103.nip.io
-      openstack_params:
-        private_network: openshift_int
-        image_id: "{{ var_image_id }}"
-    ocp5:
-      role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
-      cns_server: true
-      cns_vol_size: 20
-      cns_vol_dev: /dev/vdc
-      kvm_params:
-        ip: 192.168.122.104
-        ram: 8192
-        vcpus: 2
-        mac: 00:1c:c4:00:00:05
-        role: node
-        hostname: ocp2.192.168.122.104.nip.io
-      openstack_params:
-        private_network: openshift_int
-        image_id: "{{ var_image_id }}"
+      aws_params:
+        subnet_id: "{{ subnet_id }}"
