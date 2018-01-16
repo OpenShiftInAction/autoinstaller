@@ -2,10 +2,10 @@
   ec2_group:
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
-    name: "{{ ec2_env.sec_group }}"
+    name: "{{ sec_group }}"
     description: OpenShift Security Group
     vpc_id: "{{ vpc_id }}"
-    region: "{{ ec2_env.region }}"
+    region: "{{ region }}"
     rules:
       - proto: tcp
         from_port: 80
@@ -24,7 +24,7 @@
   ec2_key:
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
-    region: "{{ ec2_env.region }}"
+    region: "{{ region }}"
     name: "{{ instance.ssh_key.name }}"
     key_material: "{{ item }}"
   with_file: "{{ instance.ssh_key.file_public }}"

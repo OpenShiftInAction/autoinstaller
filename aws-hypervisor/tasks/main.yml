@@ -10,13 +10,17 @@
   set_fact:
     deployment_uuid: "{{ lookup('pipe','date +%Y%m%d%H%M')}}"
 
+- name: Set correct AMI fact
+  set_fact:
+    ami_id: "{{ cloud_images[virt_type][region][openshift_type] }}"
+
 - name: create openshift nodes
   ec2:
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
     instance_id: "{{ item.key }}"
-    group: "{{ ec2_env.sec_group }}"
-    region: "{{ ec2_env.region }}"
+    group: "{{ var_sec_group }}"
+    region: "{{ var_region }}"
     instance_tags:
       role: "{{ item.value.role }}"
       Name: "{{ item.key }}"
@@ -27,7 +31,7 @@
     key_name: "{{ instance.ssh_key.name }}"
     wait: yes
     assign_public_ip: yes
-    image: "{{ ec2_env.ami_id }}"
+    image: "{{ ami_id }}"
     volumes:
     - device_name: /dev/sdb
       volume_size: 20
@@ -37,7 +41,7 @@
   ec2_instance_facts:
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
-    region: "{{ ec2_env.region }}"
+    region: "{{ var_region }}"
     filters:
       "tag:cluster": "OiA-{{ deployment_uuid }}"
       "instance-state-name": running

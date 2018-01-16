@@ -6,14 +6,14 @@ glusterfs
 {% endif %}
 
 [OSEv3:vars]
-ansible_ssh_user={{ deployment.remote_user }}
+ansible_ssh_user={{ cluster_user }}
 ansible_become=true
 {% if deployment.use_nip_io %}
 openshift_master_default_subdomain=apps.{{ instance.nodes.ocp2.kvm_params.ip }}.nip.io
 {% else %}
 openshift_master_default_subdomain={{ instance.domain }}
 {% endif %}
-openshift_deployment_type={{ deployment.openshift_type }}
+openshift_deployment_type={{ openshift_type }}
 {% if deployment.set_up_cns %}
 openshift_hosted_registry_storage_kind=glusterfs
 {% endif %}

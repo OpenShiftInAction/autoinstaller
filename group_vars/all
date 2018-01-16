@@ -76,24 +76,24 @@ cloud_images:
       openshift-enterprise: ami-9fa343e7
   openstack:
     all:
-      origin: {{ var_image }}
-      openshift-enterprise: {{ var_image }}
+      origin: "{{ var_image }}"
+      openshift-enterprise: "{{ var_image }}"
   kvm:
     all:
-      origin: {{ var_image }}
-      openshift-enterprise: {{ var_image }}
+      origin: "{{ var_image }}"
+      openshift-enterprise: "{{ var_image }}"
 
 virt_type: "{{ var_deployment_type }}"
 openshift_type: "{{ var_openshift_type }}"
 flavor: "{{ var_flavor }}"
+region: "{{ var_region }}"
+sec_group: "{{ var_sec_group }}"
 
 deployment:
   virt_type: "{{ var_deployment_type }}"
   use_nip_io: "{{ var_nip_io }}"
   deploy_openshift: "{{ var_deploy_openshift }}"
   openshift_type: "{{ var_openshift_type }}"
-  set_up_security: "{{ var_setup_security }}"
-  set_up_network: "{{ var_setup_network }}"
   remote_user: "{{ vars[remote_users][virt_type][openshift_type] }}"
   set_up_cns: "{{ var_deploy_cns }}"
   set_up_metrics: "{{ var_deploy_metrics }}"
@@ -139,7 +139,7 @@ instance:
         hostname: ocp1.192.168.122.100.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ var_image_id }}"
+        image_id: "{{ var_image }}"
       aws_params:
         subnet_id: "{{ subnet_id }}"
     ocp2:
@@ -156,6 +156,6 @@ instance:
         hostname: ocp2.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ var_image_id }}"
+        image_id: "{{ var_image }}"
       aws_params:
         subnet_id: "{{ subnet_id }}"

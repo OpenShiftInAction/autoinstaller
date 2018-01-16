@@ -12,11 +12,11 @@
 
 - name: include security-related tasks
   include: os_security.yml
-  when: deployment.set_up_security
+  when: set_up_security
 
 - name: include networking tasks
   include: os_networking.yml
-  when: deployment.set_up_network
+  when: set_up_network
 
 - name: create cinder volumes for data
   os_volume:

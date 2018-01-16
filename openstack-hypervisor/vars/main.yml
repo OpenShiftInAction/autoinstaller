@@ -16,9 +16,9 @@ auth_creds:
     project: "{{ os_admin_project }}"
 
 # Create custom security group
-var_setup_security: true
+setup_security: true
 # Create network / subnet
-var_setup_network: true
+setup_network: true
 
 security_group:
   name: openshift

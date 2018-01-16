@@ -6,9 +6,13 @@
 - name: include distro-specific tasks
   include: "{{ ansible_distribution }}.yml"
 
+- name: get remote user from lookup table
+  set_fact:
+    cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
+
 - name: copy authorized key to remote user
   authorized_key:
-    user: "{{ kvm_host.remote_username }}"
+    user: "{{ cluster_user }}"
     state: present
     key: "{{ lookup('file', instance.ssh_key.file_public ) }}"
 
