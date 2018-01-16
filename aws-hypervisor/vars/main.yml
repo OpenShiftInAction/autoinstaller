@@ -2,6 +2,5 @@
 # vars file for aws-hypervisor
 ec2_env:
   region: "{{ var_region }}"
-  flavor: "{{ var_flavor }}"
   ami_id: "{{ var_ami_id }}"
   sec_group: "{{ var_sec_group }}"

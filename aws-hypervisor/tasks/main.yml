@@ -6,6 +6,10 @@
 - name: include security-related tasks
   include: ec2_security.yml
 
+- name: Create deployment UUID
+  set_fact:
+    deployment_uuid: "{{ lookup('pipe','date +%Y%m%d%H%M')}}"
+
 - name: create openshift nodes
   ec2:
     aws_secret_key: "{{ aws_secret_access_key }}"
@@ -16,9 +20,10 @@
     instance_tags:
       role: "{{ item.value.role }}"
       Name: "{{ item.key }}"
+      cluster: "OiA-{{ deployment_uuid }}"
     state: present
     vpc_subnet_id: "{{ item.value.aws_params.subnet_id }}"
-    instance_type: "{{ ec2_env.flavor }}"
+    instance_type: "{{ flavor }}"
     key_name: "{{ instance.ssh_key.name }}"
     wait: yes
     assign_public_ip: yes
@@ -26,23 +31,38 @@
     volumes:
     - device_name: /dev/sdb
       volume_size: 20
-    - device_name: /dev/sdc
-      volume_size: 20
   with_dict: "{{ instance.nodes }}"
-  register: ec2_result
+
+- name: gather facts about newly created instances
+  ec2_instance_facts:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    region: "{{ ec2_env.region }}"
+    filters:
+      "tag:cluster": "OiA-{{ deployment_uuid }}"
+      "instance-state-name": running
+  register: ec2
+
+# - name: echo ec2 result variable
+#   debug:
+#     var: ec2
+
+- name: get remote user from lookup table
+  set_fact:
+    cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
 
 - name: create groups
   add_host:
     name: "{{ item.tags.Name }}"
     ansible_ssh_host: "{{ item.public_dns_name }}"
     ansible_ssh_port: 22
-    ansible_user: cloud-user
+    ansible_user: "{{ cluster_user }}"
     groups: "{{ item.tags.role }},openshift"
-    private_ip: "{{ item.private_ip }}"
-    private_hostname: "{{ item.private_dns_name }}"
-    public_ip: "{{ item.public_ip }}"
-    public_hostname: "{{ item.public_dns_name }}"
-  with_items: ec2_result.results.instances
+    private_ip: "{{ item.network_interfaces[0].private_ip_address }}"
+    private_hostname: "{{ item.network_interfaces[0].private_dns_name }}"
+    public_ip: "{{ item.network_interfaces[0].private_ip_addresses[0].association.public_ip }}"
+    public_hostname: "{{ item.network_interfaces[0].private_ip_addresses[0].association.public_dns_name }}"
+  with_items: "{{ ec2.instances }}"
 
 # - name: set fact
 #   set_fact:
@@ -51,3 +71,7 @@
 #     cns_vol_dev: "{{ item.value.cns_vol_dev }}"
 #   with_dict: "{{ instance.nodes }}"
 #   when: item.key ==
+
+- name: wait for EC2 to get instances up and running
+  pause:
+    seconds: 30

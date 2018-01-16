@@ -15,21 +15,10 @@ auth_creds:
     password: "{{ os_admin_pass }}"
     project: "{{ os_admin_project }}"
 
-# Create a custom flavor for OCP nodes
-# 4vcpu / 8GB RAM / 20GB disk
-var_create_flavor: true
 # Create custom security group
 var_setup_security: true
 # Create network / subnet
 var_setup_network: true
-# Image ID to use
-
-flavor:
-  name: m1.openshift
-  ram: 8192
-  vcpus: 4
-  disk: 20
-  create: true
 
 security_group:
   name: openshift

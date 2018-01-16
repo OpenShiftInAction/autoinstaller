@@ -13,6 +13,14 @@
   set_fact:
     vpc_id: "{{ vpc_info.vpc.id }}"
 
+- name: Create gateway uplink for VPC
+  ec2_vpc_igw:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_access_key_id }}"
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ ec2_env.region }}"
+    state: present
+
 - name: create VPC subnet
   ec2_vpc_subnet:
     aws_secret_key: "{{ aws_secret_access_key }}"

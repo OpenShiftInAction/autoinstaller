@@ -18,21 +18,6 @@
   include: os_networking.yml
   when: deployment.set_up_network
 
-# This requires more privileges than a regular user. If you don't have auth credentials, then you can have this created ahead of time and set `create_flavor` to false to bypass this step.
-- name: create openshift-specific flavor
-  os_nova_flavor:
-    auth:
-      auth_url: "{{ auth_creds.url }}"
-      username: "{{ auth_creds.admin.username }}"
-      password: "{{ auth_creds.admin.password }}"
-      project_name: "{{ auth_creds.admin.project }}"
-    state: present
-    name: "{{ flavor.name }}"
-    ram: "{{ flavor.ram }}"
-    vcpus: "{{ flavor.vcpus }}"
-    disk: "{{ flavor.disk }}"
-  when: flavor.create
-
 - name: create cinder volumes for data
   os_volume:
     auth:
@@ -66,7 +51,7 @@
       password: "{{ auth_creds.password }}"
       project_name: "{{ auth_creds.project }}"
     state: present
-    flavor: "{{ flavor.name }}"
+    flavor: "{{ flavor }}"
     image: "{{ item.value.openstack_params.image_id }}"
     key_name: "{{ instance.ssh_key.name }}"
     network: "{{ item.value.openstack_params.private_network }}"

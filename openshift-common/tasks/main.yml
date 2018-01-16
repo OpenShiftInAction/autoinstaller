@@ -10,9 +10,7 @@
   with_items: "{{ selinux_bools }}"
 
 - name: reboot each system
-  shell: sleep 2 && systemctl reboot
-  async: 1
-  poll: 0
+  shell: systemctl reboot && sleep 1
   ignore_errors: true
 
 - name: wait for server to come back
