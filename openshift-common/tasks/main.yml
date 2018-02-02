@@ -9,9 +9,8 @@
     persistent: yes
   with_items: "{{ selinux_bools }}"
 
-- name: reboot each system
-  shell: systemctl reboot && sleep 1
-  ignore_errors: true
+- name: restart server
+  shell: ( sleep 3 && /sbin/reboot & )
 
 - name: wait for server to come back
   local_action: wait_for host={{ ansible_ssh_host }} state=started delay=30 timeout=90 port=22

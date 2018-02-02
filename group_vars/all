@@ -20,7 +20,7 @@ remote_users:
     openshift-enterprise: root
   aws:
     origin: centos
-    openshift-enterprise: cloud-user
+    openshift-enterprise: ec2-user
   openstack:
     origin: centos
     openshift-enterprise: cloud-user
@@ -89,6 +89,15 @@ flavor: "{{ var_flavor }}"
 region: "{{ var_region }}"
 sec_group: "{{ var_sec_group }}"
 
+vol_devs:
+  aws: /dev/xvdb
+  kvm: /dev/vdb
+  openstack: /dev/vdb
+
+vol_size: 20
+vol_dev: "{{ vol_devs[virt_type] }}"
+docker_vg: docker_vg
+
 deployment:
   virt_type: "{{ var_deployment_type }}"
   use_nip_io: "{{ var_nip_io }}"
@@ -128,8 +137,6 @@ instance:
     ocp1:
       role: master
       vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
       kvm_params:
         ip: 192.168.122.100
         ram: 8192
@@ -144,9 +151,6 @@ instance:
         subnet_id: "{{ subnet_id }}"
     ocp2:
       role: node
-      vol_size: 20
-      vol_dev: /dev/vdb
-      docker_vg: docker_vg
       kvm_params:
         ip: 192.168.122.101
         ram: 8192

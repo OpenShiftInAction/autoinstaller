@@ -12,9 +12,12 @@
     state: present
     username: "{{ rhn_user }}"
     password: "{{ rhn_pass }}"
-    pool_ids: "{{ rhn_pool_id }}"
-    force_register: yes
+    # pool: "{{ rhn_pool_id }}"
+    # force_register: yes
   when: sub_status.rc == 1
+
+- name: attach to desired subscription
+  command: subscription-manager attach --pool={{ rhn_pool_id }}
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"

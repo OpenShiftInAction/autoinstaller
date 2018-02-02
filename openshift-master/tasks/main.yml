@@ -6,6 +6,10 @@
 - name: include distro-specific tasks
   include: "{{ ansible_distribution }}.yml"
 
+- name: set subnet ID fact
+  set_fact:
+    subnet_id: "{{ hostvars['127.0.0.1'][subnet_id] }}"
+
 - name: get remote user from lookup table
   set_fact:
     cluster_user: "{{ remote_users[virt_type][openshift_type] }}"

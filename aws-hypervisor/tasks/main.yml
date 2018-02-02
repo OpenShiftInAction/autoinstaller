@@ -78,4 +78,4 @@
 
 - name: wait for EC2 to get instances up and running
   pause:
-    seconds: 30
+    seconds: 40
