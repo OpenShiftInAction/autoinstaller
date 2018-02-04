@@ -6,14 +6,6 @@
 - name: include distro-specific tasks
   include: "{{ ansible_distribution }}.yml"
 
-- name: set subnet ID fact
-  set_fact:
-    subnet_id: "{{ hostvars['127.0.0.1'][subnet_id] }}"
-
-- name: get remote user from lookup table
-  set_fact:
-    cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
-
 - name: copy authorized key to remote user
   authorized_key:
     user: "{{ cluster_user }}"
@@ -37,6 +29,11 @@
   template:
     src: hosts.j2
     dest: "{{ installer.dest }}"
+
+- name: install ansible config file for root user
+  template:
+    src: ansible.cfg
+    dest: /root/.ansible.cfg
 
 - name: deploy openshift
   command: ansible-playbook -i {{ installer.dest }} /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml

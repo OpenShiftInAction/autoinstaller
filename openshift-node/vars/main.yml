@@ -1,2 +1,4 @@
 ---
 # vars file for openshift-node
+
+docker_vg: docker_vg

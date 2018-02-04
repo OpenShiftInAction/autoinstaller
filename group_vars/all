@@ -14,17 +14,6 @@ kvm_host:
       - 8.8.8.8
       - 8.8.4.4
 
-remote_users:
-  kvm:
-    origin: root
-    openshift-enterprise: root
-  aws:
-    origin: centos
-    openshift-enterprise: ec2-user
-  openstack:
-    origin: centos
-    openshift-enterprise: cloud-user
-
 # updated up to 20180116
 # -jduncan
 cloud_images:
@@ -83,11 +72,26 @@ cloud_images:
       origin: "{{ var_image }}"
       openshift-enterprise: "{{ var_image }}"
 
+remote_users:
+  kvm:
+    origin: root
+    openshift-enterprise: root
+  aws:
+    origin: centos
+    openshift-enterprise: ec2-user
+  openstack:
+    origin: centos
+    openshift-enterprise: cloud-user
+
+cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
+
 virt_type: "{{ var_deployment_type }}"
 openshift_type: "{{ var_openshift_type }}"
 flavor: "{{ var_flavor }}"
 region: "{{ var_region }}"
 sec_group: "{{ var_sec_group }}"
+
+docker_vol: "{{ var_docker_vol }}"
 
 vol_devs:
   aws: /dev/xvdb
@@ -99,11 +103,8 @@ vol_dev: "{{ vol_devs[virt_type] }}"
 docker_vg: docker_vg
 
 deployment:
-  virt_type: "{{ var_deployment_type }}"
   use_nip_io: "{{ var_nip_io }}"
   deploy_openshift: "{{ var_deploy_openshift }}"
-  openshift_type: "{{ var_openshift_type }}"
-  remote_user: "{{ vars[remote_users][virt_type][openshift_type] }}"
   set_up_cns: "{{ var_deploy_cns }}"
   set_up_metrics: "{{ var_deploy_metrics }}"
   set_up_catalog: "{{ var_deploy_service_catalog }}"
@@ -147,8 +148,6 @@ instance:
       openstack_params:
         private_network: openshift_int
         image_id: "{{ var_image }}"
-      aws_params:
-        subnet_id: "{{ subnet_id }}"
     ocp2:
       role: node
       kvm_params:
@@ -161,5 +160,3 @@ instance:
       openstack_params:
         private_network: openshift_int
         image_id: "{{ var_image }}"
-      aws_params:
-        subnet_id: "{{ subnet_id }}"

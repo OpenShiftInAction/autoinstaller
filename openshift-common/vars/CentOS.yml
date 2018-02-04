@@ -1,6 +1,6 @@
 repos:
   - epel-release
-  - centos-release-openshift-origin
+  - centos-release-openshift-origin36
 
 packages:
   - origin

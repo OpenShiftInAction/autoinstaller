@@ -25,7 +25,7 @@ var_deploy_openshift: true
 # version of OpenShift to deploy. Options:
 # - origin
 # - openshift-enterprise
-var_openshift_type: origin
+var_openshift_type: openshift-enterprise
 # For AWS, the AMIs are mapped for each EC2 region, so this variable isn't used
 # For OpenStack, specify the image ID you want to use, for example 7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e
 #   This image ID will be unique to your OpenStack platform
@@ -54,4 +54,7 @@ var_deploy_cns: false
 # Set up htpasswd and make it the default provider
 # This will set up a 'dev' and 'admin' user automaticall with user/pass matching
 # the admin user will have cluster-admin privs
-var_deploy_httpd_auth: false
+var_deploy_httpd_auth:
+
+# Device to use for container graph storage on each node
+var_docker_vol: /dev/xvdb
