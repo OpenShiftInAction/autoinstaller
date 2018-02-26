@@ -1,0 +1,15 @@
+---
+- hosts: openshift
+  become: yes
+  roles:
+    - openshift-common
+
+- hosts: node
+  become: yes
+  roles:
+    - openshift-node
+
+- hosts: master
+  become: yes
+  roles:
+    - openshift-master

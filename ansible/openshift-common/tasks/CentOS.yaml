@@ -1,5 +1,9 @@
 ---
-#CentOS-specific tasks
+#CentOS-specific
+- name: set fact to get proper openshift version repo
+  set_fact:
+    origin_repo: "{{ openshift_version | replace('.', '') }}"
+
 - name: include CentOS vars
   include_vars:
     file: "{{ ansible_distribution }}.yml"

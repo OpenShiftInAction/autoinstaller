@@ -2,3 +2,4 @@
 *.swp
 *.retry
 passes.yaml
+vagrant

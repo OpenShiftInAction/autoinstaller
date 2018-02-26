@@ -1,0 +1,12 @@
+[install-hosts]
+127.0.0.1 ansible_connection=local
+
+[openshift]
+192.168.120.100
+192.168.120.101
+
+[master]
+192.168.120.100
+
+[node]
+192.168.120.101

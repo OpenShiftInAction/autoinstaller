@@ -26,6 +26,8 @@ var_deploy_openshift: true
 # - origin
 # - openshift-enterprise
 var_openshift_type: openshift-enterprise
+# OpenShift version to deploy. 3.6 and 3.7 are currently tested.
+var_openshift_version: 3.6
 # For AWS, the AMIs are mapped for each EC2 region, so this variable isn't used
 # For OpenStack, specify the image ID you want to use, for example 7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e
 #   This image ID will be unique to your OpenStack platform

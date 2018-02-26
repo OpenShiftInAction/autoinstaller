@@ -27,7 +27,7 @@
 
 - name: install inventory
   template:
-    src: hosts.j2
+    src: hosts-{{ virt_type }}.j2
     dest: "{{ installer.dest }}"
 
 - name: install ansible config file for root user

@@ -87,6 +87,7 @@ cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
 
 virt_type: "{{ var_deployment_type }}"
 openshift_type: "{{ var_openshift_type }}"
+openshift_version: "{{ var_openshift_version }}"
 flavor: "{{ var_flavor }}"
 region: "{{ var_region }}"
 sec_group: "{{ var_sec_group }}"
