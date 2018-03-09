@@ -22,8 +22,7 @@ The `autoinstaller` application leverages Ansible (www.ansible.com) roles and pl
       - [deploy_httpd_auth](#deploy_httpd_auth)
   - [Usage](#usage)
     - [Options](#options-2)
-    - [Advanced Usage](#advanced-usage)
-  - [Application design](#application-design)
+  - [Advanced Usage](#advanced-usage)
     - [Ansible Roles](#ansible-roles)
       - [Infrastructure Roles](#infrastructure-roles)
       - [OpenShift Roles](#openshift-roles)
@@ -198,8 +197,11 @@ If set to `true`, this option configures OpenShift to use an http authentication
 
 To use autoinstaller:
 
-1. Check out this repository on to a Linux system running a RHEL-family version of Linux ([Fedora](https://getfedora.org), [RHEL](https://www.redhat.com), [CentOS](https://www.centos.org)). Currently, we haven't tested autoinstaller on Ubuntu or other Linux distributions. The requirements are minor. If you'd like to help in that regard, please let us know!
-1. Fill our your configuration file. This document should help, and we provide a sample file as well.
+1. Clone this repository on to a Linux system running a RHEL-family version of Linux ([Fedora](https://getfedora.org), [RHEL](https://www.redhat.com), [CentOS](https://www.centos.org)). Currently, we haven't tested autoinstaller on Ubuntu or other Linux distributions. The requirements are minor. If you'd like to help in that regard, please let us know!
+```
+$ git clone https://github.com/OpenShiftInAction/autoinstaller.git
+```
+1. Fill our your configuration file. This document should help, and we provide a [sample file](https://raw.githubusercontent.com/OpenShiftInAction/autoinstaller/master/autoinstaller.conf) as well.
 1. Run the autoinstaller:
 ```
 $ cd autoinstaller
@@ -208,14 +210,28 @@ $ ./autoinstaller
 
 Depending on your desired provider and internet connection speed, the entire process could take a while. You are building out an entire OpenShift cluster, after all.
 
-
-
 ### Options
 
-### Advanced Usage
+```
+usage: autoinstaller.py [-h] [-c CHAPTER] [--config CONF_FILE] [-d]
 
+Autoinstaller for OpenShift in Action
 
-## Application design
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CHAPTER, --chapter CHAPTER
+                        chapter you would like to provision through
+  --config CONF_FILE    autoinstaller config file, default is
+                        autoinstaller.conf
+  -d, --dry-run         use this option to output the installation command but
+                        not launch the installer
+```
+
+## Advanced Usage
+
+The goal of autoinstaller is to make it as simple as possible to deploy a multi-node OpenShift cluster. However, there are a ton of additional options you can manipulate beyond this documentation.
+
+The autoinstaller application takes the options in your configuration file and passes them into a collection of Ansible playbooks that provision then your cluster. All variables that are read in are passed to the playbooks as [extra_vars](http://docs.ansible.com/ansible/latest/playbooks_variables.html), the highest level in Ansible's order of precedence.
 
 ### Ansible Roles
 
@@ -227,20 +243,10 @@ If you'd like to contribute a new infrastructure role, please see the [Contribut
 
 #### Infrastructure Roles
 
-##### kvm-hypervisor
-
-This role takes a Linux hypervisor and creates your cluster on top of it. It is tested on Fedora, and possibly on later ones down the road.
-
-###### Required parameters
-
-* ssh_key - SSH key to use to configure on the virtual machines. For the KVM hypervisor role, this is a file on the system you're running the playbook on.
-* ssh_key_pub - the public SSH key that corresponds to ssh_key
-* ssh_known_hosts_file - the location to add your node's ssh key fingerprints to. defaults to `/etc/ssh/ssh_known_hosts`.
-* kvm_disk_dir - the location to store your cluster's virtual disks. defaults to `/var/lib/libvirt/images`.
-* disk_image - the CentOS 7 or RHEL 7 qcow2 cloud image that will be used to create your virtual machines. This needs to be on the system you are launching the playbook from. It will be copied to your hypervisor.
-* data_disk_size - Size, in GB, for the data disk. On the nodes, this is used for docker storage. On the masters, this is used for NFS volumes. Defaults to `20` (20GB)
 
 #### OpenShift Roles
+
+The OpenShift roles typically don't require a lot of tweaking to work, assuming the provider role has done its job correctly. 
 
 ##### openshift-common
 
@@ -250,14 +256,9 @@ This role does the preperation steps common to both master and application nodes
 
 This role sets up your OpenShift nodes, including configuring docker and storage.
 
-###### Required parameters
-
-* docker_dev - Block device to use for container storage. Defaults to `/dev/vdb`.
-* docker_vg - Volume group name to use for docker storage. Defaults to `docker_vg`.
-
 ##### openshift-master
 
-This role configures your OpenShift masters, and performs the actual OpenShift deployment.
+This role configures your OpenShift master, and performs the actual OpenShift deployment.
 
 ## Contributing
 

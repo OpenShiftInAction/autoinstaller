@@ -131,7 +131,7 @@ The OpenShift In Action Team
 def main():
     parser = argparse.ArgumentParser(description='Autoinstaller for OpenShift in Action')
     parser.add_argument('-c', '--chapter', dest="chapter", type=int, default=0, help="chapter you would like to provision through")
-    parser.add_argument('--config', dest="conf_file", default="autoinstaller.conf", help="autoinstaller config file")
+    parser.add_argument('--config', dest="conf_file", default="autoinstaller.conf", help="autoinstaller config file, default is autoinstaller.conf")
     parser.add_argument('-d', '--dry-run', dest="dry_run", action="store_true", help="use this option to output the installation command but not launch the installer")
 
     args = parser.parse_args()
