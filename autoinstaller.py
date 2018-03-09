@@ -5,6 +5,7 @@ import textwrap
 import argparse
 import sys
 import getpass
+import subprocess
 
 class autoInstaller:
     '''
@@ -19,17 +20,25 @@ class autoInstaller:
         self.forum_url = 'https://forums.manning.com/forums/openshift-in-action'
         self._intro_text()
         self.chapter = options.chapter
+        # a deployment method was supplied on the command line. it should overrule what's in the config file
+        if options.deployment:
+            self.deployment = options.deployment
         self.dry_run = options.dry_run
         self.ansible_playbookdir = './ansible'
         self.inventory = self.ansible_playbookdir + '/hosts'
         self.conf, self.conf_data, self.conf_sections = self._read_conf_file(options.conf_file)
         self.global_confs = self._load_conf_section('global')
-
-        # not all deployment methods need to have a config section
+        # if there's not a deployment specified on the command line
+        if not options.deployment:
+            self.deployment = self.global_confs['deployment']
         try:
-            self.deployment_confs = self._load_conf_section(self.global_confs['deployment'])
+            self.deployment_confs = self._load_conf_section(self.deployment)
+            if self.deployment == 'other':
+                self.master = self.deployment_confs['master']
+                self.node = self.deployment_confs['node']
+                self._create_other_inventory()
         except ConfigParser.NoSectionError:
-            print("* No %s options found - none loaded" % self.global_confs['deployment'] )
+            print("* No %s options found - none loaded" % self.deployment )
             self.deployment_confs = dict()
         self._deploy_ocp()
 
@@ -70,6 +79,8 @@ class autoInstaller:
         '''
         evars = str()
 
+        print("* Processing variables for deployment")
+
         # gather up the global vars
         for k,v in self.global_confs.iteritems():
             evars += "-e %s=%s " % (k,v)
@@ -108,30 +119,59 @@ The OpenShift In Action Team
         '''
         for the 'other' type of installation, you'll supply information about 2 servers that already exist. The IPs will be provided in the config file and the autoinstaller ansible inventory will be created dynamically using this function
         '''
+        if self.deployment == 'other':
+            try:
+                self.inventory = "/tmp/autoinstaller-other-hosts"
+                fh = open(self.inventory, 'w')
 
-        self.inventory = "/tmp/autoinstaller-other-hosts"
-        fh = open('w', self.inventory)
+                inv_str = """
+[openshift]
+{master}
+{node}
 
-        inv_str = """
+[master]
+{master}
 
-        """
+[node]
+{node}
+                """.format(
+                master = self.master,
+                node = self.node
+                )
 
-        fh.write(inv_str)
-        fh.close()
+                print( "* Writing out custom inventory to use with other Provider" )
+                fh.write(inv_str)
+                fh.close()
+            except Exception, e:
+                raise(e)
+
+    def _deploy_launch_process(self, d_command):
+        '''
+        handles the launching of the process and displaying the output
+        '''
+        print("* Beginning deployment on %s provider" % self.deployment)
+
 
     def _deploy_ocp(self):
         '''
         puts together the command to deploy and executes it if so desired
         '''
+        extra_vars = self._build_extravars()
 
-        ansible_exec = 'ansible-playbook '
-        ansible_exec += ''
+        ansible_exec = 'ansible-playbook -i %s %s %s/site.yaml' % (self.inventory, extra_vars, self.ansible_playbookdir)
+
+        print("* The following ansible command will be used to deploy your cluster:\n%s" % ansible_exec)
+        if self.dry_run:
+            print("* Dry run enabled - no deployment will be created")
+        else:
+            self._deploy_launch_process(ansible_exec)
 
 
 def main():
     parser = argparse.ArgumentParser(description='Autoinstaller for OpenShift in Action')
     parser.add_argument('-c', '--chapter', dest="chapter", type=int, default=0, help="chapter you would like to provision through")
     parser.add_argument('--config', dest="conf_file", default="autoinstaller.conf", help="autoinstaller config file, default is autoinstaller.conf")
+    parser.add_argument('-p', '--provider', dest="deployment", help="the deployment provider you'd like to use from your configuration file")
     parser.add_argument('-d', '--dry-run', dest="dry_run", action="store_true", help="use this option to output the installation command but not launch the installer")
 
     args = parser.parse_args()

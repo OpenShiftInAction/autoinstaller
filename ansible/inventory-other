@@ -1,9 +1,0 @@
-[openshift]
-192.168.122.100
-192.168.122.101
-
-[master]
-192.168.122.100 public_ip=192.168.122.100 public_hostname=ocp1.192.168.122.100.nip.io private_ip=192.168.122.100 private_hostname=ocp1.192.168.122.100.nip.io
-
-[node]
-192.168.122.101 public_ip=192.168.122.101 public_hostname=ocp2.192.168.122.101.nip.io private_hostname=ocp2.192.168.122.101.nip.io private_ip=192.168.122.101
