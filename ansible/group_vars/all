@@ -1,10 +1,8 @@
 kvm_host:
-  cleanup: "{{ var_cleanup }}"
-  disk_image: "{{ var_image }}"
+  cleanup: true
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
-  remote_username: "{{ var_remote_username }}"
   network:
     name: default
     network: 192.168.122.0
@@ -65,12 +63,12 @@ cloud_images:
       openshift-enterprise: ami-9fa343e7
   openstack:
     all:
-      origin: "{{ var_image }}"
-      openshift-enterprise: "{{ var_image }}"
+      origin: "{{ image }}"
+      openshift-enterprise: "{{ image }}"
   kvm:
     all:
-      origin: "{{ var_image }}"
-      openshift-enterprise: "{{ var_image }}"
+      origin: "{{ image }}"
+      openshift-enterprise: "{{ image }}"
 
 remote_users:
   kvm:
@@ -82,34 +80,46 @@ remote_users:
   openstack:
     origin: centos
     openshift-enterprise: cloud-user
+  other:
+    origin: vagrant
+    openshift-enterprise: vagrant
 
 cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
 
-virt_type: "{{ var_deployment_type }}"
-openshift_type: "{{ var_openshift_type }}"
-openshift_version: "{{ var_openshift_version }}"
-flavor: "{{ var_flavor }}"
-region: "{{ var_region }}"
-sec_group: "{{ var_sec_group }}"
-
-docker_vol: "{{ var_docker_vol }}"
+virt_type: "{{ deployment }}"
+openshift_type: "{{ openshift_type }}"
+openshift_version: "{{ openshift_version }}"
+flavor: "{{ flavor }}"
+region: "{{ region }}"
+sec_group: "{{ sec_group }}"
 
 vol_devs:
-  aws: /dev/xvdb
-  kvm: /dev/vdb
-  openstack: /dev/vdb
+  aws:
+    origin: /dev/xvdb
+    openshift-enterprise: /dev/xvdb
+  kvm:
+    origin: /dev/vdb
+    openshift-enterprise: /dev/vdb
+  openstack:
+    origin: /dev/vdb
+    openshift-enterprise: /dev/vdb
+  other:
+    origin: /dev/sdb
+    openshift-enterprise: /dev/sdb
+
+docker_vol: "{{ vol_devs[virt_type][openshift_type] }}"
 
 vol_size: 20
-vol_dev: "{{ vol_devs[virt_type] }}"
+vol_dev: "{{ vol_devs[virt_type][openshift_type] }}"
 docker_vg: docker_vg
 
 deployment:
-  use_nip_io: "{{ var_nip_io }}"
-  deploy_openshift: "{{ var_deploy_openshift }}"
-  set_up_cns: "{{ var_deploy_cns }}"
-  set_up_metrics: "{{ var_deploy_metrics }}"
-  set_up_catalog: "{{ var_deploy_service_catalog }}"
-  set_up_httpd_auth: "{{ var_deploy_httpd_auth }}"
+  use_nip_io: true
+  deploy_openshift: "{{ deploy_openshift }}"
+  set_up_cns: "{{ deploy_cns }}"
+  set_up_metrics: "{{ deploy_metrics }}"
+  set_up_catalog: "{{ deploy_service_catalog }}"
+  set_up_httpd_auth: "{{ deploy_httpd_auth }}"
 
 networks:
   external:
@@ -131,10 +141,9 @@ networks:
 
 instance:
   ssh_key:
-    name: "{{ var_ssh_key_name }}"
-    file_private: "{{ var_ssh_key_file }}"
-    file_public: "{{ var_ssh_key_file}}.pub"
-  domain: "{{ var_domain }}"
+    name: "{{ ssh_key_name }}"
+    file_private: "{{ ssh_key_file }}"
+    file_public: "{{ ssh_key_file}}.pub"
   nodes:
     ocp1:
       role: master
@@ -148,7 +157,7 @@ instance:
         hostname: ocp1.192.168.122.100.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ var_image }}"
+        image_id: "{{ image }}"
     ocp2:
       role: node
       kvm_params:
@@ -160,4 +169,4 @@ instance:
         hostname: ocp2.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ var_image }}"
+        image_id: "{{ image }}"

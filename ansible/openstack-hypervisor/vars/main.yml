@@ -6,14 +6,10 @@ ansible_deps:
   - jmespath
 
 auth_creds:
-  url: "{{ os_auth_url }}"
-  username: "{{ os_username }}"
-  password: "{{ os_password }}"
-  project: "{{ os_project }}"
-  admin:
-    username: "{{ os_admin_user }}"
-    password: "{{ os_admin_pass }}"
-    project: "{{ os_admin_project }}"
+  url: "{{ auth_url }}"
+  username: "{{ lookup('env', 'OS_USERNAME') }}"
+  password: "{{ lookup('env', 'OS_PASSWORD') }}"
+  project: "{{ project }}"
 
 # Create custom security group
 setup_security: true

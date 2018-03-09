@@ -6,37 +6,41 @@
 - name: include distro-specific tasks
   include: "{{ ansible_distribution }}.yml"
 
-- name: copy authorized key to remote user
-  authorized_key:
-    user: "{{ cluster_user }}"
-    state: present
-    key: "{{ lookup('file', instance.ssh_key.file_public ) }}"
+# - name: copy authorized key to remote user
+#   authorized_key:
+#     user: "{{ cluster_user }}"
+#     state: present
+#     key: "{{ lookup('file', instance.ssh_key.file_public ) }}"
+#
+# - name: copy private key to master
+#   copy:
+#     src: "{{ instance.ssh_key.file_private }}"
+#     dest: /root/.ssh/id_rsa
+#     owner: root
+#     group: root
+#     mode: 0400
+#
+# - name: copy down autoinstaller repository
+#   git:
+#     repo: "{{ autoinstaller.repo }}"
+#     dest: "{{ autoinstaller.dest }}"
 
-- name: copy private key to master
-  copy:
-    src: "{{ instance.ssh_key.file_private }}"
-    dest: /root/.ssh/id_rsa
-    owner: root
-    group: root
-    mode: 0400
+- name: set home directory path
+  set_fact:
 
-- name: copy down autoinstaller repository
-  git:
-    repo: "{{ autoinstaller.repo }}"
-    dest: "{{ autoinstaller.dest }}"
 
 - name: install inventory
   template:
     src: hosts-{{ virt_type }}.j2
-    dest: "{{ installer.dest }}"
+    dest: "{{ ansible_env.HOME }}/hosts"
 
 - name: install ansible config file for root user
   template:
     src: ansible.cfg
-    dest: /root/.ansible.cfg
+    dest: "{{ ansible_env.HOME }}/.ansible.cfg"
 
 - name: deploy openshift
-  command: ansible-playbook -i {{ installer.dest }} /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+  command: ansible-playbook -i {{ ansible_env.HOME }}/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   register: ocp_out
   when: deployment.deploy_openshift
 

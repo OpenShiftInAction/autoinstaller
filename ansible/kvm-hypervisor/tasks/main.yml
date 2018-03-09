@@ -30,7 +30,6 @@
     state: directory
   when: kvm_host.cleanup
 
-
 - name: add ssh public key to workspace folder
   copy:
     src: "{{ instance.ssh_key.file_public }}"
@@ -41,15 +40,21 @@
   include: cleanup.yml
   when: kvm_host.cleanup
 
+- name: download CentOS cloud image (this may take a few minutes depending on your connection speed)
+  get_url:
+    url: "{{ centos_image_loc }}"
+    dest: "{{ centos_image_local }}"
+    checksum: sha256:{{ centos_image_sha256 }}
+
 - name: Copy over the virtual disk images
   copy:
-    src: "{{ kvm_host.disk_image }}"
+    src: "{{ centos_image_local }}"
     dest: "{{ kvm_host.disk_dir }}/{{ item.key }}.qcow2"
   with_dict: "{{ instance.nodes }}"
   when: kvm_host.cleanup
 
 - name: create data disk
-  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2 {{ item.value.vol_size }}G
+  command: qemu-img create -f qcow2 -o preallocation=metadata {{ kvm_host.disk_dir }}/{{ item.key }}-data.qcow2 {{ vol_size }}G
   with_dict: "{{ instance.nodes }}"
   when: kvm_host.cleanup
 
@@ -153,13 +158,14 @@
     name: "{{ item.key }}"
     ansible_ssh_host: "{{ item.value.kvm_params.ip }}"
     ansible_ssh_port: 22
+    ansible_user: "{{ cluster_user }}"
     groups: "{{ item.value.kvm_params.role }},openshift"
     private_ip: "{{ item.value.kvm_params.ip }}"
     private_hostname: "{{ item.value.kvm_params.hostname }}"
     public_ip: "{{ item.value.kvm_params.ip }}"
     public_hostname: "{{ item.value.kvm_params.hostname }}"
-    docker_vg: "{{ item.value.docker_vg }}"
-    vol_dev: "{{ item.value.vol_dev }}"
+    docker_vg: "{{ docker_vg }}"
+    vol_dev: "{{ vol_dev }}"
   with_dict: "{{ instance.nodes }}"
 
 - name: wait a few seconds for everything to boot

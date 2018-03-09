@@ -8,3 +8,5 @@ packages:
   - vim-enhanced
   - atomic-openshift-utils
   - NetworkManager
+  - dnsmasq
+  - libsemanage-python

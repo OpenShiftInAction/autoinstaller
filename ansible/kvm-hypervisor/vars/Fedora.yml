@@ -2,3 +2,4 @@ hypervisor_deps:
   - python-netaddr
   - genisoimage
   - libselinux-python
+  - tar

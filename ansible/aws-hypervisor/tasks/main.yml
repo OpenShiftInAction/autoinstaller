@@ -1,5 +1,10 @@
 ---
 # tasks file for aws-hypervisor
+- name: get AWS access information
+  set_fact:
+    aws_secret_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID' }}"
+    aws_secret_access_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+
 - name: include network-related tasks
   include: ec2_network.yml
 
@@ -19,8 +24,8 @@
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
     instance_id: "{{ item.key }}"
-    group: "{{ var_sec_group }}"
-    region: "{{ var_region }}"
+    group: "{{ sec_group }}"
+    region: "{{ region }}"
     instance_tags:
       role: "{{ item.value.role }}"
       Name: "{{ item.key }}"
@@ -41,7 +46,7 @@
   ec2_instance_facts:
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_access_key_id }}"
-    region: "{{ var_region }}"
+    region: "{{ region }}"
     filters:
       "tag:cluster": "OiA-{{ deployment_uuid }}"
       "instance-state-name": running
