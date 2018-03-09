@@ -4,6 +4,7 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
 
 <!-- TOC START min:1 max:4 link:true update:true -->
 - [OpenShift in Action Autoinstaller](#openshift-in-action-autoinstaller)
+  - [Prerequisites for using autoinstaller](#prerequisites-for-using-autoinstaller)
   - [Getting started](#getting-started)
   - [Autoinstaller configuration](#autoinstaller-configuration)
     - [Global configurations](#global-configurations)
@@ -32,6 +33,8 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
   - [Contributing](#contributing)
 
 <!-- TOC END -->
+
+## Prerequisites for using autoinstaller
 
 * Ansible on a linux system (tested using Ansible 2.2.2.0+)
 * git, to clone this repository
