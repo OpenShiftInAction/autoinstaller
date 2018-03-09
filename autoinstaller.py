@@ -150,7 +150,15 @@ The OpenShift In Action Team
         handles the launching of the process and displaying the output
         '''
         print("* Beginning deployment on %s provider" % self.deployment)
-
+        p = subprocess.Popen(d_command, shell=True, stderr=subprocess.PIPE)
+        
+        while True:
+            out = p.stderr.read(1)
+            if out == '' and p.poll() != None:
+                break
+            if out != '':
+                sys.stdout.write(out)
+                sys.stdout.flush()
 
     def _deploy_ocp(self):
         '''
