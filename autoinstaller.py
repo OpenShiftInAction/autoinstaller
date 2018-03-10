@@ -20,17 +20,15 @@ class autoInstaller:
         self.forum_url = 'https://forums.manning.com/forums/openshift-in-action'
         self._intro_text()
         self.chapter = options.chapter
-        # a deployment method was supplied on the command line. it should overrule what's in the config file
-        if options.deployment:
-            self.deployment = options.deployment
         self.dry_run = options.dry_run
         self.ansible_playbookdir = './ansible'
         self.inventory = self.ansible_playbookdir + '/inventory'
         self.conf, self.conf_data, self.conf_sections = self._read_conf_file(options.conf_file)
         self.global_confs = self._load_conf_section('global')
         # if there's not a deployment specified on the command line
-        if not options.deployment:
-            self.deployment = self.global_confs['deployment']
+        if options.deployment:
+            self.global_confs['deployment'] = options.deployment
+        self.deployment = self.global_confs['deployment']
         try:
             self.deployment_confs = self._load_conf_section(self.deployment)
             if self.deployment == 'other':
@@ -149,7 +147,8 @@ The OpenShift In Action Team
         '''
         handles the launching of the process and displaying the output
         '''
-        print("* Beginning deployment on %s provider" % self.deployment)
+        print("* Beginning deployment on %s provider\n\n" % self.deployment)
+        print("* ------------- ANSIBLE HANDOVER -----------------\n\n")
         p = subprocess.Popen(d_command, shell=True, stderr=subprocess.PIPE)
 
         while True:

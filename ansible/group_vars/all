@@ -12,6 +12,8 @@ kvm_host:
       - 8.8.8.8
       - 8.8.4.4
 
+image: foobar
+
 # updated up to 20180116
 # -jduncan
 cloud_images:
@@ -61,14 +63,8 @@ cloud_images:
     us-west-2:
       origin: ami-0c2aba6c
       openshift-enterprise: ami-9fa343e7
-  openstack:
-    all:
-      origin: "{{ image }}"
-      openshift-enterprise: "{{ image }}"
-  kvm:
-    all:
-      origin: "{{ image }}"
-      openshift-enterprise: "{{ image }}"
+
+image_name: "{{ cloud_images[virt_type][region][openshift_type] }}"
 
 remote_users:
   kvm:
@@ -157,7 +153,6 @@ instance:
         hostname: ocp1.192.168.122.100.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ image }}"
     ocp2:
       role: node
       kvm_params:
@@ -169,4 +164,3 @@ instance:
         hostname: ocp2.192.168.122.101.nip.io
       openstack_params:
         private_network: openshift_int
-        image_id: "{{ image }}"

@@ -2,7 +2,7 @@
 # tasks file for aws-hypervisor
 - name: get AWS access information
   set_fact:
-    aws_secret_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID' }}"
+    aws_secret_key_id: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
     aws_secret_access_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
 
 - name: include network-related tasks
@@ -17,12 +17,12 @@
 
 - name: Set correct AMI fact
   set_fact:
-    ami_id: "{{ cloud_images[virt_type][region][openshift_type] }}"
+    ami_id: "{{ image_name }}"
 
 - name: create openshift nodes
   ec2:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     instance_id: "{{ item.key }}"
     group: "{{ sec_group }}"
     region: "{{ region }}"
@@ -45,7 +45,7 @@
 - name: gather facts about newly created instances
   ec2_instance_facts:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     region: "{{ region }}"
     filters:
       "tag:cluster": "OiA-{{ deployment_uuid }}"

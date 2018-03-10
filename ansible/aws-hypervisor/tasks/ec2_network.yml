@@ -1,7 +1,7 @@
 - name: create VPC for OpenShift cluster
   ec2_vpc_net:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     name: OpenShift
     cidr_block: "{{ networks.private.openshift_int.subnet_cidr }}"
     region: "{{ region }}"
@@ -19,7 +19,7 @@
 - name: Create gateway uplink for VPC
   ec2_vpc_igw:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
     state: present
@@ -27,7 +27,7 @@
 - name: create VPC subnet
   ec2_vpc_subnet:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     state: present
     cidr: "{{ networks.private.openshift_int.subnet_cidr }}"
     region: "{{ region }}"

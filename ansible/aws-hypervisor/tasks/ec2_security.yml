@@ -1,7 +1,7 @@
 - name: create ec2 vpc security group
   ec2_group:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     name: "{{ sec_group }}"
     description: OpenShift Security Group
     vpc_id: "{{ vpc_id }}"
@@ -23,7 +23,7 @@
 - name: create ssh key
   ec2_key:
     aws_secret_key: "{{ aws_secret_access_key }}"
-    aws_access_key: "{{ aws_access_key_id }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
     region: "{{ region }}"
     name: "{{ instance.ssh_key.name }}"
     key_material: "{{ item }}"
