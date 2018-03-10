@@ -20,7 +20,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 
 [masters]
 {% for host in groups['master'] %}
-{{ hostvars[host]['public_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
+{{ hostvars[host]['private_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
 {% endfor %}
 
 [nodes]
