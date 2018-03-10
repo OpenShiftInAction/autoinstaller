@@ -7,7 +7,7 @@ ansible_ssh_user={{ cluster_user }}
 ansible_become=true
 openshift_master_default_subdomain=apps.{{ hostvars[groups['node'][0]]['public_ip']}}.nip.io
 openshift_deployment_type={{ openshift_type }}
-openshift_disable_check=disk_availability,memory_availability,docker_storage
+openshift_disable_check=disk_availability,memory_availability,docker_storage, package_availability
 {% if deploy_metrics %}
 openshift_hosted_metrics_deploy=true
 {% endif %}

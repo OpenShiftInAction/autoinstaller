@@ -15,19 +15,15 @@
 - name: copy private key to master
   copy:
     src: "{{ instance.ssh_key.file_private }}"
-    dest: /root/.ssh/id_rsa
-    owner: root
-    group: root
+    dest: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    owner: "{{ cluster_user }}"
+    group: "{{ cluster_user }}"
     mode: 0400
 
 - name: copy down autoinstaller repository
   git:
     repo: "{{ autoinstaller.repo }}"
     dest: "{{ autoinstaller.dest }}"
-
-- name: set home directory path
-  set_fact:
-
 
 - name: install inventory
   template:

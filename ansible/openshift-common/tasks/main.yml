@@ -9,6 +9,11 @@
     persistent: yes
   with_items: "{{ selinux_bools }}"
 
+- name: update systems
+  yum:
+    name: '*'
+    state: latest
+
 - name: restart server
   shell: ( sleep 3 && /sbin/reboot & )
 
