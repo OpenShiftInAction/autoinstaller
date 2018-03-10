@@ -1,7 +1,7 @@
 [OSEv3:children]
 masters
 nodes
-{% if deployment.set_up_cns %}
+{% if deploy_cns %}
 glusterfs
 {% endif %}
 
@@ -11,16 +11,16 @@ ansible_become=true
 openshift_master_default_subdomain=apps.{{ hostvars[groups['node'][0]]['public_ip']}}.nip.io
 openshift_deployment_type={{ openshift_type }}
 openshift_disable_check=disk_availability,memory_availability,docker_storage
-{% if deployment.set_up_cns %}
+{% if deploy_cns %}
 openshift_hosted_registry_storage_kind=glusterfs
 {% endif %}
-{% if deployment.set_up_metrics %}
+{% if deploy_metrics %}
 openshift_hosted_metrics_deploy=true
 {% endif %}
-{% if deployment.set_up_catalog %}
+{% if deploy_catalog %}
 openshift_enable_service_catalog=true
 {% endif %}
-{% if openshift_type == 'openshift-enterprise' or deployment.set_up_httpd_auth %}
+{% if openshift_type == 'openshift-enterprise' or deploy_httpd_auth %}
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 {% endif %}
 
@@ -38,7 +38,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 {{ hostvars[host]['private_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True openshift_schedulable=True
 {% endfor %}
 
-{% if deployment.set_up_cns %}
+{% if deploy_cns %}
 [glusterfs]
 {% for host in groups['gluster'] %}
 {{ hostvars[host]['public_ip']}} glusterfs_devices="[ '{{ hostvars[host]['cns_vol_dev'] }}' ]"

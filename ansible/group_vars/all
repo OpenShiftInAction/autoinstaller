@@ -109,14 +109,6 @@ vol_size: 20
 vol_dev: "{{ vol_devs[virt_type][openshift_type] }}"
 docker_vg: docker_vg
 
-deployment:
-  use_nip_io: true
-  deploy_openshift: "{{ deploy_openshift }}"
-  set_up_cns: "{{ deploy_cns }}"
-  set_up_metrics: "{{ deploy_metrics }}"
-  set_up_catalog: "{{ deploy_service_catalog }}"
-  set_up_httpd_auth: "{{ deploy_httpd_auth }}"
-
 networks:
   external:
     public:

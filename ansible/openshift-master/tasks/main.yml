@@ -42,9 +42,9 @@
 - name: deploy openshift
   command: ansible-playbook -i {{ ansible_env.HOME }}/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   register: ocp_out
-  when: deployment.deploy_openshift
+  when: deploy_openshift
 
 - name: deploy output
   debug:
     msg: "{{ ocp_out.stdout }}"
-  when: deployment.deploy_openshift
+  when: deploy_openshift
