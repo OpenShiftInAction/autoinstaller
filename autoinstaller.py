@@ -25,7 +25,7 @@ class autoInstaller:
             self.deployment = options.deployment
         self.dry_run = options.dry_run
         self.ansible_playbookdir = './ansible'
-        self.inventory = self.ansible_playbookdir + '/hosts'
+        self.inventory = self.ansible_playbookdir + '/inventory'
         self.conf, self.conf_data, self.conf_sections = self._read_conf_file(options.conf_file)
         self.global_confs = self._load_conf_section('global')
         # if there's not a deployment specified on the command line
@@ -121,7 +121,7 @@ The OpenShift In Action Team
         '''
         if self.deployment == 'other':
             try:
-                self.inventory = "/tmp/autoinstaller-other-hosts"
+                self.inventory = "/tmp/autoinstaller-other-inventory"
                 fh = open(self.inventory, 'w')
 
                 inv_str = """
@@ -151,7 +151,7 @@ The OpenShift In Action Team
         '''
         print("* Beginning deployment on %s provider" % self.deployment)
         p = subprocess.Popen(d_command, shell=True, stderr=subprocess.PIPE)
-        
+
         while True:
             out = p.stderr.read(1)
             if out == '' and p.poll() != None:
