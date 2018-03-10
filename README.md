@@ -19,7 +19,6 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
       - [Other](#other)
     - [Experiemental](#experiemental)
       - [deploy_metrics](#deploy_metrics)
-      - [deploy_cns](#deploy_cns)
       - [deploy_httpd_auth](#deploy_httpd_auth)
     - [Debug](#debug)
     - [Sample autoinstaller.conf](#sample-autoinstallerconf)
@@ -214,10 +213,6 @@ There are several experimental options in autoinstaller. These may or may not wo
 
 If set to `true`, this option deploys the [OpenShift metrics](https://github.com/openshift/origin-metrics) stack at deploy time.
 
-#### deploy_cns
-
-If set to `true`, this option deploys [Container Native Storage](https://access.redhat.com/documentation/en-us/red_hat_gluster_storage/3.3/html/container-native_storage_for_openshift_container_platform/) in your OpenShift cluster.
-
 #### deploy_httpd_auth
 
 If set to `true`, this option configures OpenShift to use an http authentication provider for your cluster (Note: this is done automatically if you're deploying OpenShift on Red Hat Enterprise Linux).
@@ -259,7 +254,6 @@ docker_vol = /dev/sdb
 
 [experimental]
 deploy_metrics = false
-deploy_cns = false
 deploy_httpd_auth = false
 
 [debug]
