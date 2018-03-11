@@ -5,6 +5,7 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
 <!-- TOC START min:1 max:4 link:true update:true -->
 - [OpenShift in Action Autoinstaller](#openshift-in-action-autoinstaller)
   - [Prerequisites for using autoinstaller](#prerequisites-for-using-autoinstaller)
+  - [Testing Matrix](#testing-matrix)
   - [AWS Quickstart](#aws-quickstart)
   - [Getting started](#getting-started)
   - [Autoinstaller configuration](#autoinstaller-configuration)
@@ -31,7 +32,6 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
       - [Infrastructure Roles](#infrastructure-roles)
       - [OpenShift Roles](#openshift-roles)
   - [Contributing](#contributing)
-  - [Testing Matrix](#testing-matrix)
 
 <!-- TOC END -->
 
@@ -45,6 +45,17 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
   * Linux (kvm/libvirt)
   * Other (virtual machines or bare metal systems already running CentOS 7)
 * Any special prerequisites for a given provider will be spelled out in its own section.
+
+## Testing Matrix
+
+Providers and OpenShift versions that have been tested to date. Feel free to help!
+
+| Provider | Origin 3.6 | Origin 3.7 | OCP 3.6 | OCP 3.7 |
+|----------|------------|------------|---------|---------|
+| AWS      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :heavy_check_mark:    |         |
+| KVM      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :x:     |    :x:     |
+| OpenStack|            |            |         |         |
+| Other    |            |            |         |         |
 
 ## AWS Quickstart
 
@@ -364,12 +375,3 @@ This role configures your OpenShift master, and performs the actual OpenShift de
 ## Contributing
 
 If you are an Ansible user and want to add general improvements, or especially addtional hypervisor platforms, PRs and Issues are _most definitely_ welcome!
-
-## Testing Matrix
-
-| Provider | Origin 3.6 | Origin 3.7 | OCP 3.6 | OCP 3.7 |
-|----------|------------|------------|---------|---------|
-| AWS      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :heavy_check_mark:    |         |
-| KVM      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :x:     |    :x:     |
-| OpenStack|            |            |         |         |
-| Other    |            |            |         |         |
