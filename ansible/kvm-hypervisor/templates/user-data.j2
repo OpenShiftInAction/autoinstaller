@@ -4,7 +4,7 @@ chpasswd: { expire: False }
 ssh_pwauth: True
 disable_root: false
 ssh_authorized_keys:
-  - {{ lookup('file', instance.ssh_key.file_public) }}
+  - {{ lookup('file', ssh_key_file_pub) }}
 
 write_files:
 - content: |

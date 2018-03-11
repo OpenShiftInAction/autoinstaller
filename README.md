@@ -369,7 +369,7 @@ If you are an Ansible user and want to add general improvements, or especially a
 
 | Provider | Origin 3.6 | Origin 3.7 | OCP 3.6 | OCP 3.7 |
 |----------|------------|------------|---------|---------|
-| AWS      |   X        |    X       |    X    |         |
-| KVM      |   X        |            |         |         |
+| AWS      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :heavy_check_mark:    |         |
+| KVM      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :x:     |    :x:     |
 | OpenStack|            |            |         |         |
 | Other    |            |            |         |         |

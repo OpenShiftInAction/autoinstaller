@@ -128,10 +128,6 @@ networks:
         - 8.8.4.4
 
 instance:
-  ssh_key:
-    name: "{{ ssh_key_name }}"
-    file_private: "{{ ssh_key_file }}"
-    file_public: "{{ ssh_key_file}}.pub"
   nodes:
     ocp1:
       role: master

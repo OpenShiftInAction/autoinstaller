@@ -10,12 +10,12 @@
     seconds: 30
   when: libvirtd.changed
 
-# - name: pull in distribution-specific variables
-#   include_vars:
-#     file: "{{ ansible_distribution }}.yml"
-#
-# - name: pull in distribution-specific tasks
-#   include: "{{ ansible_distribution }}.yml"
+- name: pull in distribution-specific variables
+  include_vars:
+    file: "{{ ansible_distribution }}.yml"
+
+- name: pull in distribution-specific tasks
+  include: "{{ ansible_distribution }}.yml"
 
 - name: clean up any old temporary workspaces
   file:
@@ -32,7 +32,7 @@
 
 - name: add ssh public key to workspace folder
   copy:
-    src: "{{ instance.ssh_key.file_public }}"
+    src: "{{ ssh_key_file }}.pub"
     dest: "{{ kvm_host.tmp_workspace }}/ssh_key.pub"
   when: kvm_host.cleanup
 
@@ -64,6 +64,10 @@
     state: directory
   with_dict: "{{ instance.nodes }}"
   when: kvm_host.cleanup
+
+- name: codify ssh public key filename
+  set_fact:
+    ssh_key_file_pub: "{{ ssh_key_file }}.pub"
 
 - name: create the metadata ISO directory
   file:

@@ -25,6 +25,6 @@
     aws_secret_key: "{{ aws_secret_access_key }}"
     aws_access_key: "{{ aws_secret_key_id }}"
     region: "{{ region }}"
-    name: "{{ instance.ssh_key.name }}"
+    name: "{{ ssh_key_name }}"
     key_material: "{{ item }}"
-  with_file: "{{ instance.ssh_key.file_public }}"
+  with_file: "{{ ssh_key_file }}.pub"

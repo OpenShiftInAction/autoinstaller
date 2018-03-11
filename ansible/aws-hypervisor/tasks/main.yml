@@ -33,7 +33,7 @@
     state: present
     vpc_subnet_id: "{{ subnet_id }}"
     instance_type: "{{ flavor }}"
-    key_name: "{{ instance.ssh_key.name }}"
+    key_name: "{{ ssh_key_name }}"
     wait: yes
     assign_public_ip: yes
     image: "{{ ami_id }}"
