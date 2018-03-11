@@ -31,6 +31,7 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
       - [Infrastructure Roles](#infrastructure-roles)
       - [OpenShift Roles](#openshift-roles)
   - [Contributing](#contributing)
+  - [Testing Matrix](#testing-matrix)
 
 <!-- TOC END -->
 
@@ -67,7 +68,7 @@ ssh_key_name = oia_key
 * run the following command:
 `$ ./autoinstaller.py`
 
-That's it. This will create 2 instances in AWS and deploy an OpenShift cluster for you. 
+That's it. This will create 2 instances in AWS and deploy an OpenShift cluster for you.
 
 ## Getting started
 
@@ -363,3 +364,12 @@ This role configures your OpenShift master, and performs the actual OpenShift de
 ## Contributing
 
 If you are an Ansible user and want to add general improvements, or especially addtional hypervisor platforms, PRs and Issues are _most definitely_ welcome!
+
+## Testing Matrix
+
+| Provider | Origin 3.6 | Origin 3.7 | OCP 3.6 | OCP 3.7 |
+|----------|------------|------------|---------|---------|
+| AWS      |   X        |    X       |    X    |         |
+| KVM      |   X        |            |         |         |
+| OpenStack|            |            |         |         |
+| Other    |            |            |         |         |
