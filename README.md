@@ -2,26 +2,17 @@
 
 The `autoinstaller` application automates the deployment of an OpenShift cluster that's an analogue to Appendix A in _OpenShift in Action_. It also helps you complete the tasks for each chapter quickly if you break your system and want to quickly catch up.
 
-<!-- TOC START min:1 max:4 link:true update:true -->
+<!-- TOC START min:1 max:3 link:true update:true -->
 - [OpenShift in Action Autoinstaller](#openshift-in-action-autoinstaller)
   - [Prerequisites for using autoinstaller](#prerequisites-for-using-autoinstaller)
   - [Testing Matrix](#testing-matrix)
   - [AWS Quickstart](#aws-quickstart)
-  - [Getting started](#getting-started)
-  - [Autoinstaller configuration](#autoinstaller-configuration)
+  - [Getting started and configuration](#getting-started-and-configuration)
     - [Global configurations](#global-configurations)
-      - [openshift_version](#openshift_version)
-      - [openshift_type](#openshift_type)
-      - [ssh_key_file](#ssh_key_file)
-      - [deployment](#deployment)
-    - [Providers](#providers)
-      - [AWS](#aws)
-      - [KVM](#kvm)
-      - [Openstack](#openstack)
-      - [Other](#other)
-    - [Experiemental](#experiemental)
-      - [deploy_metrics](#deploy_metrics)
-      - [deploy_httpd_auth](#deploy_httpd_auth)
+    - [AWS Provider](#aws-provider)
+    - [KVM Provider](#kvm-provider)
+    - [Openstack Provider](#openstack-provider)
+    - [Other provider](#other-provider)
     - [Debug](#debug)
     - [Sample autoinstaller.conf](#sample-autoinstallerconf)
   - [Usage](#usage)
@@ -29,8 +20,6 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
     - [Multiple providers in a single configuration](#multiple-providers-in-a-single-configuration)
   - [Advanced Usage](#advanced-usage)
     - [Ansible Roles](#ansible-roles)
-      - [Infrastructure Roles](#infrastructure-roles)
-      - [OpenShift Roles](#openshift-roles)
   - [Contributing](#contributing)
 
 <!-- TOC END -->
@@ -81,11 +70,9 @@ ssh_key_name = oia_key
 
 That's it. This will create 2 instances in AWS and deploy an OpenShift cluster for you.
 
-## Getting started
+## Getting started and configuration
 
 Autoinstaller uses an [ini configuration file](https://wiki.python.org/moin/ConfigParserExamples). This is the only configuration you have to make to deploy OpenShift with the autoinstaller.
-
-## Autoinstaller configuration
 
 ### Global configurations
 
@@ -121,21 +108,17 @@ The provider to use for your OpenShift cluster. This parameter is used to refere
 * openstack
 * other
 
-These are outlined in the next section.
-
-### Providers  
-
 Each provider has its own section. You only need to have a single provider defined, but you can define multiple platforms. The `deployment` parameter in `[global]` tells which provider to use for a given deployment.
 
-#### AWS
+### AWS Provider
 
 The AWS provider comes complete with a list of CentOS and RHEL 7.4 AMIs for each EC2 region. You don't have to specify them. It just works.
 
-##### Prerequisites
+#### Prerequisites
 
 We assume you have used, are using, or are comfortable with using AWS (Amazon Web Services) and its EC2 service. If you're new to AWS, their [_Getting Started with Amazon EC2_](https://aws.amazon.com/ec2/getting-started/) is a great first step.
 
-###### Access environment variables
+##### Access environment variables
 
 Everything in AWS requires authentication. Autoinstallers uses environment variables for your AWS secret key and access key set in accordance with [their documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-environment.html). The following environment variables need to be set:
 
@@ -144,43 +127,43 @@ Everything in AWS requires authentication. Autoinstallers uses environment varia
 
 If these variables aren't set on the autoinstaller host, the provider can't function.
 
-###### IAM role to create VPC and Security Group
+##### IAM role to create VPC and Security Group
 
 The API key you use also needs to have the proper permissions to create a VPC, Security Group, and EC2 instances. If managing AWS permissions is new to you, they have [documentation](https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started.html) for that, too! It's a solid platform with a pretty low learning curve to get it set up for this purpose.
 
-##### Parameters
+#### Parameters
 
-###### region
+##### region
 
 The region where you want to deploy OpenShift
 
-###### sec_group
+##### sec_group
 
 By default, autoinstaller creates a security group for public access to OpenShift.  
 
-###### flavor
+##### flavor
 
 The instance flavor for your instance. `m4.xlarge` matches the OpenShift recommendations. We've tested with `m4.large` instances as well.
 
-###### ssh_key_name
+##### ssh_key_name
 
 The name on the provider for your ssh key. If it's not already uploaded, autoinstaller will upload your specified key to your cloud provider using this name. This is the key name that will be referenced when instances are created.
 
-#### KVM
+### KVM Provider
 
 The KVM provider automatically downloads the proper [CentOS7 cloud image](https://cloud.centos.org/centos/7/images/) to your KVM host and uses that to deploy your OpenShift cluster.
 
 By default, no parameters need to be set.
 
-#### Openstack
+### Openstack Provider
 
 [OpenStack](https://www.openstack.org) is an industry-leading on-premises cloud platform. It's a lot like having all of AWS' services inside your own datacenter.
 
 Unlike AWS, each OpenStack deployment has a unique image ID that references. You need to tell autoinstaller that information, along with the same information used for EC2.
 
-##### Prerequisites
+#### Prerequisites
 
-###### Access environment variables
+##### Access environment variables
 
 Like the AWS provider, authentication environment variables are needed to access your OpenStack APIs. Your OpenStack username and passwords need to be available in the following variables on your autoinstaller host:
 
@@ -189,37 +172,37 @@ Like the AWS provider, authentication environment variables are needed to access
 
 If these variables aren't set, this provider can't work.
 
-##### Parameters
+#### Parameters
 
-###### image
+##### image
 
 The image ID for your OpenStack cloud that is a CentOS 7 image. This value is a long hash, for example `7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e7e9fb03c-734b-4ad2-9244-df8b9c2e2b6e`, and will be unique to each OpenStack environment.
 
-###### project
+##### project
 
 The OpenStack project where you want to deploy OpenShift
 
-###### auth_url
+##### auth_url
 
 The keystone API URL for your OpenStack cluster, for example `http://172.16.0.20:5000/v2.0`.
 
-###### sec_group
+##### sec_group
 
 By default, autoinstaller creates a security group for public access to OpenShift.  
 
-###### flavor
+##### flavor
 
 The instance flavor for your instance. `m4.xlarge` matches the OpenShift recommendations. We've tested with `m4.large` instances as well.
 
-###### ssh_key_name
+##### ssh_key_name
 
 The name on the provider for your ssh key. If it's not already uploaded, autoinstaller will upload your specified key to your cloud provider using this name. This is the key name that will be referenced when instances are created.
 
-#### Other
+### Other provider
 
 This provider is the monkey wrench for autoinstaller. It doesn't provision your cluster instances. Instead it takes existing instances and deploys OpenShift on them for you.
 
-##### Assumptions
+#### Assumptions
 
 1. You have two CentOS 7 systems (physical or virtual) built out. This can be on any platform (Virtualbox, VMWare, etc.), assuming the rest of the assumptions are met.
 1. You have root access to both systems
@@ -228,31 +211,19 @@ This provider is the monkey wrench for autoinstaller. It doesn't provision your 
 1. Both systems have the CentOS 7 installed on one disk, and a second unformatted disk attached to the system.
 1. Both systems have at least two CPUs (or VCPUs), 4 GB of RAM, and 10GB of space on the second disk.
 
-##### Parameters
+#### Parameters
 
-###### master
+##### master
 
 The IP address or hostname of the system that will be your master server.
 
-###### node
+##### node
 
 The IP address or hostname of the system that will be your application node.
 
-###### docker_vol
+##### docker_vol
 
 There are two many different physical and virtual systems to account for all possible disk-naming conventions out there. This value is configured for the other providers, and defaults to `/dev/sdb` for this provider. If your servers have a different name for its second disk, you can override that default value with this parameter.
-
-### Experiemental
-
-There are several experimental options in autoinstaller. These may or may not work from one git commit to another. As they are tested and stabilized, they'll become global options.
-
-####  deploy_metrics
-
-If set to `true`, this option deploys the [OpenShift metrics](https://github.com/openshift/origin-metrics) stack at deploy time.
-
-#### deploy_httpd_auth
-
-If set to `true`, this option configures OpenShift to use an http authentication provider for your cluster (Note: this is done automatically if you're deploying OpenShift on Red Hat Enterprise Linux).
 
 ### Debug
 
@@ -288,10 +259,6 @@ ssh_key_name = jduncan_key
 master = 192.168.122.105
 node = 192.168.122.106
 docker_vol = /dev/sdb
-
-[experimental]
-deploy_metrics = false
-deploy_httpd_auth = false
 
 [debug]
 deploy_openshift = true
