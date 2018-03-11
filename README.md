@@ -46,7 +46,7 @@ Providers and OpenShift versions that have been tested to date. Feel free to hel
 | OpenStack|            |            |         |         |
 | Other    |            |            |         |         |
 
-The KVM provider is currently blocked from deploying OCP by issue #4
+The KVM provider is currently [blocked from deploying OCP](#4)
 
 ## AWS Quickstart
 
