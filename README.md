@@ -5,6 +5,7 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
 <!-- TOC START min:1 max:4 link:true update:true -->
 - [OpenShift in Action Autoinstaller](#openshift-in-action-autoinstaller)
   - [Prerequisites for using autoinstaller](#prerequisites-for-using-autoinstaller)
+  - [AWS Quickstart](#aws-quickstart)
   - [Getting started](#getting-started)
   - [Autoinstaller configuration](#autoinstaller-configuration)
     - [Global configurations](#global-configurations)
@@ -43,6 +44,30 @@ The `autoinstaller` application automates the deployment of an OpenShift cluster
   * Linux (kvm/libvirt)
   * Other (virtual machines or bare metal systems already running CentOS 7)
 * Any special prerequisites for a given provider will be spelled out in its own section.
+
+## AWS Quickstart
+
+* Clone this repository on to a Linux server (Fedora is preffered)
+* Set up your environment variables for [your AWS API secret and key](#access-environment-variables).
+* Set up your `autoinstaller.conf` as follows (NOTE: `ssh_key_file` must [already be created](#ssh-key-file)).:
+```
+[global]
+openshift_version = 3.6
+openshift_type = origin
+deployment = kvm
+ssh_key_file = /home/<YOUR_USER>/.ssh/id_rsa
+deploy_catalog = true
+
+[aws]
+region = us-east-1
+sec_group = openshift
+flavor = m4.xlarge
+ssh_key_name = oia_key
+```
+* run the following command:
+`$ ./autoinstaller.py`
+
+That's it. This will create 2 instances in AWS and deploy an OpenShift cluster for you. 
 
 ## Getting started
 

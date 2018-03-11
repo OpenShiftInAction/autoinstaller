@@ -18,3 +18,7 @@ base_pkgs:
   - vim-enhanced
   - atomic-openshift-utils
   - docker
+
+rhn_user: "{{ lookup('env','RHN_USERNAME') }}"
+rhn_pass: "{{ lookup('env','RHN_PASSWORD') }}"
+rhn_pool_id: "{{ lookup('env','RHN_POOL_ID') }}"
