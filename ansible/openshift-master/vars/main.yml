@@ -9,7 +9,7 @@ ansible_version: 2.2.2.0
 
 autoinstaller:
   repo: https://github.com/OpenShiftInAction/autoinstaller.git
-  dest: /root/autoinstaller
+  dest: /home/{{ cluster_user }}/autoinstaller
 
 installer:
   dest: "{{ var_inventory_path }}"

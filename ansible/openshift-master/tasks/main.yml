@@ -15,7 +15,7 @@
 - name: copy private key to master
   copy:
     src: "{{ instance.ssh_key.file_private }}"
-    dest: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+    dest: "/home/{{ cluster_user }}/.ssh/id_rsa"
     owner: "{{ cluster_user }}"
     group: "{{ cluster_user }}"
     mode: 0400
@@ -25,20 +25,34 @@
     repo: "{{ autoinstaller.repo }}"
     dest: "{{ autoinstaller.dest }}"
 
+- name: set ownership of autoinstaller checkout
+  file:
+    name: "{{ autoinstaller.dest }}"
+    state: directory
+    owner: "{{ cluster_user }}"
+    group: "{{ cluster_user }}"
+    mode: 0755
+
 - name: install inventory
   template:
     src: hosts.j2
-    dest: "{{ ansible_env.HOME }}/hosts"
+    dest: "/home/{{ cluster_user }}/hosts"
+    owner: "{{ cluster_user }}"
+    group: "{{ cluster_user }}"
 
-- name: install ansible config file for root user
+- name: install ansible config file for user
   template:
     src: ansible.cfg
-    dest: "{{ ansible_env.HOME }}/.ansible.cfg"
+    dest: "/home/{{ cluster_user }}/.ansible.cfg"
+    owner: "{{ cluster_user }}"
+    group: "{{ cluster_user }}"
 
 - name: deploy openshift
-  command: ansible-playbook -i {{ ansible_env.HOME }}/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
+  command: ansible-playbook -i /home/{{ cluster_user }}/hosts /usr/share/ansible/openshift-ansible/playbooks/byo/config.yml
   register: ocp_out
   when: deploy_openshift
+  become: yes
+  become_user: "{{ cluster_user }}"
 
 - name: deploy output
   debug:

@@ -1,24 +1,21 @@
 [OSEv3:children]
 masters
 nodes
+etcd
 
 [OSEv3:vars]
 ansible_ssh_user={{ cluster_user }}
 ansible_become=true
 openshift_master_default_subdomain=apps.{{ hostvars[groups['node'][0]]['public_ip']}}.nip.io
 openshift_deployment_type={{ openshift_type }}
-openshift_disable_check=disk_availability,memory_availability,docker_storage, package_availability
-{% if deploy_metrics %}
-openshift_hosted_metrics_deploy=true
-{% endif %}
-{% if deploy_catalog %}
-openshift_enable_service_catalog=true
-{% endif %}
-{% if openshift_type == 'openshift-enterprise' or deploy_httpd_auth %}
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
-{% endif %}
+openshift_disable_check=disk_availability,memory_availability,docker_storage,package_availability,package_version
 
 [masters]
+{% for host in groups['master'] %}
+{{ hostvars[host]['private_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
+{% endfor %}
+
+[etcd]
 {% for host in groups['master'] %}
 {{ hostvars[host]['private_ip'] }} openshift_hostname={{ hostvars[host]['private_hostname'] }} openshift_public_hostname={{ hostvars[host]['public_hostname'] }}  openshift_ip={{ hostvars[host]['private_ip'] }} openshift_public_ip={{ hostvars[host]['public_ip'] }} node=True storage=True master=True openshift_schedulable=False
 {% endfor %}

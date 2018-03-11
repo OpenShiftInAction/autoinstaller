@@ -35,7 +35,6 @@ class autoInstaller:
                 self.master = self.deployment_confs['master']
                 self.node = self.deployment_confs['node']
                 self._create_other_inventory()
-            self.experimental_confs = self._load_conf_section('experimental')
             self.debug_confs = self._load_conf_section('debug')
         except ConfigParser.NoSectionError:
             print("* No %s options found - none loaded" % self.deployment )
@@ -83,8 +82,6 @@ class autoInstaller:
 
         # gather up the global vars
         for k,v in self.global_confs.iteritems():
-            evars += "-e %s=%s " % (k,v)
-        for k,v in self.experimental_confs.iteritems():
             evars += "-e %s=%s " % (k,v)
         for k,v in self.debug_confs.iteritems():
             evars += "-e %s=%s " % (k,v)
