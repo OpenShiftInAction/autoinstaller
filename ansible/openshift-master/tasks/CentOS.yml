@@ -4,6 +4,14 @@
     state: present
   with_items: "{{ dev_pkgs }}"
 
+- name: set fact to get proper openshift version repo
+  set_fact:
+    origin_repo: "{{ openshift_version | replace('.', '') }}"
+
+- name: set ansible version
+  set_fact:
+    ansible_ver: "ansible_{{ openshift_repo }}"
+
 - name: install pip on master
   easy_install:
     name: pip
@@ -14,4 +22,4 @@
     name: "{{ item }}"
   with_items:
     - pip==8.1.1
-    - ansible==2.2.2.0
+    - ansible=="{{ ansible_ver }}"

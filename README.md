@@ -42,7 +42,7 @@ Providers and OpenShift versions that have been tested to date. Feel free to hel
 | Provider | Origin 3.6 | Origin 3.7 | OCP 3.6 | OCP 3.7 |
 |----------|------------|------------|---------|---------|
 | AWS      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :heavy_check_mark:    |         |
-| KVM      |   :heavy_check_mark:        |    :heavy_check_mark:       |    :x:     |    :x:     |
+| KVM      |   :heavy_check_mark:        |    :x:       |    :x:     |    :x:     |
 | OpenStack|            |            |         |         |
 | Other    |            |            |         |         |
 
