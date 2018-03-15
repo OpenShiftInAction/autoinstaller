@@ -6,15 +6,19 @@
 - name: include distro-specific tasks
   include: "{{ ansible_distribution }}.yml"
 
+- name: codify ssh public key filename
+  set_fact:
+    ssh_key_file_pub: "{{ ssh_key_file }}.pub"
+
 - name: copy authorized key to remote user
   authorized_key:
     user: "{{ cluster_user }}"
     state: present
-    key: "{{ lookup('file', instance.ssh_key.file_public ) }}"
+    key: "{{ lookup('file', ssh_key_file_pub) }}"
 
 - name: copy private key to master
   copy:
-    src: "{{ instance.ssh_key.file_private }}"
+    src: "{{ ssh_key_file }}"
     dest: "/home/{{ cluster_user }}/.ssh/id_rsa"
     owner: "{{ cluster_user }}"
     group: "{{ cluster_user }}"

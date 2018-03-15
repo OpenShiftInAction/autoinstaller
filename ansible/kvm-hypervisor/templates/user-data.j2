@@ -1,11 +1,15 @@
 #cloud-config
-password: redhat
-chpasswd: { expire: False }
 ssh_pwauth: True
 disable_root: false
-ssh_authorized_keys:
-  - {{ lookup('file', ssh_key_file_pub) }}
-
+users:
+  - name: oia_user
+    groups: [ wheel ]
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh_authorized_keys:
+    - {{ lookup('file', ssh_key_file_pub) }}
+    shell: /bin/bash
+chpasswd: |
+  oia_user:redhat01
 write_files:
 - content: |
    127.0.0.1		localhost.localdomain localhost

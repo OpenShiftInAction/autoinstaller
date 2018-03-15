@@ -1,5 +1,5 @@
 kvm_host:
-  cleanup: true
+  cleanup: false
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
@@ -68,8 +68,8 @@ image_name: "{{ cloud_images[virt_type][region][openshift_type] }}"
 
 remote_users:
   kvm:
-    origin: root
-    openshift-enterprise: root
+    origin: oia_user
+    openshift-enterprise: oia_user
   aws:
     origin: centos
     openshift-enterprise: ec2-user
@@ -83,11 +83,6 @@ remote_users:
 cluster_user: "{{ remote_users[virt_type][openshift_type] }}"
 
 virt_type: "{{ deployment }}"
-openshift_type: "{{ openshift_type }}"
-openshift_version: "{{ openshift_version }}"
-flavor: "{{ flavor }}"
-region: "{{ region }}"
-sec_group: "{{ sec_group }}"
 
 vol_devs:
   aws:

@@ -44,7 +44,6 @@
   get_url:
     url: "{{ centos_image_loc }}"
     dest: "{{ centos_image_local }}"
-    checksum: sha256:{{ centos_image_sha256 }}
 
 - name: Copy over the virtual disk images
   copy:
@@ -65,7 +64,7 @@
   with_dict: "{{ instance.nodes }}"
   when: kvm_host.cleanup
 
-- name: codify ssh public key filename
+- name: set ssh public key filename
   set_fact:
     ssh_key_file_pub: "{{ ssh_key_file }}.pub"
 
