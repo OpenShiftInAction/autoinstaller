@@ -87,6 +87,11 @@ The version of OpenShift you'd like to deploy. _OpenShift In Action_ is written 
 #### openshift_type
 
 The type of OpenShift to deploy. For _OpenShift In Action_ this value should be `origin`. The other possible option is `openshift-enterprise`, which deploys [Red Hat OpenShift Container Platform](https://www.redhat.com/en/technologies/cloud-computing/openshift).
+You must set your RHN credentials and the appropriate RHN pool ID in order to install `openshift-enterprise`:
+  `export RHN_USERNAME=<your RHN user ID>`
+  `export RHN_PASSWORD=<your RHN password>`
+  `export RHN_POOL_ID=<A pool ID with Openshift Enterprise subscription>`
+
 
 #### ssh_key_file
 
