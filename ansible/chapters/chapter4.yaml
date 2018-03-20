@@ -6,7 +6,7 @@
   remote_user: centos
   become: yes
   vars:
-    server: https://ocp1.{{ inventory_hostname }}.nip.io:8443
+    server: https://{{ inventory_hostname }}:8443
     app_names:
     - app-cli
     - app-gui
