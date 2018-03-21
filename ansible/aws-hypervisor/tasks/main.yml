@@ -71,6 +71,7 @@
       "tag:cluster": "OiA-{{ deployment_uuid }}"
       "instance-state-name": running
   register: ec2_r
+  when : create_eips
 
 - name: create groups
   add_host:
