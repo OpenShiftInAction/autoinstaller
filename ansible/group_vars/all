@@ -1,5 +1,5 @@
 kvm_host:
-  cleanup: true
+  cleanup: false
   disk_dir: /var/lib/libvirt/images
   known_hosts_file: ~/.ssh/known_hosts
   tmp_workspace: /tmp/autoinstaller
