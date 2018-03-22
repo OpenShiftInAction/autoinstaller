@@ -70,7 +70,7 @@
     filters:
       "tag:cluster": "OiA-{{ deployment_uuid }}"
       "instance-state-name": running
-  register: ec2_r
+  register: ec2
   when : create_eips
 
 - name: create groups
@@ -84,7 +84,7 @@
     private_hostname: "{{ item.network_interfaces[0].private_dns_name }}"
     public_ip: "{{ item.network_interfaces[0].private_ip_addresses[0].association.public_ip }}"
     public_hostname: "{{ item.network_interfaces[0].private_ip_addresses[0].association.public_dns_name }}"
-  with_items: "{{ ec2_r.instances }}"
+  with_items: "{{ ec2.instances }}"
 
 - name: wait for EC2 to get instances up and running
   pause:
