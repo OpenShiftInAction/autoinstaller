@@ -10,7 +10,7 @@
 
 - name: set ansible version
   set_fact:
-    ansible_ver: "ansible_{{ openshift_repo }}"
+    ansible_ver: "ansible_{{ origin_repo }}"
 
 - name: install pip on master
   easy_install:
@@ -22,4 +22,4 @@
     name: "{{ item }}"
   with_items:
     - pip==8.1.1
-    - ansible=="{{ ansible_ver }}"
+    - ansible=="{{ ansible_vers[ansible_ver] }}"

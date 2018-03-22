@@ -23,6 +23,24 @@
         from_port: 443
         to_port: 443
         cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 10250
+        to_port: 10250
+        cidr_ip: "{{ networks.private.openshift_int.subnet_cidr }}"
+      - proto: udp
+        from_port: 53
+        to_port: 53
+        cidr_ip: "{{ networks.private.openshift_int.subnet_cidr }}"
+      - proto: udp
+        from_port: 8053
+        to_port: 8053
+        cidr_ip: "{{ networks.private.openshift_int.subnet_cidr }}"
+      - proto: udp
+        from_port: 4789
+        to_port: 4789
+        cidr_ip: "{{ networks.private.openshift_int.subnet_cidr }}"
+        
+
 
 - name: create ssh key
   ec2_key:
