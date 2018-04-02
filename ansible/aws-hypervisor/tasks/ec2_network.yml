@@ -23,6 +23,7 @@
     vpc_id: "{{ vpc_id }}"
     region: "{{ region }}"
     state: present
+  register: vpc_igw
 
 - name: create VPC subnet
   ec2_vpc_subnet:
@@ -39,3 +40,28 @@
 - name: set VPC Subnet ID fact
   set_fact:
     subnet_id: "{{ ocp_subnet.subnet.id }}"
+
+- name: Lookup route tables
+  ec2_vpc_route_table_facts:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
+    region: "{{ region }}"
+    filters:
+      vpc-id: "{{ vpc_id }}"
+  register: vpc_route_tables
+
+- name: Set up public subnet route 
+  ec2_vpc_route_table:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
+    state: present
+    vpc_id: "{{ vpc_id }}"
+    region: "{{ region }}"
+    lookup: id
+    purge_subnets: false
+    route_table_id: "{{ vpc_route_tables.route_tables[0].id }}"
+    subnets:
+      - "{{ ocp_subnet.subnet.id }}"
+    routes:
+      - dest: 0.0.0.0/0
+        gateway_id: "{{ vpc_igw.gateway_id }}"
