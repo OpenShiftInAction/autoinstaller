@@ -128,22 +128,22 @@ instance:
       role: master
       vol_size: 20
       kvm_params:
-        ip: 192.168.122.100
+        ip: "{{ master_ip | default('192.168.122.100') }}"
         ram: 8192
         vcpus: 2
         mac: 00:1c:c4:00:00:01
         role: master
-        hostname: ocp1.192.168.122.100.nip.io
+        hostname: ocp1.example.com
       openstack_params:
         private_network: openshift_int
     ocp2:
       role: node
       kvm_params:
-        ip: 192.168.122.101
+        ip: "{{ node_ip | default('192.168.122.101') }}"
         ram: 8192
         vcpus: 2
         mac: 00:1c:c4:00:00:02
         role: node
-        hostname: ocp2.192.168.122.101.nip.io
+        hostname: ocp2.example.com
       openstack_params:
         private_network: openshift_int

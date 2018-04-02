@@ -18,6 +18,7 @@
 
 - name: attach to desired subscription
   command: subscription-manager attach --pool={{ rhn_pool_id }}
+  when: sub_status.rc == 1
 
 - name: disable all repos
   command: subscription-manager repos --disable="*"
@@ -31,8 +32,3 @@
     state: present
     name: "{{ item }}"
   with_items: "{{ base_pkgs }}"
-
-- name: update system
-  yum:
-    state: latest
-    name: '*'
