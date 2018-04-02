@@ -57,7 +57,7 @@ The KVM provider is currently blocked from deploying OCP by issue https://github
 [global]
 openshift_version = 3.6
 openshift_type = origin
-deployment = kvm
+deployment = aws
 ssh_key_file = /home/<YOUR_USER>/.ssh/id_rsa
 deploy_catalog = true
 
