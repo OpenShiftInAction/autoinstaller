@@ -52,6 +52,27 @@
       "instance-state-name": running
   register: ec2
 
+- name: associate new elastic IPs with each of the instances
+  ec2_eip:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
+    device_id: "{{ item.instance_id }}"
+    region: "{{ region }}"
+    in_vpc: yes
+  with_items: "{{ ec2.instances }}"
+  when : use_elastic_ips
+
+- name: Refresh facts to get EIPS
+  ec2_instance_facts:
+    aws_secret_key: "{{ aws_secret_access_key }}"
+    aws_access_key: "{{ aws_secret_key_id }}"
+    region: "{{ region }}"
+    filters:
+      "tag:cluster": "OiA-{{ deployment_uuid }}"
+      "instance-state-name": running
+  register: ec2
+  when : use_elastic_ips
+
 - name: create groups
   add_host:
     name: "{{ item.tags.Name }}"

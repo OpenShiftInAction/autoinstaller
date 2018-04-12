@@ -8,11 +8,18 @@
   set_fact:
     origin_repo: "{{ openshift_version | replace('.', '') }}"
 
-# - name: install pip on master
-#   easy_install:
-#     name: pip
-#     state: latest
-#
-# - name: install the proper version of ansible on master
-#   pip:
-#     name: ansible=="{{ a_ver }}"
+- name: set ansible version
+  set_fact:
+    ansible_ver: "ansible_{{ origin_repo }}"
+
+- name: install pip on master
+  easy_install:
+    name: pip
+    state: latest
+
+- name: install the proper version of ansible on master
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - pip==8.1.1
+    - ansible=="{{ ansible_vers[ansible_ver] }}"
